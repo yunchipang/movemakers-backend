@@ -13,11 +13,15 @@ class Style(Enum):
     contemporary = "Contemporary"
     jazz = "Jazz"
     afro = "Afro"
+    dancehall = "Dancehall"
+    heels = "heels"
+    reggaeton = "Reggaetón"
 
 class Level(Enum):
     beginner = "Beginner"
     intermediate = "Intermediate"
     advanced = "Advanced"
+    all_levels = "All Levels"
 
 class Role(Enum):
     instructor = "instructor"
@@ -41,8 +45,21 @@ class Person(BaseModel):
     name: str
     instagram: str
     role: list[str]
+    crew: list[Crew]
     teach_at: list[Studio]
     bio: str
+
+class Crew(BaseModel):
+    name: str
+    bio: str
+    base: Studio
+    directors: list[Person]
+    members: list[Person]
+    style: str
+    formation_year: int
+    instagram: str
+    training_schedule: str
+    performances: list[str]
 
 class Choreo(BaseModel):
     created_at: datetime
