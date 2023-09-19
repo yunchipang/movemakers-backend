@@ -1,73 +1,11 @@
 from typing import Union
-
 from fastapi import FastAPI
-from pydantic import BaseModel
-from datetime import datetime
-from enum import Enum
+from models.choreo import Choreo
+from models.person import Person
+from models.studio import Studio
+from models.crew import Crew
 
 app = FastAPI()
-
-
-class Style(Enum):
-    hip_hop = "Hip Hop"
-    contemporary = "Contemporary"
-    jazz = "Jazz"
-    afro = "Afro"
-    dancehall = "Dancehall"
-    heels = "heels"
-    reggaeton = "Reggaetón"
-
-class Level(Enum):
-    beginner = "Beginner"
-    intermediate = "Intermediate"
-    advanced = "Advanced"
-    all_levels = "All Levels"
-
-class Role(Enum):
-    instructor = "instructor"
-    choreographer = "choreographer"
-    director = "director"
-
-class Studio(BaseModel):
-    name: str
-    city: str
-    state: str
-    address: str
-    opening_hours: str
-    phone_number: str
-    email: str
-    website: str
-    instagram: str
-    dance_styles: list[str]
-    instructors: list[str]
-
-class Person(BaseModel):
-    name: str
-    instagram: str
-    role: list[str]
-    crew: list[Crew]
-    teach_at: list[Studio]
-    bio: str
-
-class Crew(BaseModel):
-    name: str
-    bio: str
-    base: Studio
-    directors: list[Person]
-    members: list[Person]
-    style: str
-    formation_year: int
-    instagram: str
-    training_schedule: str
-    performances: list[str]
-
-class Choreo(BaseModel):
-    created_at: datetime
-    choreographer: Person
-    music: str
-    style: Style
-    level: Level
-    video: str
 
 
 @app.get("/")
@@ -97,3 +35,11 @@ def read_choreo(choreo_id: int, q: Union[str, None] = None):
 @app.put("/choreos/{choreo_id}")
 def update_choreo(choreo_id: int, choreo: Choreo):
     return {"choreo_name": choreo.name, "choreo_id": choreo_id}
+
+@app.get("/crews/{crew_id}")
+def read_crew(crew_id: int, q: Union[str, None] = None):
+    return {"crew_id": crew_id, "q": q}
+
+@app.put("/crews/{crew_id}")
+def update_crew(crew_id: int, crew: Crew):
+    return {"crew_name": crew.name, "crew_id": crew_id}
