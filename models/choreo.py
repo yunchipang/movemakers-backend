@@ -11,4 +11,4 @@ class Choreo(BaseModel):
     style: list[Style]
     level: Level
     video: str
-    created_at: datetime
+    created_at: datetime.now()

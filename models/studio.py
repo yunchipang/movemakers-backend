@@ -12,5 +12,5 @@ class Studio(BaseModel):
     email: EmailStr
     website: HttpUrl
     instagram: str
-    dance_styles: list[Style]
+    styles: list[Style]
     instructors: list[Person]

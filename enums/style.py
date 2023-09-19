@@ -9,3 +9,4 @@ class Style(Enum):
     dancehall = "Dancehall"
     heels = "heels"
     reggaeton = "Reggaetón"
+    kpop = "K-pop"
