@@ -1,9 +1,18 @@
 from typing import Union
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
+from bson import ObjectId
+
 from models.choreo import Choreo
 from models.person import Person
 from models.studio import Studio
 from models.crew import Crew
+
+from pymongo import MongoClient
+import settings
+
+client = MongoClient(settings.mongodb_uri, settings.mongodb_port)
+db = client["movemakers"]
+
 
 app = FastAPI()
 
@@ -20,12 +29,18 @@ def read_studio(studio_id: int, q: Union[str, None] = None):
 def update_studio(studio_id: int, studio: Studio):
     return {"studio_name": studio.name, "studio_id": studio_id}
 
-@app.get("/persons/{person_id}")
-def read_person(person_id: int, q: Union[str, None] = None):
-    return {"person_id": person_id, "q": q}
+@app.get("/persons/{object_id}")
+def read_person(object_id: str, q: Union[str, None] = None):
+    collection = db['persons']
+    person = collection.find_one({"_id": ObjectId(object_id)})
+    if person is None:
+        raise HTTPException(status_code=404, detail="Person not found")
+    
+    person['_id'] = str(person["_id"])
+    return {"object_id": object_id, "q": q, "person": person}
 
 @app.put("/persons/{person_id}")
-def update_person(person_id: int, person: Person):
+def update_person(person_id: str, person: Person):
     return {"person_name": person.name, "person_id": person_id}
 
 @app.get("/choreos/{choreo_id}")
