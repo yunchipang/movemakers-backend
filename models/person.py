@@ -8,3 +8,6 @@ class Person(BaseModel):
     email: EmailStr
     role: list[Role]
     bio: str
+
+    class Config:
+        from_attributes = True

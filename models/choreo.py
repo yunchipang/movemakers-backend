@@ -11,4 +11,7 @@ class Choreo(BaseModel):
     style: list[Style]
     level: Level
     video: str
-    created_at: datetime.now()
+    created_at: str
+
+    class Config:
+        from_attributes = True

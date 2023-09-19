@@ -14,3 +14,6 @@ class Studio(BaseModel):
     instagram: str
     styles: list[Style]
     instructors: list[Person]
+
+    class Config:
+        from_attributes = True

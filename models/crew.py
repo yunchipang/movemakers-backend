@@ -14,3 +14,6 @@ class Crew(BaseModel):
     instagram: str
     training_schedule: str
     performances: list[str]
+
+    class Config:
+        from_attributes = True
