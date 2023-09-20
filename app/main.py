@@ -2,7 +2,7 @@ from fastapi import Depends, FastAPI, HTTPException
 from sqlalchemy.orm import Session
 
 from app import crud, models, schemas
-from database import SessionLocal, engine
+from app.database import SessionLocal, engine
 
 models.Base.metadata.create_all(bind=engine)
 
@@ -16,6 +16,11 @@ def get_db():
         yield db
     finally:
         db.close()
+
+
+@app.get("/")
+def read_root():
+    return {"hello": "world"}
 
 
 @app.post("/users/", response_model=schemas.User)
