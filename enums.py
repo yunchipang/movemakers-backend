@@ -1,20 +1,21 @@
-from enum import Enum
+# from enum import Enum
+from sqlalchemy import Enum
 
 
-class Level(Enum):
+class LevelEnum(Enum):
     beginner = "Beginner"
     intermediate = "Intermediate"
     advanced = "Advanced"
     all_levels = "All Levels"
 
-class Role(Enum):
+class RoleEnum(Enum):
     instructor = "instructor"
     choreographer = "choreographer"
     director = "director"
     owner = "owner"
     member = "member"
 
-class Style(Enum):
+class StyleEnum(Enum):
     hip_hop = "Hip Hop"
     contemporary = "Contemporary"
     jazz_funk = "Jazz Funk"
