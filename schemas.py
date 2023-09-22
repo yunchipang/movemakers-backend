@@ -11,5 +11,8 @@ class BaseDancer(BaseModel):
 class Dancer(BaseDancer):
     id: int
 
+    class Config:
+        from_attributes=True
+
 class CreateDancer(BaseDancer):
     pass

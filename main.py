@@ -1,4 +1,4 @@
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, List
 import fastapi
 
 from sqlalchemy import orm
@@ -17,3 +17,7 @@ async def create_dancer(
     db: orm.Session=fastapi.Depends(services.get_db),
 ):
     return await services.create_dancer(dancer=dancer, db=db)
+
+@app.get("/api/dancers/", response_model=List[schemas.Dancer])
+async def get_dancers(db: orm.Session=fastapi.Depends(services.get_db)):
+    return await services.get_all_dancers(db=db)
