@@ -40,3 +40,18 @@ async def get_dancer(dancer_id: int, db: "Session"):
 async def delete_dancer(dancer: models.Dancer, db: "Session"):
     db.delete(dancer)
     db.commit()
+
+# update a specific dancer in the database
+async def update_dancer(
+        dancer_data: schemas.CreateDancer, dancer: models.Dancer, db: "Session"
+) -> schemas.Dancer:
+    # feed data one to one into the dancer object
+    dancer.name = dancer_data.name
+    dancer.instagram_handle = dancer_data.instagram_handle
+    dancer.rols = dancer_data.roles
+    dancer.styles = dancer_data.styles
+
+    db.commit()
+    db.refresh(dancer)
+
+    return schemas.Dancer.from_orm(dancer)

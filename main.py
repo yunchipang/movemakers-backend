@@ -45,3 +45,15 @@ async def delete_dancer(
 
     await services.delete_dancer(dancer, db=db)
     return "successfully deleted the dancer"
+
+@app.put("/api/dancers/{dancer_id}", response_model=schemas.Dancer)
+async def update_dancer(
+    dancer_id: int,
+    dancer_data: schemas.CreateDancer,
+    db: orm.Session=fastapi.Depends(services.get_db)
+):
+    dancer = await services.get_dancer(dancer_id=dancer_id, db=db)
+    if dancer is None:
+        raise fastapi.HTTPException(status_code=404, detail="Dancer does not exist")
+
+    return await services.update_dancer(dancer_data=dancer_data, dancer=dancer, db=db)
