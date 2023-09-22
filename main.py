@@ -21,3 +21,27 @@ async def create_dancer(
 @app.get("/api/dancers/", response_model=List[schemas.Dancer])
 async def get_dancers(db: orm.Session=fastapi.Depends(services.get_db)):
     return await services.get_all_dancers(db=db)
+
+@app.get("/api/dancers/{dancer_id}", response_model=schemas.Dancer)
+async def get_dancer(
+    dancer_id: int, 
+    db: orm.Session=fastapi.Depends(services.get_db)
+):
+    dancer = await services.get_dancer(dancer_id=dancer_id, db=db)
+    print("dancer=", dancer)
+    if dancer is None:
+        raise fastapi.HTTPException(status_code=404, detail="Dancer does not exist")
+    
+    return dancer
+
+@app.delete("/api/dancers/{dancer_id}")
+async def delete_dancer(
+    dancer_id: int,
+    db: orm.Session=fastapi.Depends(services.get_db)
+):
+    dancer = await services.get_dancer(dancer_id=dancer_id, db=db)
+    if dancer is None:
+        raise fastapi.HTTPException(status_code=404, detail="Dancer does not exist")
+
+    await services.delete_dancer(dancer, db=db)
+    return "successfully deleted the dancer"
