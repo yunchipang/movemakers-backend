@@ -2,14 +2,19 @@ from typing import TYPE_CHECKING, List
 import fastapi
 
 from sqlalchemy import orm
-import schemas
-import services
+from app import schemas
+from app import services
 
 if TYPE_CHECKING:
     from sqlalchemy.orm import Session
 
 
 app = fastapi.FastAPI()
+
+
+@app.get("/api/")
+async def get_root():
+    return {"message": "Welcome to MoveMakers API🕺🏻"}
 
 @app.post("/api/dancers/", response_model=schemas.Dancer)
 async def create_dancer(

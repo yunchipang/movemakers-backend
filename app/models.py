@@ -1,7 +1,7 @@
 from sqlalchemy import Column, Integer, String
 from sqlalchemy.types import ARRAY
 
-from database import Base
+from app.database import Base
 
 
 class Dancer(Base):
