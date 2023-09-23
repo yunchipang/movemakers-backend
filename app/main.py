@@ -14,7 +14,7 @@ app = fastapi.FastAPI()
 
 @app.get("/api/")
 async def get_root():
-    return {"message": "Welcome to movemakers🕺🏻"}
+    return {"message": "Welcome to MoveMakers API🕺🏻"}
 
 @app.post("/api/dancers/", response_model=schemas.Dancer)
 async def create_dancer(
