@@ -3,25 +3,29 @@ version: "3.8"
 services:
   web:
     build: .
-    command: bash -c 'while !</dev/tcp/db/5432; do sleep 1; done; uvicorn app.main:app --host 0.0.0.0'
+    ports:
+      - 8000:8000
     volumes:
       - .:/app
-    ports:
-      - 8008:8000
-    environment:
-      - DATABASE_URL=postgresql://postgres:rena1ssance@localhost/movemakers
     depends_on:
       - db
+    restart: always
+    networks:
+      - movemakers-network
+
   db:
-    image: postgres:15-alpine
+    image: postgres:alpine
     volumes:
       - postgres_data:/var/lib/postgresql/data/
+    env_file:
+      - ./.env
+    environment:
+      - POSTGRES_HOST=${POSTGRES_HOST}
+      - POSTGRES_DB=${POSTGRES_DB}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
     expose:
       - 5432
-    environment:
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=rena1ssance
-      - POSTGRES_DB=movemakers
-
-volumes:
-  postgres_data:
+    restart: always
+    networks:
+      - movemakers-network
