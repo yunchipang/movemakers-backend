@@ -27,5 +27,8 @@ share/python-wheels/
 *.egg
 MANIFEST
 
+# cache
+__pycache__/
+
 # MacOS
 .DS_Store
