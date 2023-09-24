@@ -1,5 +1,5 @@
 # pull the official docker image
-FROM python:3.9.6-slim
+FROM python:3.11.5-slim
 
 # set work directory
 WORKDIR /app
@@ -12,5 +12,12 @@ ENV PYTHONUNBUFFERED 1
 COPY requirements.txt .
 RUN pip install -r requirements.txt
 
-# copy project
+# copy project to container
 COPY . .
+
+# expose port 8000 (FastAPI app) and 5432 (PostgreSQL)
+EXPOSE 8000
+EXPOSE 5432
+
+# Start FastAPI and PostgreSQL services
+CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
