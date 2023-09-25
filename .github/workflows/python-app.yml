@@ -37,6 +37,5 @@ jobs:
           postgresql user: postgres
           postgresql password: postgres
       - name: Unit Testing with pytest
-        env:
         run: |
           pytest
