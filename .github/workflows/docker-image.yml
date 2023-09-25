@@ -2,21 +2,32 @@ name: Docker Compose Actions Workflow
 
 on:
   push:
-    branches: ["main"]
-  pull_request:
-    branches: ["main"]
+    branches:
+      - main
 
 jobs:
   build:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v4
       - name: Build the Docker image
+      - uses: actions/checkout@v4
         run: docker-compose build --no-cache --force-rm
+
   test:
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Run the Docker image
       - uses: actions/checkout@v2
-      - name: Build the stack
         run: docker-compose up -d
+
+      - name: Wait for containers to start (adjust sleep time as needed)
+        run: sleep 15
+
+      - name: Run Alembic database migrations
+        run: |
+          docker-compose exec web alembic revision --autogenerate
+          docker-compose exec web alembic upgrade head
