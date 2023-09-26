@@ -26,10 +26,10 @@ jobs:
       - name: Run the Docker image
         run: docker-compose up -d
 
-      - name: Wait for containers to start (adjust sleep time as needed)
-        run: sleep 15
+      # - name: Wait for containers to start (adjust sleep time as needed)
+      #   run: sleep 15
 
-      - name: Run Alembic database migrations
-        run: |
-          docker-compose run web alembic revision --autogenerate
-          docker-compose run web alembic upgrade head
+      # - name: Run Alembic database migrations
+      #   run: |
+      #     docker-compose run web alembic revision --autogenerate
+      #     docker-compose run web alembic upgrade head
