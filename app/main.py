@@ -12,22 +12,22 @@ if TYPE_CHECKING:
 app = fastapi.FastAPI()
 
 
-@app.get("/api/")
+@app.get("/")
 async def get_root():
     return {"message": "Welcome to MoveMakers API🕺🏻"}
 
-@app.post("/api/dancers/", response_model=schemas.Dancer)
+@app.post("/dancers/", response_model=schemas.Dancer)
 async def create_dancer(
     dancer: schemas.CreateDancer, 
     db: orm.Session=fastapi.Depends(services.get_db),
 ):
     return await services.create_dancer(dancer=dancer, db=db)
 
-@app.get("/api/dancers/", response_model=List[schemas.Dancer])
+@app.get("/dancers/", response_model=List[schemas.Dancer])
 async def get_dancers(db: orm.Session=fastapi.Depends(services.get_db)):
     return await services.get_all_dancers(db=db)
 
-@app.get("/api/dancers/{dancer_id}", response_model=schemas.Dancer)
+@app.get("/dancers/{dancer_id}", response_model=schemas.Dancer)
 async def get_dancer(
     dancer_id: int, 
     db: orm.Session=fastapi.Depends(services.get_db)
@@ -39,7 +39,7 @@ async def get_dancer(
     
     return dancer
 
-@app.delete("/api/dancers/{dancer_id}")
+@app.delete("/dancers/{dancer_id}")
 async def delete_dancer(
     dancer_id: int,
     db: orm.Session=fastapi.Depends(services.get_db)
@@ -51,7 +51,7 @@ async def delete_dancer(
     await services.delete_dancer(dancer, db=db)
     return "successfully deleted the dancer"
 
-@app.put("/api/dancers/{dancer_id}", response_model=schemas.Dancer)
+@app.put("/dancers/{dancer_id}", response_model=schemas.Dancer)
 async def update_dancer(
     dancer_id: int,
     dancer_data: schemas.CreateDancer,
