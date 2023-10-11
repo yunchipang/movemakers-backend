@@ -7,7 +7,11 @@ if TYPE_CHECKING:
 
 
 def add_tables():
-    return database.Base.metadata.create_all(bind=database.engine)
+    # return database.Base.metadata.create_all(bind=database.engine)
+    existing_table_names = database.engine.table_names()
+    for table in database.Base.metadata.tables.values():
+        if table.name not in existing_table_names:
+            table.create(database.engine)
 
 def get_db():
     db = database.SessionLocal()

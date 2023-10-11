@@ -11,6 +11,10 @@ if TYPE_CHECKING:
 
 app = fastapi.FastAPI()
 
+@app.on_event("startup")
+async def startup_event():
+    # create tables if they do not exist yet
+    services.add_tables()
 
 @app.get("/")
 async def get_root():
