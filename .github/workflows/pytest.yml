@@ -22,5 +22,5 @@ jobs:
 
       - name: Run Pytest
         run: |
-          uvicorn app.main:app
+          docker-compose up -d --build
           pytest
