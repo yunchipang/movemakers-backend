@@ -23,7 +23,8 @@ jobs:
 
       - name: Build and Run Docker Containers
         run: |
-          ssh ${{ secrets.DROPLET_USERNAME }}@${{ secrets.DROPLET_IP }} -p ${{ secrets.SSH_PORT }} 'docker compose down -v'
+          ssh ${{ secrets.DROPLET_USERNAME }}@${{ secrets.DROPLET_IP }} -p ${{ secrets.SSH_PORT }} 'docker compose down'
+          ssh ${{ secrets.DROPLET_USERNAME }}@${{ secrets.DROPLET_IP }} -p ${{ secrets.SSH_PORT }} 'docker compose pull'
           ssh ${{ secrets.DROPLET_USERNAME }}@${{ secrets.DROPLET_IP }} -p ${{ secrets.SSH_PORT }} 'docker compose up -d --build'
 
       - name: Run Migrations
