@@ -18,7 +18,7 @@ async def startup_event():
 
 @app.get("/")
 async def get_root():
-    return {"message": "Welcome to MoveMakers API🕺🏻"}
+    return {"message": "Welcome to MoveMakers API"}
 
 @app.post("/dancers/", response_model=schemas.Dancer)
 async def create_dancer(
