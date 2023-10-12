@@ -19,9 +19,7 @@ jobs:
       - name: Install dependencies
         run: |
           pip install -r requirements.txt
-        working-directory: ./movemakers-fastapi
 
       - name: Run Pytest
         run: |
           pytest
-        working-directory: ./movemakers-fastapi
