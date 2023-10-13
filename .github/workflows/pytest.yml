@@ -1,10 +1,10 @@
-name: Run Pytest
+name: Pytest
 
 on: [push]
 
 jobs:
   build:
-    name: Run Pytest
+    name: Pytest
     runs-on: ubuntu-latest
 
     steps:
@@ -20,13 +20,24 @@ jobs:
         run: |
           pip install -r requirements.txt
 
-      - name: Set DATABASE_URL environment variable
+      - name: Set environment variables
         run: |
           echo "DATABASE_URL=$DATABASE_URL" >> $GITHUB_ENV
+          echo "POSTGRES_USER=$POSTGRES_USER" >> $GITHUB_ENV
+          echo "POSTGRES_PASSWORD=$POSTGRES_PASSWORD" >> $GITHUB_ENV
+          echo "POSTGRES_DB=$POSTGRES_DB" >> $GITHUB_ENV
+          echo "POSTGRES_HOST=$POSTGRES_HOST" >> $GITHUB_ENV
+          echo "POSTGRES_PORT=$POSTGRES_PORT" >> $GITHUB_ENV
         env:
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          POSTGRES_USER: ${{ secrets.POSTGRES_USER }}
+          POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
+          POSTGRES_DB: ${{ secrets.POSTGRES_DB }}
+          POSTGRES_HOST: ${{ secrets.POSTGRES_HOST }}
+          POSTGRES_PORT: ${{ secrets.POSTGRES_PORT }}
 
-      - name: Run Pytest
-        run: |
-          docker-compose up -d --build
-          pytest
+      - name: Build and Run Docker Images
+        run: docker-compose up -d --build
+
+      - name: Pytest
+        run: pytest
