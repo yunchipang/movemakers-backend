@@ -21,6 +21,10 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           port: ${{ secrets.SSH_PORT }} # by default 22
 
+      - name: Change working directory
+        run: |
+          ssh ${{ secrets.DROPLET_USERNAME }}@${{ secrets.DROPLET_IP }} -p ${{ secrets.SSH_PORT }} 'cd movemakers-fastapi/'
+
       - name: Build and Run Docker Containers
         run: |
           ssh ${{ secrets.DROPLET_USERNAME }}@${{ secrets.DROPLET_IP }} -p ${{ secrets.SSH_PORT }} 'docker compose down'
