@@ -1,4 +1,4 @@
-from typing import TYPE_CHECKING, List, Annotated
+from typing import TYPE_CHECKING, List
 from fastapi import FastAPI, Depends, HTTPException
 
 from sqlalchemy import orm
