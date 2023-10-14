@@ -29,12 +29,8 @@ class User(Base):
     
     def validate_password(self, password) -> bool:
         """confirms password validity"""
-        return {
-            "access_token": jwt.encode(
-                {"email": self.email},
-                "ApplicationSecretKey"
-            )
-        }
+        # verify the provided password against the stored hashed password
+        return bcrypt.checkpw(password.encode(), self.hashed_password)
     
     def generate_token(self) -> dict:
         """generate access token for user"""

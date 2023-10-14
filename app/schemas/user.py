@@ -1,6 +1,6 @@
 from pydantic import BaseModel, Field, EmailStr, ConfigDict, UUID4
 
-
+# user
 class BaseUser(BaseModel):
     email: EmailStr
 
@@ -11,3 +11,8 @@ class User(BaseUser):
 
 class CreateUser(BaseUser):
     hashed_password: str = Field(alias="password")
+
+# user login
+class UserLogin(BaseModel):
+    email: EmailStr
+    password: str

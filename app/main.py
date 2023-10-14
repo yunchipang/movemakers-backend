@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Dict
 
 from fastapi import FastAPI, Depends, HTTPException
 from fastapi.security import OAuth2PasswordBearer
@@ -30,12 +30,29 @@ async def signup(
     user: user_schemas.CreateUser,
     db: Session=Depends(database.get_db),
 ):
+    # check duplicated email
+    existing_user = user_services.get_user(email=user.email, db=db)
+    if existing_user:
+        raise HTTPException(status_code=400, detail="Email is already in use.")
+    
     """processes request to register user account"""
     user.hashed_password = user_models.User.hash_password(user.hashed_password)
     return await user_services.create_user(user=user, db=db)
 
 # login endpoint
-
+@app.post("/login/", response_model=Dict)
+def login(
+    payload: user_schemas.UserLogin,
+    db: Session=Depends(database.get_db),
+):
+    """processes user's auth and returns a token on successful auth"""
+    user = user_services.get_user(email=payload.email, db=db)
+    if not user or not user.validate_password(payload.password):
+        raise HTTPException(
+            status_code=401,
+            detail="Invalid user credentials.",
+        )
+    return user.generate_token()
 
 # dancers endpoints
 @app.post("/dancers/", response_model=dancer_schemas.Dancer)
