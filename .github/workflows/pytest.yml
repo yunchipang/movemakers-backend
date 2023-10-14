@@ -28,6 +28,7 @@ jobs:
           echo "POSTGRES_DB=$POSTGRES_DB" >> $GITHUB_ENV
           echo "POSTGRES_HOST=$POSTGRES_HOST" >> $GITHUB_ENV
           echo "POSTGRES_PORT=$POSTGRES_PORT" >> $GITHUB_ENV
+          echo "JWT_SECRET_KEY=$JWT_SECRET_KEY" >> $GITHUB_ENV
         env:
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
           POSTGRES_USER: ${{ secrets.POSTGRES_USER }}
@@ -35,6 +36,7 @@ jobs:
           POSTGRES_DB: ${{ secrets.POSTGRES_DB }}
           POSTGRES_HOST: ${{ secrets.POSTGRES_HOST }}
           POSTGRES_PORT: ${{ secrets.POSTGRES_PORT }}
+          JWT_SECRET_KEY: ${{ secrets.JWT_SECRET_KEY }}
 
       - name: Build and Run Docker Images
         run: docker-compose up -d --build
