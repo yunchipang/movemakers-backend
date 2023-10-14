@@ -1,7 +1,7 @@
 import uuid, bcrypt, jwt
 from datetime import datetime
 
-from sqlalchemy import Column, String, Boolean, LargeBinary, DateTime
+from sqlalchemy import Column, String, LargeBinary, DateTime
 from sqlalchemy.dialects.postgresql import UUID
 
 from app.database import Base
@@ -17,7 +17,6 @@ class User(Base):
     email = Column(String(225), nullable=False, unique=True)
     hashed_password = Column(LargeBinary, nullable=False)
     created_at = Column(DateTime, default=datetime.utcnow)
-    is_active = Column(Boolean, default=False)
 
     def __repr__(self):
         """returns strings representation of model instance"""

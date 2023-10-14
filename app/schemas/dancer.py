@@ -14,6 +14,7 @@ class BaseDancer(BaseModel):
 
 class Dancer(BaseDancer):
     id: int
+    
     model_config = ConfigDict(from_attributes=True)
 
 class CreateDancer(BaseDancer):

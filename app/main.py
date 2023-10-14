@@ -1,14 +1,16 @@
-from typing import TYPE_CHECKING, List
-from fastapi import FastAPI, Depends, HTTPException
+from typing import List
 
-from sqlalchemy import orm
+from fastapi import FastAPI, Depends, HTTPException
+from fastapi.security import OAuth2PasswordBearer
+
+from sqlalchemy.orm import Session
 
 from app import database
+from app.models import user as user_models
 from app.schemas import dancer as dancer_schemas
+from app.schemas import user as user_schemas
 from app.services import dancer as dancer_services
-
-if TYPE_CHECKING:
-    from sqlalchemy.orm import Session
+from app.services import user as user_services
 
 app = FastAPI()
 
@@ -22,21 +24,35 @@ async def startup_event():
 async def get_root():
     return {"message": "Welcome to MoveMakers API"}
 
+# signup endpoint
+@app.post("/signup/", response_model=user_schemas.User)
+async def signup(
+    user: user_schemas.CreateUser,
+    db: Session=Depends(database.get_db),
+):
+    """processes request to register user account"""
+    user.hashed_password = user_models.User.hash_password(user.hashed_password)
+    return await user_services.create_user(user=user, db=db)
+
+# login endpoint
+
+
+# dancers endpoints
 @app.post("/dancers/", response_model=dancer_schemas.Dancer)
 async def create_dancer(
     dancer: dancer_schemas.CreateDancer, 
-    db: orm.Session=Depends(database.get_db),
+    db: Session=Depends(database.get_db),
 ):
     return await dancer_services.create_dancer(dancer=dancer, db=db)
 
 @app.get("/dancers/", response_model=List[dancer_schemas.Dancer])
-async def get_dancers(db: orm.Session=Depends(database.get_db)):
+async def get_dancers(db: Session=Depends(database.get_db)):
     return await dancer_services.get_all_dancers(db=db)
 
 @app.get("/dancers/{dancer_id}", response_model=dancer_schemas.Dancer)
 async def get_dancer(
     dancer_id: int, 
-    db: orm.Session=Depends(database.get_db)
+    db: Session=Depends(database.get_db)
 ):
     dancer = await dancer_services.get_dancer(dancer_id=dancer_id, db=db)
     print("dancer=", dancer)
@@ -48,7 +64,7 @@ async def get_dancer(
 @app.delete("/dancers/{dancer_id}")
 async def delete_dancer(
     dancer_id: int,
-    db: orm.Session=Depends(database.get_db)
+    db: Session=Depends(database.get_db)
 ):
     dancer = await dancer_services.get_dancer(dancer_id=dancer_id, db=db)
     if dancer is None:
@@ -61,7 +77,7 @@ async def delete_dancer(
 async def update_dancer(
     dancer_id: int,
     dancer_data: dancer_schemas.CreateDancer,
-    db: orm.Session=Depends(database.get_db)
+    db: Session=Depends(database.get_db)
 ):
     dancer = await dancer_services.get_dancer(dancer_id=dancer_id, db=db)
     if dancer is None:
