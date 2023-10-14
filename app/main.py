@@ -1,17 +1,18 @@
-from typing import TYPE_CHECKING, List
-import fastapi
+from typing import TYPE_CHECKING, List, Annotated
+from fastapi import FastAPI, Depends, HTTPException
 
 from sqlalchemy import orm
 
-from app import database
+from app import config, database
 from app.schemas import dancer as dancer_schemas
 from app.services import dancer as dancer_services
+from app.settings import get_settings
 
 if TYPE_CHECKING:
     from sqlalchemy.orm import Session
 
+app = FastAPI()
 
-app = fastapi.FastAPI()
 
 @app.on_event("startup")
 async def startup_event():
@@ -22,37 +23,44 @@ async def startup_event():
 async def get_root():
     return {"message": "Welcome to MoveMakers API"}
 
+# debug
+@app.get("/info")
+async def info(settings: Annotated[config.Settings, Depends(get_settings)]):
+    return {
+        "app_name": settings.app_name,
+    }
+
 @app.post("/dancers/", response_model=dancer_schemas.Dancer)
 async def create_dancer(
     dancer: dancer_schemas.CreateDancer, 
-    db: orm.Session=fastapi.Depends(database.get_db),
+    db: orm.Session=Depends(database.get_db),
 ):
     return await dancer_services.create_dancer(dancer=dancer, db=db)
 
 @app.get("/dancers/", response_model=List[dancer_schemas.Dancer])
-async def get_dancers(db: orm.Session=fastapi.Depends(database.get_db)):
+async def get_dancers(db: orm.Session=Depends(database.get_db)):
     return await dancer_services.get_all_dancers(db=db)
 
 @app.get("/dancers/{dancer_id}", response_model=dancer_schemas.Dancer)
 async def get_dancer(
     dancer_id: int, 
-    db: orm.Session=fastapi.Depends(database.get_db)
+    db: orm.Session=Depends(database.get_db)
 ):
     dancer = await dancer_services.get_dancer(dancer_id=dancer_id, db=db)
     print("dancer=", dancer)
     if dancer is None:
-        raise fastapi.HTTPException(status_code=404, detail="Dancer does not exist")
+        raise HTTPException(status_code=404, detail="Dancer does not exist")
     
     return dancer
 
 @app.delete("/dancers/{dancer_id}")
 async def delete_dancer(
     dancer_id: int,
-    db: orm.Session=fastapi.Depends(database.get_db)
+    db: orm.Session=Depends(database.get_db)
 ):
     dancer = await dancer_services.get_dancer(dancer_id=dancer_id, db=db)
     if dancer is None:
-        raise fastapi.HTTPException(status_code=404, detail="Dancer does not exist")
+        raise HTTPException(status_code=404, detail="Dancer does not exist")
 
     await dancer_services.delete_dancer(dancer, db=db)
     return "successfully deleted the dancer"
@@ -61,10 +69,10 @@ async def delete_dancer(
 async def update_dancer(
     dancer_id: int,
     dancer_data: dancer_schemas.CreateDancer,
-    db: orm.Session=fastapi.Depends(database.get_db)
+    db: orm.Session=Depends(database.get_db)
 ):
     dancer = await dancer_services.get_dancer(dancer_id=dancer_id, db=db)
     if dancer is None:
-        raise fastapi.HTTPException(status_code=404, detail="Dancer does not exist")
+        raise HTTPException(status_code=404, detail="Dancer does not exist")
 
     return await dancer_services.update_dancer(dancer_data=dancer_data, dancer=dancer, db=db)
