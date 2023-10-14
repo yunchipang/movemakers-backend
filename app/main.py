@@ -3,10 +3,9 @@ from fastapi import FastAPI, Depends, HTTPException
 
 from sqlalchemy import orm
 
-from app import config, database
+from app import database
 from app.schemas import dancer as dancer_schemas
 from app.services import dancer as dancer_services
-from app.settings import get_settings
 
 if TYPE_CHECKING:
     from sqlalchemy.orm import Session
@@ -22,13 +21,6 @@ async def startup_event():
 @app.get("/")
 async def get_root():
     return {"message": "Welcome to MoveMakers API"}
-
-# debug
-@app.get("/info")
-async def info(settings: Annotated[config.Settings, Depends(get_settings)]):
-    return {
-        "app_name": settings.app_name,
-    }
 
 @app.post("/dancers/", response_model=dancer_schemas.Dancer)
 async def create_dancer(
