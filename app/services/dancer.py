@@ -36,9 +36,9 @@ async def update_dancer(
 ) -> dancer_schemas.Dancer:
     # feed data one to one into the dancer object
     dancer.name = dancer_data.name
+    dancer.bio = dancer_data.bio
+    dancer.based_in = dancer_data.based_in
     dancer.instagram_handle = dancer_data.instagram_handle
-    dancer.rols = dancer_data.roles
-    dancer.styles = dancer_data.styles
 
     db.commit()
     db.refresh(dancer)
