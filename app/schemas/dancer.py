@@ -1,5 +1,5 @@
-from typing import List, Optional
 from pydantic import BaseModel, ConfigDict
+from typing import Optional
 
 
 # 3 schema classes, with the latter 2 inherits the first class BaseDancer
@@ -8,7 +8,7 @@ from pydantic import BaseModel, ConfigDict
 # BaseDancer includes the most basic data that can be public facing
 class BaseDancer(BaseModel):
     name: str
-    bio: str
+    bio: Optional[str] = None
     based_in: str
     instagram_handle: str
 

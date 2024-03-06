@@ -1,8 +1,9 @@
-from sqlalchemy import Column, Integer, String, Enum
+from sqlalchemy import Column, Integer, String
 
 from app.database import Base
 
-
+# models data classes define teh SQL tables
+# while schemas data classes define the API that FastAPI uses the interact with the database
 class Dancer(Base):
     __tablename__ = "dancers"
 

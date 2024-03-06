@@ -1,7 +1,7 @@
 from fastapi import FastAPI, Depends, HTTPException
 from typing import Dict
 
-from .routers import dancer
+from .routers import dancer, training
 
 from sqlalchemy.orm import Session
 
@@ -12,6 +12,8 @@ from app.services import user as user_services
 
 app = FastAPI()
 app.include_router(dancer.router, prefix="/dancers", tags=["dancers"])
+app.include_router(training.router, prefix="/trainings", tags=["trainings"])
+
 
 @app.on_event("startup")
 async def startup_event():
