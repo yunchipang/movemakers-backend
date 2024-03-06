@@ -19,7 +19,7 @@ async def create_dancer(
 ):
     return await dancer_services.create_dancer(dancer=dancer, db=db)
 
-# get dancers
+# get all dancers
 @router.get("/", response_model=List[dancer_schemas.Dancer])
 async def get_dancers(db: Session=Depends(database.get_db)):
     return await dancer_services.get_all_dancers(db=db)
@@ -31,13 +31,11 @@ async def get_dancer(
     db: Session=Depends(database.get_db)
 ):
     dancer = await dancer_services.get_dancer(dancer_id=dancer_id, db=db)
-    print("dancer=", dancer)
     if dancer is None:
         raise HTTPException(status_code=404, detail="Dancer does not exist")
-    
     return dancer
 
-# delete dancers
+# delete a dancer by id
 @router.delete("/{dancer_id}")
 async def delete_dancer(
     dancer_id: int,
@@ -50,7 +48,7 @@ async def delete_dancer(
     await dancer_services.delete_dancer(dancer, db=db)
     return "successfully deleted the dancer"
 
-# delete dancer by id
+# update a dancer by id
 @router.put("/{dancer_id}", response_model=dancer_schemas.Dancer)
 async def update_dancer(
     dancer_id: int,

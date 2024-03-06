@@ -10,10 +10,10 @@ from app.models import user as user_models
 from app.schemas import user as user_schemas
 from app.services import user as user_services
 
+
 app = FastAPI()
 app.include_router(dancer.router, prefix="/dancers", tags=["dancers"])
 app.include_router(training.router, prefix="/trainings", tags=["trainings"])
-
 
 @app.on_event("startup")
 async def startup_event():
