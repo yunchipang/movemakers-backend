@@ -8,9 +8,9 @@ from pydantic import BaseModel, ConfigDict
 # BaseDancer includes the most basic data that can be public facing
 class BaseDancer(BaseModel):
     name: str
+    bio: str
+    based_in: str
     instagram_handle: str
-    roles: Optional[List[str]] = None
-    styles: Optional[List[str]] = None
 
 class Dancer(BaseDancer):
     id: int
