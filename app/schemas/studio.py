@@ -15,10 +15,12 @@ class BaseStudio(BaseModel):
     room_count: Optional[int] = None
     since: Optional[int] = None
 
+
 class Studio(BaseStudio):
     id: int
 
     model_config = ConfigDict(from_attributes=True)
+
 
 class CreateStudio(BaseStudio):
     pass

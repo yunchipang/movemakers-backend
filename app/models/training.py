@@ -13,6 +13,7 @@ class LevelEnum(enum.Enum):
     ADVANCED = "Advanced"
     ALL_LEVELS = "All Levels"
 
+
 class StyleEnum(enum.Enum):
     AFRO = "Afro"
     BREAKING = "Breaking"
@@ -25,6 +26,7 @@ class StyleEnum(enum.Enum):
     LOCKING = "Locking"
     POPPING = "Popping"
     WAACKING = "Waacking"
+
 
 class Training(Base):
     __tablename__ = "trainings"
@@ -39,9 +41,9 @@ class Training(Base):
     time = Column(Time())
     duration = Column(Integer, default=60)
     price = Column(Integer, default=18)
-    currency = Column(String, default='USD')
+    currency = Column(String, default="USD")
     studio = Column(String)
-    flyer =  Column(String, nullable=True) # flyer is a URL to the image
+    flyer = Column(String, nullable=True)  # flyer is a URL to the image
     max_slots = Column(Integer)
     is_active = Column(Boolean)
 
