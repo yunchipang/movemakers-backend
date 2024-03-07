@@ -2,9 +2,29 @@ from sqlalchemy import Boolean, Column, Integer, String, Enum, Date, DateTime, T
 from datetime import datetime
 
 from app.database import Base
-from ..enums.level import LevelEnum
-from ..enums.style import StyleEnum
+import enum
 
+
+class LevelEnum(enum.Enum):
+    BEGINNER = "Beginner"
+    BEGINNER_OR_INTERMEDIATE = "Beginner/Intermediate"
+    INTERMEDIATE = "Intermediate"
+    INTERMEDIATE_OR_ADVANCED = "Intermediate/Advanced"
+    ADVANCED = "Advanced"
+    ALL_LEVELS = "All Levels"
+
+class StyleEnum(enum.Enum):
+    AFRO = "Afro"
+    BREAKING = "Breaking"
+    CHOREOGRAPHY = "Choreography"
+    CONTEMPORARY = "Contemporary"
+    HEELS = "Heels"
+    HIP_HOP = "Hip-hop"
+    JAZZ_FUNK = "Jazz Funk"
+    KPOP = "K-pop"
+    LOCKING = "Locking"
+    POPPING = "Popping"
+    WAACKING = "Waacking"
 
 class Training(Base):
     __tablename__ = "trainings"

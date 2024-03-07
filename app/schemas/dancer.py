@@ -8,9 +8,11 @@ from typing import Optional
 # BaseDancer includes the most basic data that can be public facing
 class BaseDancer(BaseModel):
     name: str
-    bio: Optional[str] = None
-    based_in: str
     instagram_handle: str
+    youtube_channel: str
+    bio: Optional[str] = None
+    nationality: str
+    based_in: str
 
 class Dancer(BaseDancer):
     id: int

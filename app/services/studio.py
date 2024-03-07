@@ -36,6 +36,8 @@ async def update_studio(
 ) -> studio_schemas.Studio:
     # feed data one to one into the studio object
     studio.name = studio_data.name
+    studio.instagram_handle = studio_data.instagram_handle
+    studio.youtube_channel = studio_data.youtube_channel
     studio.address = studio_data.address
     studio.email = studio_data.email
     studio.phone = studio_data.phone

@@ -2,8 +2,7 @@ from pydantic import BaseModel, ConfigDict
 from datetime import date, datetime, time
 from typing import Optional
 
-from ..enums.level import LevelEnum
-from ..enums.style import StyleEnum
+from ..models.training import LevelEnum, StyleEnum
 
 
 class TrainingBase(BaseModel):
@@ -20,7 +19,6 @@ class TrainingBase(BaseModel):
     flyer: Optional[str] = None
     max_slots: int
     is_active: bool
-
 
 class Training(TrainingBase):
     id: int
