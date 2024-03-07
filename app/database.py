@@ -12,12 +12,6 @@ SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 Base = declarative_base()
 
-# def create_enums():
-#     existing_enum_names = engine.enum_names()
-#     for enum in Base.metadata.enums.values():
-#         if enum.name not in existing_enum_names:
-#             enum.create(engine)
-
 def create_tables():
     # return database.Base.metadata.create_all(bind=database.engine)
     existing_table_names = engine.table_names()
