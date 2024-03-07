@@ -1,4 +1,6 @@
-import uuid, bcrypt, jwt
+import uuid
+import bcrypt
+import jwt
 from datetime import datetime
 
 from sqlalchemy import Column, String, LargeBinary, DateTime
