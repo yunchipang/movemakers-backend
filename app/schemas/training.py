@@ -14,17 +14,19 @@ class TrainingBase(BaseModel):
     time: time
     duration: int = 60
     price: int = 18
-    currency: str = 'USD'
+    currency: str = "USD"
     studio: str
     flyer: Optional[str] = None
     max_slots: int
     is_active: bool
+
 
 class Training(TrainingBase):
     id: int
     created_at: datetime
 
     model_config = ConfigDict(from_attributes=True)
+
 
 class CreateTraining(TrainingBase):
     pass

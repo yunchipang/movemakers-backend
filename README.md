@@ -1,15 +1,24 @@
 # movemakers-fastapi
 
-### local
+### lint & format
 
 ```
-# run server
-$ uvicorn app.main:app --reload
+❯ ruff check . --fix # run linter (ruff)
+❯ black .  # run formatter (black)
 ```
 
-### docker
+### migrations
 
 ```
-$ docker-compose build # build the image
-$ docker-compose up -d # run the container
+❯ docker compose exec web alembic init alembic # init migration directory
+❯ docker compose exec web alembic revision --autogenerate -m "<migration message>" # generate migration file
+❯ docker compose exec web alembic upgrade head # apply migrations
+```
+
+### run app in docker
+
+```
+❯ docker-compose down # shut down
+❯ docker-compose down -v # shut down and remove the volumes
+❯ docker-compose up -d --build # build & run
 ```

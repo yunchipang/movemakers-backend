@@ -8,31 +8,43 @@ if TYPE_CHECKING:
 
 
 # create a training instance in database using the training data passed in
-async def create_training(training: training_schemas.CreateTraining, db: "Session") -> training_schemas.Training:
+async def create_training(
+    training: training_schemas.CreateTraining, db: "Session"
+) -> training_schemas.Training:
     training = training_models.Training(**training.dict())
     db.add(training)
     db.commit()
     db.refresh(training)
     return training_schemas.Training.from_orm(training)
 
+
 # query database to get all trainings
 async def get_all_trainings(db: "Session") -> List[training_schemas.Training]:
     trainings = db.query(training_models.Training).all()
     return list(map(training_schemas.Training.from_orm, trainings))
 
+
 # query database for a specific training with training id
 async def get_training(training_id: int, db: "Session"):
-    training = db.query(training_models.Training).filter(training_models.Training.id == training_id).first()
+    training = (
+        db.query(training_models.Training)
+        .filter(training_models.Training.id == training_id)
+        .first()
+    )
     return training
+
 
 # delete a specific training from the database
 async def delete_training(training: training_models.Training, db: "Session"):
     db.delete(training)
     db.commit()
 
+
 # update a specific training
 async def update_training(
-        training_data: training_schemas.CreateTraining, training: training_models.Training, db: "Session"
+    training_data: training_schemas.CreateTraining,
+    training: training_models.Training,
+    db: "Session",
 ) -> training_schemas.Training:
     # feed data one to one into the training object
     training.level = training_data.level
