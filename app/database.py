@@ -1,7 +1,6 @@
-import os
-
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, declarative_base
+from sqlalchemy.dialects.postgresql import ENUM
 
 from app.settings import get_settings
 
@@ -13,8 +12,7 @@ SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 Base = declarative_base()
 
-
-def add_tables():
+def create_tables():
     # return database.Base.metadata.create_all(bind=database.engine)
     existing_table_names = engine.table_names()
     for table in Base.metadata.tables.values():

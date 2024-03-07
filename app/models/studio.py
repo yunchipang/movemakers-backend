@@ -8,6 +8,8 @@ class Studio(Base):
 
     id = Column(Integer, primary_key=True, index=True)
     name = Column(String, unique=True, index=True)
+    instagram_handle = Column(String(255), unique=True)
+    youtube_channel = Column(String(255), nullable=True)
     address = Column(String)
     email = Column(String(255))
     phone = Column(String(255))

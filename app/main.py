@@ -19,7 +19,7 @@ app.include_router(studio.router, prefix="/studios", tags=["studios"])
 @app.on_event("startup")
 async def startup_event():
     # create tables if they do not exist yet
-    database.add_tables()
+    database.create_tables()
 
 @app.get("/")
 async def get_root():

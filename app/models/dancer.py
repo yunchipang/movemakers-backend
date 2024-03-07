@@ -8,7 +8,9 @@ class Dancer(Base):
     __tablename__ = "dancers"
 
     id = Column(Integer, primary_key=True, index=True)
-    name = Column(String, index=True)
+    name = Column(String(255), index=True)
+    instagram_handle = Column(String, unique=True)
+    youtube_channel = Column(String(255), nullable=True)
+    nationality = Column(String(255))
     bio = Column(String)
-    based_in = Column(String)
-    instagram_handle = Column(String, unique=True, index=True)
+    based_in = Column(String(255))

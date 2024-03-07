@@ -4,6 +4,8 @@ from typing import Optional
 
 class BaseStudio(BaseModel):
     name: str
+    instagram_handle: str
+    youtube_channel: str
     address: str
     email: str
     phone: str
