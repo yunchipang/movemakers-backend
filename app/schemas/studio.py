@@ -1,23 +1,23 @@
-from pydantic import BaseModel, ConfigDict
-from typing import Optional
+from pydantic import BaseModel, ConfigDict, UUID4
+from typing import List, Optional
 
 
 class BaseStudio(BaseModel):
     name: str
-    instagram_handle: str
-    youtube_channel: str
     address: str
     email: str
     phone: str
     opening_hours: str
-    website: str
-    owner: Optional[str] = None
+    owner_ids: Optional[List[UUID4]] = None
     room_count: Optional[int] = None
-    since: Optional[int] = None
+    founded_in: Optional[int] = None
+    instagram: str
+    youtube: str
+    website: str
 
 
 class Studio(BaseStudio):
-    id: int
+    id: UUID4
 
     model_config = ConfigDict(from_attributes=True)
 

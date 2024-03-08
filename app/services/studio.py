@@ -25,7 +25,7 @@ async def get_all_studios(db: "Session") -> List[studio_schemas.Studio]:
 
 
 # query database for a specific studio with the studio id
-async def get_studio(studio_id: int, db: "Session"):
+async def get_studio(studio_id: str, db: "Session"):
     studio = (
         db.query(studio_models.Studio)
         .filter(studio_models.Studio.id == studio_id)
@@ -48,16 +48,16 @@ async def update_studio(
 ) -> studio_schemas.Studio:
     # feed data one to one into the studio object
     studio.name = studio_data.name
-    studio.instagram_handle = studio_data.instagram_handle
-    studio.youtube_channel = studio_data.youtube_channel
     studio.address = studio_data.address
     studio.email = studio_data.email
     studio.phone = studio_data.phone
     studio.opening_hours = studio_data.opening_hours
-    studio.website = studio_data.website
-    studio.owner = studio_data.owner
+    studio.owner_ids = studio_data.owner_ids
     studio.room_count = studio_data.room_count
-    studio.since = studio_data.since
+    studio.founded_in = studio_data.founded_in
+    studio.instagram = studio_data.instagram
+    studio.youtube = studio_data.youtube
+    studio.website = studio_data.website
 
     db.commit()
     db.refresh(studio)

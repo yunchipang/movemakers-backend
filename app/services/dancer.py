@@ -25,7 +25,7 @@ async def get_all_dancers(db: "Session") -> List[dancer_schemas.Dancer]:
 
 
 # query database for a specific dancer with the dancer id
-async def get_dancer(dancer_id: int, db: "Session"):
+async def get_dancer(dancer_id: str, db: "Session"):
     dancer = (
         db.query(dancer_models.Dancer)
         .filter(dancer_models.Dancer.id == dancer_id)
@@ -48,11 +48,11 @@ async def update_dancer(
 ) -> dancer_schemas.Dancer:
     # feed data one to one into the dancer object
     dancer.name = dancer_data.name
-    dancer.instagram_handle = dancer_data.instagram_handle
-    dancer.youtube_channel = dancer_data.youtube_channel
     dancer.bio = dancer_data.bio
     dancer.nationality = dancer_data.nationality
     dancer.based_in = dancer_data.based_in
+    dancer.instagram = dancer_data.instagram
+    dancer.youtube = dancer_data.youtube
 
     db.commit()
     db.refresh(dancer)

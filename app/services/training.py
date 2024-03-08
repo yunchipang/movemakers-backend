@@ -25,7 +25,7 @@ async def get_all_trainings(db: "Session") -> List[training_schemas.Training]:
 
 
 # query database for a specific training with training id
-async def get_training(training_id: int, db: "Session"):
+async def get_training(training_id: str, db: "Session"):
     training = (
         db.query(training_models.Training)
         .filter(training_models.Training.id == training_id)
@@ -49,14 +49,14 @@ async def update_training(
     # feed data one to one into the training object
     training.level = training_data.level
     training.style = training_data.style
-    training.instructor = training_data.instructor
+    training.instructor_ids = training_data.instructor_ids
     training.description = training_data.description
     training.date = training_data.date
     training.time = training_data.time
     training.duration = training_data.duration
     training.price = training_data.price
     training.currency = training_data.currency
-    training.studio = training_data.studio
+    training.studio_id = training_data.studio_id
     training.flyer = training_data.flyer
     training.max_slots = training_data.max_slots
     training.is_active = training_data.is_active

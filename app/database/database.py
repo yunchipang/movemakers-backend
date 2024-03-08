@@ -14,9 +14,12 @@ Base = declarative_base()
 
 def create_tables():
     # return database.Base.metadata.create_all(bind=database.engine)
+    sorted_tables = Base.metadata.sorted_tables
     existing_table_names = engine.table_names()
-    for table in Base.metadata.tables.values():
+
+    for table in sorted_tables:
         if table.name not in existing_table_names:
+            # Create each table individually
             table.create(engine)
 
 
