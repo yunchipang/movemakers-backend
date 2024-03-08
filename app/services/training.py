@@ -56,7 +56,7 @@ async def update_training(
     training.duration = training_data.duration
     training.price = training_data.price
     training.currency = training_data.currency
-    training.studio = training_data.studio
+    training.studio_id = training_data.studio_id
     training.flyer = training_data.flyer
     training.max_slots = training_data.max_slots
     training.is_active = training_data.is_active

@@ -15,7 +15,7 @@ class TrainingBase(BaseModel):
     duration: int = 60
     price: int = 18
     currency: str = "USD"
-    studio: str
+    studio_id: UUID4
     flyer: Optional[str] = None
     max_slots: int
     is_active: bool

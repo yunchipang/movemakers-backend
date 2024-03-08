@@ -61,7 +61,7 @@ class Training(Base):
     duration = Column(Integer, default=60)
     price = Column(Integer, default=18)
     currency = Column(String, default="USD")
-    studio = Column(String)
+    studio_id = Column(UUID(as_uuid=True))
     flyer = Column(String, nullable=True)  # flyer is a URL to the image
     max_slots = Column(Integer)
     is_active = Column(Boolean)
