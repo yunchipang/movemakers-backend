@@ -1,7 +1,12 @@
+import uuid
+
 from sqlalchemy import Boolean, Column, Integer, String, Enum, Date, DateTime, Time
+from sqlalchemy.orm import relationship
+from sqlalchemy.dialects.postgresql import UUID
 from datetime import datetime
 
-from app.database import Base
+from app.database.database import Base
+from app.database.associations import training_instructor_association
 import enum
 
 
@@ -31,11 +36,21 @@ class StyleEnum(enum.Enum):
 class Training(Base):
     __tablename__ = "trainings"
 
-    id = Column(Integer, primary_key=True, index=True)
+    id = Column(
+        UUID(as_uuid=True),
+        default=uuid.uuid4,
+        primary_key=True,
+        unique=True,
+        nullable=False,
+    )
     created_at = Column(DateTime, default=datetime.utcnow)
     level = Column(Enum(LevelEnum))
     style = Column(Enum(StyleEnum))
-    instructor = Column(String)
+    instructors = relationship(
+        "Dancer",
+        secondary=training_instructor_association,
+        back_populates="instructor_of",
+    )
     description = Column(String, nullable=True)
     date = Column(Date())
     time = Column(Time())

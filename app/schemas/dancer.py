@@ -1,4 +1,4 @@
-from pydantic import BaseModel, ConfigDict
+from pydantic import BaseModel, ConfigDict, UUID4
 from typing import Optional
 
 
@@ -9,15 +9,15 @@ from typing import Optional
 # BaseDancer includes the most basic data that can be public facing
 class BaseDancer(BaseModel):
     name: str
-    instagram_handle: str
-    youtube_channel: str
     bio: Optional[str] = None
     nationality: str
     based_in: str
+    instagram: str
+    youtube: Optional[str] = None
 
 
 class Dancer(BaseDancer):
-    id: int
+    id: UUID4
 
     model_config = ConfigDict(from_attributes=True)
 

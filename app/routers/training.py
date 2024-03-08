@@ -4,7 +4,7 @@ from fastapi import APIRouter, Depends, HTTPException
 
 from sqlalchemy.orm import Session
 
-from app import database
+from app.database import database
 from app.schemas import training as training_schemas
 from app.services import training as training_services
 
@@ -29,7 +29,7 @@ async def get_trainings(db: Session = Depends(database.get_db)):
 
 # get a training by id
 @router.get("/{training_id}", response_model=training_schemas.Training)
-async def get_training(training_id: int, db: Session = Depends(database.get_db)):
+async def get_training(training_id: str, db: Session = Depends(database.get_db)):
     training = await training_services.get_training(training_id=training_id, db=db)
     if training is None:
         raise HTTPException(status_code=404, detail="Training does not exist")
@@ -38,18 +38,18 @@ async def get_training(training_id: int, db: Session = Depends(database.get_db))
 
 # delete a training by id
 @router.delete("/{training_id}")
-async def delete_training(training_id: int, db: Session = Depends(database.get_db)):
+async def delete_training(training_id: str, db: Session = Depends(database.get_db)):
     training = await training_services.get_training(training_id=training_id, db=db)
     if training is None:
         raise HTTPException(status_code=404, detail="Training does not exist")
     await training_services.delete_training(training, db=db)
-    return "successfully deleted the training"
+    return "Successfully deleted the training"
 
 
 # update a training by id
 @router.put("/{training_id}", response_model=training_schemas.Training)
 async def update_training(
-    training_id: int,
+    training_id: str,
     training_data: training_schemas.CreateTraining,
     db: Session = Depends(database.get_db),
 ):

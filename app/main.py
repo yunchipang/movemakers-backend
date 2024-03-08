@@ -1,20 +1,22 @@
 from fastapi import FastAPI, Depends, HTTPException
 from typing import Dict
 
-from .routers import dancer, training, studio
+from .routers import dancer, training, studio, crew
 
 from sqlalchemy.orm import Session
 
-from app import database
+from app.database import database
 from app.models import user as user_models
 from app.schemas import user as user_schemas
 from app.services import user as user_services
 
 
 app = FastAPI()
+# register routers
 app.include_router(dancer.router, prefix="/dancers", tags=["dancers"])
 app.include_router(training.router, prefix="/trainings", tags=["trainings"])
 app.include_router(studio.router, prefix="/studios", tags=["studios"])
+app.include_router(crew.router, prefix="/crews", tags=["crews"])
 
 
 @app.on_event("startup")
