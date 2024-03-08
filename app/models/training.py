@@ -1,12 +1,20 @@
 import uuid
 
-from sqlalchemy import Boolean, Column, Integer, String, Enum, Date, DateTime, Time
-from sqlalchemy.orm import relationship
+from sqlalchemy import (
+    Boolean,
+    Column,
+    Integer,
+    String,
+    Enum,
+    Date,
+    DateTime,
+    Time,
+    ARRAY,
+)
 from sqlalchemy.dialects.postgresql import UUID
 from datetime import datetime
 
 from app.database.database import Base
-from app.database.associations import training_instructor_association
 import enum
 
 
@@ -46,11 +54,7 @@ class Training(Base):
     created_at = Column(DateTime, default=datetime.utcnow)
     level = Column(Enum(LevelEnum))
     style = Column(Enum(StyleEnum))
-    instructors = relationship(
-        "Dancer",
-        secondary=training_instructor_association,
-        back_populates="instructor_of",
-    )
+    instructor_ids = Column(ARRAY(UUID(as_uuid=True)))
     description = Column(String, nullable=True)
     date = Column(Date())
     time = Column(Time())
@@ -67,9 +71,10 @@ class Training(Base):
 
     def __repr__(self):
         """returns strings representation of model instance"""
-        instructor_names = ", ".join(
-            [str(instructor) for instructor in self.instructors]
-        )
-        return "<Training level={!r}, style={!r}, instructors={!r}>".format(
-            self.level, self.style, instructor_names
-        )
+        # instructor_names = ", ".join(
+        #     [str(instructor) for instructor in self.instructors]
+        # )
+        # return "<Training level={!r}, style={!r}, instructors={!r}>".format(
+        #     self.level, self.style, instructor_names
+        # )
+        return "<Training {id!r}>".format(id=self.id)

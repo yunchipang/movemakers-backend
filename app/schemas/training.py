@@ -8,7 +8,7 @@ from app.models.training import LevelEnum, StyleEnum
 class TrainingBase(BaseModel):
     level: LevelEnum
     style: StyleEnum
-    instructors: List[UUID4]
+    instructor_ids: List[UUID4]
     description: Optional[str] = None
     date: date
     time: time

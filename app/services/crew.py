@@ -1,8 +1,6 @@
-from fastapi import HTTPException, status
 from typing import TYPE_CHECKING, List
 
 from app.models import crew as crew_models
-from app.models import dancer as dancer_models
 from app.schemas import crew as crew_schemas
 
 
@@ -51,7 +49,7 @@ async def update_crew(
     crew.bio = crew_data.bio
     crew.based_in = crew_data.based_in
     crew.founded_in = crew_data.founded_in
-    crew.home_studio = crew_data.home_studio
+    crew.home_studio_id = crew_data.home_studio_id
     crew.styles = crew_data.styles
     crew.director_ids = crew_data.director_ids
     crew.captain_ids = crew_data.captain_ids

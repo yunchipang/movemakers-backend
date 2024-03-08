@@ -1,7 +1,6 @@
 import uuid
 
-from sqlalchemy import ARRAY, Column, Enum, Integer, String, Text, ForeignKey
-from sqlalchemy.orm import relationship
+from sqlalchemy import ARRAY, Column, Enum, Integer, String, Text
 from sqlalchemy.dialects.postgresql import UUID
 
 from app.database.database import Base
@@ -22,10 +21,7 @@ class Crew(Base):
     bio = Column(Text)
     based_in = Column(String(255))
     founded_in = Column(Integer, nullable=True)
-    # foreign key to reference the home studio
-    home_studio_id = Column(UUID(as_uuid=True), ForeignKey("studios.id"))
-    # relationship to access the home Studio object from a Crew object
-    home_studio = relationship("Studio", backref="resident_crews")
+    home_studio_id = Column(UUID(as_uuid=True))
     styles = Column(ARRAY(Enum(StyleEnum, name="style_enum")))
     director_ids = Column(ARRAY(UUID(as_uuid=True)))
     captain_ids = Column(ARRAY(UUID(as_uuid=True)))

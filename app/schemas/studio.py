@@ -8,7 +8,7 @@ class BaseStudio(BaseModel):
     email: str
     phone: str
     opening_hours: str
-    owners: Optional[List[UUID4]] = None
+    owner_ids: Optional[List[UUID4]] = None
     room_count: Optional[int] = None
     founded_in: Optional[int] = None
     instagram: str

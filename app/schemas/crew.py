@@ -9,7 +9,7 @@ class BaseCrew(BaseModel):
     bio: Optional[str] = None
     based_in: str
     founded_in: int
-    home_studio: Optional[UUID4] = None
+    home_studio_id: Optional[UUID4] = None
     styles: List[StyleEnum]
     director_ids: List[UUID4]
     captain_ids: Optional[List[UUID4]] = None

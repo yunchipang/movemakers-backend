@@ -1,11 +1,9 @@
 import uuid
 
-from sqlalchemy import Column, Integer, String
+from sqlalchemy import Column, Integer, String, ARRAY
 from sqlalchemy.dialects.postgresql import UUID
-from sqlalchemy.orm import relationship
 
 from app.database.database import Base
-from app.database.associations import studio_owner_association
 
 
 class Studio(Base):
@@ -23,9 +21,7 @@ class Studio(Base):
     email = Column(String(255))
     phone = Column(String(255))
     opening_hours = Column(String)
-    owners = relationship(
-        "Dancer", secondary=studio_owner_association, back_populates="owner_of"
-    )
+    owner_ids = Column(ARRAY(UUID(as_uuid=True)))
     room_count = Column(Integer, nullable=True)
     founded_in = Column(Integer, nullable=True)
     instagram = Column(String(255), unique=True)

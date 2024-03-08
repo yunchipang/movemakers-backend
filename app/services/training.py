@@ -49,7 +49,7 @@ async def update_training(
     # feed data one to one into the training object
     training.level = training_data.level
     training.style = training_data.style
-    training.instructors = training_data.instructors
+    training.instructor_ids = training_data.instructor_ids
     training.description = training_data.description
     training.date = training_data.date
     training.time = training_data.time

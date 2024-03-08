@@ -52,7 +52,7 @@ async def update_studio(
     studio.email = studio_data.email
     studio.phone = studio_data.phone
     studio.opening_hours = studio_data.opening_hours
-    studio.owners = studio_data.owners
+    studio.owner_ids = studio_data.owner_ids
     studio.room_count = studio_data.room_count
     studio.founded_in = studio_data.founded_in
     studio.instagram = studio_data.instagram
