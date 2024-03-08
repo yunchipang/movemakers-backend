@@ -49,3 +49,7 @@ class Dancer(Base):
     instructor_of = relationship(
         "Training", secondary=training_instructor_association, back_populates="instructors"
     )
+
+    def __repr__(self):
+        """returns strings representation of model instance"""
+        return "<Dancer {name!r}>".format(name=self.name)

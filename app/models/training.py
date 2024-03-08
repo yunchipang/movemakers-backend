@@ -64,3 +64,8 @@ class Training(Base):
 
     class Config:
         orm_mode = True
+
+    def __repr__(self):
+        """returns strings representation of model instance"""
+        instructor_names = ', '.join([str(instructor) for instructor in self.instructors])
+        return "<Training level={!r}, style={!r}, instructors={!r}>".format(self.level, self.style, instructor_names)
