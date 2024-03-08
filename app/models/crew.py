@@ -1,15 +1,10 @@
 import uuid
 
-from sqlalchemy import ARRAY, Column, Enum, Integer, String, Text
+from sqlalchemy import ARRAY, Column, Enum, Integer, String, Text, ForeignKey
 from sqlalchemy.orm import relationship
 from sqlalchemy.dialects.postgresql import UUID
 
 from app.database.database import Base
-from app.database.associations import (
-    crew_director_association,
-    crew_captain_association,
-    crew_member_association,
-)
 from .training import StyleEnum
 
 
@@ -27,17 +22,14 @@ class Crew(Base):
     bio = Column(Text)
     based_in = Column(String(255))
     founded_in = Column(Integer, nullable=True)
+    # foreign key to reference the home studio
+    home_studio_id = Column(UUID(as_uuid=True), ForeignKey("studios.id"))
+    # relationship to access the home Studio object from a Crew object
     home_studio = relationship("Studio", backref="resident_crews")
     styles = Column(ARRAY(Enum(StyleEnum, name="style_enum")))
-    directors = relationship(
-        "Dancer", secondary=crew_director_association, back_populates="director_of"
-    )
-    captains = relationship(
-        "Dancer", secondary=crew_captain_association, back_populates="captain_of"
-    )
-    members = relationship(
-        "Dancer", secondary=crew_member_association, back_populates="member_of"
-    )
+    director_ids = Column(ARRAY(UUID(as_uuid=True)))
+    captain_ids = Column(ARRAY(UUID(as_uuid=True)))
+    member_ids = Column(ARRAY(UUID(as_uuid=True)))
     rehearsal_schedules = Column(Text, nullable=True)
     instagram = Column(String(255), unique=True)
     youtube = Column(String(255), nullable=True)

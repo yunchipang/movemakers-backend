@@ -1,7 +1,7 @@
 from pydantic import BaseModel, ConfigDict, HttpUrl, UUID4
 from typing import List, Optional
 
-from ..models.training import StyleEnum
+from app.models.training import StyleEnum
 
 
 class BaseCrew(BaseModel):
@@ -11,9 +11,9 @@ class BaseCrew(BaseModel):
     founded_in: int
     home_studio: Optional[UUID4] = None
     styles: List[StyleEnum]
-    directors: List[UUID4]
-    captains: Optional[List[UUID4]]
-    members: Optional[List[UUID4]]
+    director_ids: List[UUID4]
+    captain_ids: Optional[List[UUID4]] = None
+    member_ids: Optional[List[UUID4]] = None
     rehearsal_schedules: Optional[str] = None
     instagram: str
     youtube: Optional[str] = None

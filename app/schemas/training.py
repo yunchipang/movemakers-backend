@@ -2,7 +2,7 @@ from pydantic import BaseModel, ConfigDict, UUID4
 from datetime import date, datetime, time
 from typing import List, Optional
 
-from ..models.training import LevelEnum, StyleEnum
+from app.models.training import LevelEnum, StyleEnum
 
 
 class TrainingBase(BaseModel):

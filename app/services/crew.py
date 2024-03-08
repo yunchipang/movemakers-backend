@@ -1,7 +1,10 @@
+from fastapi import HTTPException, status
 from typing import TYPE_CHECKING, List
 
 from app.models import crew as crew_models
+from app.models import dancer as dancer_models
 from app.schemas import crew as crew_schemas
+
 
 if TYPE_CHECKING:
     from sqlalchemy.orm import Session
@@ -11,6 +14,7 @@ if TYPE_CHECKING:
 async def create_crew(
     crew: crew_schemas.CreateCrew, db: "Session"
 ) -> crew_schemas.Crew:
+
     crew = crew_models.Crew(**crew.dict())
     db.add(crew)
     db.commit()
@@ -49,9 +53,9 @@ async def update_crew(
     crew.founded_in = crew_data.founded_in
     crew.home_studio = crew_data.home_studio
     crew.styles = crew_data.styles
-    crew.directors = crew_data.directors
-    crew.captains = crew_data.captains
-    crew.members = crew_data.members
+    crew.director_ids = crew_data.director_ids
+    crew.captain_ids = crew_data.captain_ids
+    crew.member_ids = crew_data.member_ids
     crew.rehearsal_schedules = crew_data.rehearsal_schedules
     crew.instagram = crew_data.instagram
     crew.youtube = crew_data.youtube

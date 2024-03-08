@@ -67,5 +67,9 @@ class Training(Base):
 
     def __repr__(self):
         """returns strings representation of model instance"""
-        instructor_names = ', '.join([str(instructor) for instructor in self.instructors])
-        return "<Training level={!r}, style={!r}, instructors={!r}>".format(self.level, self.style, instructor_names)
+        instructor_names = ", ".join(
+            [str(instructor) for instructor in self.instructors]
+        )
+        return "<Training level={!r}, style={!r}, instructors={!r}>".format(
+            self.level, self.style, instructor_names
+        )
