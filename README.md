@@ -15,6 +15,12 @@
 ❯ docker compose exec web alembic upgrade head # apply migrations
 ```
 
+### tests
+
+```
+❯ python3 -m pytest
+```
+
 ### run app in docker
 
 ```
