@@ -2,9 +2,9 @@ import enum
 
 
 class Level(enum.Enum):
-    BEGINNER = "Beginner"
-    BEGINNER_OR_INTERMEDIATE = "Beginner/Intermediate"
-    INTERMEDIATE = "Intermediate"
-    INTERMEDIATE_OR_ADVANCED = "Intermediate/Advanced"
-    ADVANCED = "Advanced"
+    BEGINNER = "Beg"
+    BEGINNER_OR_INTERMEDIATE = "Beg/Int"
+    INTERMEDIATE = "Int"
+    INTERMEDIATE_OR_ADVANCED = "Int/Adv"
+    ADVANCED = "Adv"
     ALL_LEVELS = "All Levels"
