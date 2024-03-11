@@ -1,6 +1,6 @@
 import uuid
 
-from sqlalchemy import Column, String, Text
+from sqlalchemy import Column, String, Text, Date
 from sqlalchemy.dialects.postgresql import UUID
 
 from app.database.database import Base
@@ -20,6 +20,7 @@ class Dancer(Base):
     )
     name = Column(String(255), index=True)
     bio = Column(Text)
+    date_of_birth = Column(Date, nullable=True)
     nationality = Column(String(255))
     based_in = Column(String(255))
     instagram = Column(String, unique=True)

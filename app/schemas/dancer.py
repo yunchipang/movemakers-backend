@@ -1,5 +1,6 @@
 from pydantic import BaseModel, ConfigDict, UUID4
 from typing import Optional
+from datetime import date
 
 
 # 3 schema classes, with the latter 2 inherits the first class BaseDancer
@@ -10,6 +11,7 @@ from typing import Optional
 class BaseDancer(BaseModel):
     name: str
     bio: Optional[str] = None
+    date_of_birth: Optional[date] = None
     nationality: str
     based_in: str
     instagram: str

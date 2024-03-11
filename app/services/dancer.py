@@ -49,6 +49,7 @@ async def update_dancer(
     # feed data one to one into the dancer object
     dancer.name = dancer_data.name
     dancer.bio = dancer_data.bio
+    dancer.date_of_birth = dancer_data.date_of_birth
     dancer.nationality = dancer_data.nationality
     dancer.based_in = dancer_data.based_in
     dancer.instagram = dancer_data.instagram
