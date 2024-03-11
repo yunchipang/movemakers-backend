@@ -1,6 +1,6 @@
 import uuid
 
-from sqlalchemy import ARRAY, Column, Enum, Integer, String, Text
+from sqlalchemy import ARRAY, Boolean, Column, Enum, Integer, String, Text
 from sqlalchemy.dialects.postgresql import UUID
 
 from app.database.database import Base
@@ -30,6 +30,7 @@ class Crew(Base):
     instagram = Column(String(255), unique=True)
     youtube = Column(String(255), nullable=True)
     website = Column(String(255))
+    is_active = Column(Boolean, default=True)
 
     def __repr__(self):
         """returns strings representation of model instance"""

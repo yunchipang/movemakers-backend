@@ -58,6 +58,7 @@ async def update_crew(
     crew.instagram = crew_data.instagram
     crew.youtube = crew_data.youtube
     crew.website = crew_data.website
+    crew.is_active = crew_data.is_active
 
     db.commit()
     db.refresh(crew)

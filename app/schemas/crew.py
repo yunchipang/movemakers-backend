@@ -18,7 +18,7 @@ class BaseCrew(BaseModel):
     instagram: str
     youtube: Optional[str] = None
     website: Optional[HttpUrl] = None
-
+    is_active: bool
 
 class Crew(BaseCrew):
     id: UUID4
