@@ -5,7 +5,7 @@ from .routers import dancer, training, studio, crew
 
 from sqlalchemy.orm import Session
 
-from app.database import database
+from app import database
 from app.models import user as user_models
 from app.schemas import user as user_schemas
 from app.services import user as user_services

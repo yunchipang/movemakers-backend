@@ -20,6 +20,7 @@ class BaseCrew(BaseModel):
     website: Optional[HttpUrl] = None
     is_active: bool
 
+
 class Crew(BaseCrew):
     id: UUID4
 

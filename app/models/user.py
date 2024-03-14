@@ -6,7 +6,7 @@ from datetime import datetime
 from sqlalchemy import Column, String, LargeBinary, DateTime
 from sqlalchemy.dialects.postgresql import UUID
 
-from app.database.database import Base
+from app.database import Base
 from app.settings import get_settings
 
 

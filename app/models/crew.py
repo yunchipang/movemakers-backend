@@ -3,7 +3,7 @@ import uuid
 from sqlalchemy import ARRAY, Boolean, Column, Enum, Integer, String, Text
 from sqlalchemy.dialects.postgresql import UUID
 
-from app.database.database import Base
+from app.database import Base
 from .training import StyleEnum
 
 

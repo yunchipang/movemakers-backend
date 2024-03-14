@@ -14,7 +14,7 @@ from sqlalchemy import (
 from sqlalchemy.dialects.postgresql import UUID
 from datetime import datetime
 
-from app.database.database import Base
+from app.database import Base
 import enum
 
 
