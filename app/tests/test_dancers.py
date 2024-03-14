@@ -48,6 +48,7 @@ client = TestClient(app)
 # def test_create_dancer(create_dancer):
 #     assert create_dancer["name"] == "Bada Lee 이바다"
 
+
 def test_create_dancer():
     sample_payload = {
         "name": "Bada Lee 이바다",
@@ -64,6 +65,7 @@ def test_create_dancer():
     assert "id" in data
     dancer_id = data["id"]
     print("Bada Lee 이바다 dancer_id: ", dancer_id)
+
 
 # def test_get_all_dancers():
 #     response = client.get("/dancers")
