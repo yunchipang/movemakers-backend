@@ -3,6 +3,7 @@ sample_user = {
     "password": "securepassword",
 }
 
+
 def test_signup_success(test_app):
     response = test_app.post("/signup/", json=sample_user)
     assert response.status_code == 200
