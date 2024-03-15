@@ -4,7 +4,7 @@ from fastapi import APIRouter, Depends, HTTPException
 
 from sqlalchemy.orm import Session
 
-from app.database import database
+from app import database
 from app.schemas import training as training_schemas
 from app.services import training as training_services
 

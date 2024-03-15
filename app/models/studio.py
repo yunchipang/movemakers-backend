@@ -3,7 +3,7 @@ import uuid
 from sqlalchemy import Column, Integer, String, ARRAY
 from sqlalchemy.dialects.postgresql import UUID
 
-from app.database.database import Base
+from app.database import Base
 
 
 class Studio(Base):

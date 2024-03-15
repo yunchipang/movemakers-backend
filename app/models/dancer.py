@@ -3,7 +3,7 @@ import uuid
 from sqlalchemy import Column, String, Text, Date
 from sqlalchemy.dialects.postgresql import UUID
 
-from app.database.database import Base
+from app.database import Base
 
 
 # models data classes define teh SQL tables

@@ -14,31 +14,9 @@ from sqlalchemy import (
 from sqlalchemy.dialects.postgresql import UUID
 from datetime import datetime
 
-from app.database.database import Base
-import enum
-
-
-class LevelEnum(enum.Enum):
-    BEGINNER = "Beginner"
-    BEGINNER_OR_INTERMEDIATE = "Beginner/Intermediate"
-    INTERMEDIATE = "Intermediate"
-    INTERMEDIATE_OR_ADVANCED = "Intermediate/Advanced"
-    ADVANCED = "Advanced"
-    ALL_LEVELS = "All Levels"
-
-
-class StyleEnum(enum.Enum):
-    AFRO = "Afro"
-    BREAKING = "Breaking"
-    CHOREOGRAPHY = "Choreography"
-    CONTEMPORARY = "Contemporary"
-    HEELS = "Heels"
-    HIP_HOP = "Hip-hop"
-    JAZZ_FUNK = "Jazz Funk"
-    KPOP = "K-pop"
-    LOCKING = "Locking"
-    POPPING = "Popping"
-    WAACKING = "Waacking"
+from app.database import Base
+from app.enums.level import Level
+from app.enums.style import Style
 
 
 class Training(Base):
@@ -52,8 +30,8 @@ class Training(Base):
         nullable=False,
     )
     created_at = Column(DateTime, default=datetime.utcnow)
-    level = Column(Enum(LevelEnum))
-    style = Column(Enum(StyleEnum))
+    level = Column(Enum(Level))
+    style = Column(Enum(Style))
     instructor_ids = Column(ARRAY(UUID(as_uuid=True)))
     description = Column(String, nullable=True)
     date = Column(Date())

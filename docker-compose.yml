@@ -1,7 +1,7 @@
 version: "3.8"
 
 services:
-  web:
+  app:
     build: .
     container_name: movemakers-fastapi
     command: >
@@ -13,8 +13,10 @@ services:
       - 8000:8000
     environment:
       - DATABASE_URL=postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${POSTGRES_HOST}:${POSTGRES_PORT}/${POSTGRES_DB}
+      - TEST_DATABASE_URL=postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${TEST_POSTGRES_HOST}:${POSTGRES_PORT}/${POSTGRES_DB}
     depends_on:
       - db
+      - testdb
 
   db:
     image: postgres:alpine
@@ -22,11 +24,21 @@ services:
     ports:
       - 5433:5432 # <host_port>:<container_port>
     volumes:
-      - postgres_data:/var/lib/postgresql/data/
+      - pgdata:/var/lib/postgresql/data/
     environment:
+      - POSTGRES_DB=${POSTGRES_DB}
       - POSTGRES_USER=${POSTGRES_USER}
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+
+  testdb:
+    image: postgres:alpine
+    container_name: test-movemakers-postgres
+    ports:
+      - 5434:5432 # <host_port>:<container_port>
+    environment:
       - POSTGRES_DB=${POSTGRES_DB}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
 
 volumes:
-  postgres_data:
+  pgdata:

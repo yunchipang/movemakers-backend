@@ -1,45 +1,45 @@
-name: Pytest
+# name: Pytest
 
 # on: [push]
 
-jobs:
-  build:
-    name: Pytest
-    runs-on: ubuntu-latest
+# jobs:
+#   build:
+#     name: Pytest
+#     runs-on: ubuntu-latest
 
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
+#     steps:
+#       - name: Checkout code
+#         uses: actions/checkout@v2
 
-      - name: Set up Python
-        uses: actions/setup-python@v2
-        with:
-          python-version: 3.8
+#       - name: Set up Python
+#         uses: actions/setup-python@v2
+#         with:
+#           python-version: 3.8
 
-      - name: Install dependencies
-        run: |
-          pip install -r requirements.txt
+#       - name: Install dependencies
+#         run: |
+#           pip install -r requirements.txt
 
-      - name: Set environment variables
-        run: |
-          echo "POSTGRES_USER=$POSTGRES_USER" >> $GITHUB_ENV
-          echo "POSTGRES_PASSWORD=$POSTGRES_PASSWORD" >> $GITHUB_ENV
-          echo "POSTGRES_HOST=$POSTGRES_HOST" >> $GITHUB_ENV
-          echo "POSTGRES_PORT=$POSTGRES_PORT" >> $GITHUB_ENV
-          echo "POSTGRES_DB=$POSTGRES_DB" >> $GITHUB_ENV
-          echo "DATABASE_URL=$DATABASE_URL" >> $GITHUB_ENV
-          echo "JWT_SECRET_KEY=$JWT_SECRET_KEY" >> $GITHUB_ENV
-        env:
-          POSTGRES_USER: ${{ secrets.POSTGRES_USER }}
-          POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
-          POSTGRES_HOST: ${{ secrets.POSTGRES_HOST }}
-          POSTGRES_PORT: ${{ secrets.POSTGRES_PORT }}
-          POSTGRES_DB: ${{ secrets.POSTGRES_DB }}
-          DATABASE_URL: ${{ secrets.DATABASE_URL }}
-          JWT_SECRET_KEY: ${{ secrets.JWT_SECRET_KEY }}
+#       - name: Set environment variables
+#         run: |
+#           echo "POSTGRES_USER=$POSTGRES_USER" >> $GITHUB_ENV
+#           echo "POSTGRES_PASSWORD=$POSTGRES_PASSWORD" >> $GITHUB_ENV
+#           echo "POSTGRES_HOST=$POSTGRES_HOST" >> $GITHUB_ENV
+#           echo "POSTGRES_PORT=$POSTGRES_PORT" >> $GITHUB_ENV
+#           echo "POSTGRES_DB=$POSTGRES_DB" >> $GITHUB_ENV
+#           echo "DATABASE_URL=$DATABASE_URL" >> $GITHUB_ENV
+#           echo "JWT_SECRET_KEY=$JWT_SECRET_KEY" >> $GITHUB_ENV
+#         env:
+#           POSTGRES_USER: ${{ secrets.POSTGRES_USER }}
+#           POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
+#           POSTGRES_HOST: ${{ secrets.POSTGRES_HOST }}
+#           POSTGRES_PORT: ${{ secrets.POSTGRES_PORT }}
+#           POSTGRES_DB: ${{ secrets.POSTGRES_DB }}
+#           DATABASE_URL: ${{ secrets.DATABASE_URL }}
+#           JWT_SECRET_KEY: ${{ secrets.JWT_SECRET_KEY }}
 
-      - name: Build and Run Docker Images
-        run: docker-compose up -d --build
+#       - name: Build and Run Docker Images
+#         run: docker-compose up -d --build
 
-      - name: Pytest
-        run: pytest
+#       - name: Pytest
+#         run: pytest

@@ -11,17 +11,19 @@ if TYPE_CHECKING:
 async def create_training(
     training: training_schemas.CreateTraining, db: "Session"
 ) -> training_schemas.Training:
-    training = training_models.Training(**training.dict())
+    training = training_models.Training(**training.model_dump())
     db.add(training)
     db.commit()
     db.refresh(training)
-    return training_schemas.Training.from_orm(training)
+    return training_schemas.Training.model_validate(training)
 
 
 # query database to get all trainings
 async def get_all_trainings(db: "Session") -> List[training_schemas.Training]:
     trainings = db.query(training_models.Training).all()
-    return list(map(training_schemas.Training.from_orm, trainings))
+    return [
+        training_schemas.Training.model_validate(training) for training in trainings
+    ]
 
 
 # query database for a specific training with training id

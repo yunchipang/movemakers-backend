@@ -1,10 +1,10 @@
 import uuid
 
-from sqlalchemy import ARRAY, Column, Enum, Integer, String, Text
+from sqlalchemy import ARRAY, Boolean, Column, Enum, Integer, String, Text
 from sqlalchemy.dialects.postgresql import UUID
 
-from app.database.database import Base
-from .training import StyleEnum
+from app.database import Base
+from app.enums.style import Style
 
 
 class Crew(Base):
@@ -22,7 +22,7 @@ class Crew(Base):
     based_in = Column(String(255))
     founded_in = Column(Integer, nullable=True)
     home_studio_id = Column(UUID(as_uuid=True))
-    styles = Column(ARRAY(Enum(StyleEnum, name="style_enum")))
+    styles = Column(ARRAY(Enum(Style, name="style_enum")))
     director_ids = Column(ARRAY(UUID(as_uuid=True)))
     captain_ids = Column(ARRAY(UUID(as_uuid=True)))
     member_ids = Column(ARRAY(UUID(as_uuid=True)))
@@ -30,6 +30,7 @@ class Crew(Base):
     instagram = Column(String(255), unique=True)
     youtube = Column(String(255), nullable=True)
     website = Column(String(255))
+    is_active = Column(Boolean, default=True)
 
     def __repr__(self):
         """returns strings representation of model instance"""

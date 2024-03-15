@@ -10,11 +10,11 @@ if TYPE_CHECKING:
 async def create_user(
     user: user_schemas.CreateUser, db: "Session"
 ) -> user_schemas.User:
-    user = user_models.User(**user.dict())
+    user = user_models.User(**user.model_dump())
     db.add(user)
     db.commit()
     db.refresh(user)
-    return user_schemas.User.from_orm(user)
+    return user_schemas.User.model_validate(user)
 
 
 async def get_user(email: str, db: "Session"):
