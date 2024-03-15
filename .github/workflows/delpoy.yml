@@ -1,30 +1,30 @@
-name: Deploy to DigitalOcean
+# name: Deploy to DigitalOcean
 
 # on:
-  push:
-    branches:
-      - main
+# push:
+#   branches:
+#     - main
 
-jobs:
-  deploy:
-    runs-on: ubuntu-latest
+# jobs:
+#   deploy:
+#     runs-on: ubuntu-latest
 
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
+#     steps:
+#       - name: Checkout code
+#         uses: actions/checkout@v2
 
-      - name: SSH into DigitalOcean Droplet
-        uses: appleboy/ssh-action@v1.0.0
-        with:
-          host: ${{ secrets.DROPLET_IP }}
-          username: ${{ secrets.DROPLET_USERNAME }}
-          key: ${{ secrets.SSH_PRIVATE_KEY }}
-          port: ${{ secrets.SSH_PORT }} # by default 22
-          script: |
-            cd movemakers-fastapi
-            docker compose down
-            docker compose pull
-            docker compose up -d --build
-            sleep 10
-            docker compose exec web alembic revision --autogenerate
-            docker compose exec web alembic upgrade head
+#       - name: SSH into DigitalOcean Droplet
+#         uses: appleboy/ssh-action@v1.0.0
+#         with:
+#           host: ${{ secrets.DROPLET_IP }}
+#           username: ${{ secrets.DROPLET_USERNAME }}
+#           key: ${{ secrets.SSH_PRIVATE_KEY }}
+#           port: ${{ secrets.SSH_PORT }} # by default 22
+#           script: |
+#             cd movemakers-fastapi
+#             docker compose down
+#             docker compose pull
+#             docker compose up -d --build
+#             sleep 10
+#             docker compose exec web alembic revision --autogenerate
+#             docker compose exec web alembic upgrade head
