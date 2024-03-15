@@ -44,5 +44,5 @@ class User(Base):
     def generate_token(self) -> dict:
         """generate access token for user"""
         return {
-            "access_token": jwt.encode({"email": self.email}, settings.jwt_secret_key)
+            "access_token": jwt.encode({"email": self.email}, settings.JWT_SECRET_KEY)
         }
