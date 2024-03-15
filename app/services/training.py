@@ -11,7 +11,7 @@ if TYPE_CHECKING:
 async def create_training(
     training: training_schemas.CreateTraining, db: "Session"
 ) -> training_schemas.Training:
-    training = training_models.Training(**training.dict())
+    training = training_models.Training(**training.model_dump())
     db.add(training)
     db.commit()
     db.refresh(training)

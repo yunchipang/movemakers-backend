@@ -13,7 +13,7 @@ async def create_crew(
     crew: crew_schemas.CreateCrew, db: "Session"
 ) -> crew_schemas.Crew:
 
-    crew = crew_models.Crew(**crew.dict())
+    crew = crew_models.Crew(**crew.model_dump())
     db.add(crew)
     db.commit()
     db.refresh(crew)

@@ -11,7 +11,7 @@ if TYPE_CHECKING:
 async def create_studio(
     studio: studio_schemas.CreateStudio, db: "Session"
 ) -> studio_schemas.Studio:
-    studio = studio_models.Studio(**studio.dict())
+    studio = studio_models.Studio(**studio.model_dump())
     db.add(studio)
     db.commit()
     db.refresh(studio)

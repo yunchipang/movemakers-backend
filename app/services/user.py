@@ -10,7 +10,7 @@ if TYPE_CHECKING:
 async def create_user(
     user: user_schemas.CreateUser, db: "Session"
 ) -> user_schemas.User:
-    user = user_models.User(**user.dict())
+    user = user_models.User(**user.model_dump())
     db.add(user)
     db.commit()
     db.refresh(user)

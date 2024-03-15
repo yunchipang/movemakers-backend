@@ -11,17 +11,17 @@ if TYPE_CHECKING:
 async def create_dancer(
     dancer: dancer_schemas.CreateDancer, db: "Session"
 ) -> dancer_schemas.Dancer:
-    dancer = dancer_models.Dancer(**dancer.dict())
+    dancer = dancer_models.Dancer(**dancer.model_dump())
     db.add(dancer)
     db.commit()
     db.refresh(dancer)
-    return dancer_schemas.Dancer.from_orm(dancer)
+    return dancer_schemas.Dancer.model_validate(dancer)
 
 
 # query database to get all dancers
 async def get_all_dancers(db: "Session") -> List[dancer_schemas.Dancer]:
     dancers = db.query(dancer_models.Dancer).all()
-    return list(map(dancer_schemas.Dancer.from_orm, dancers))
+    return [dancer_schemas.Dancer.model_validate(dancer) for dancer in dancers]
 
 
 # query database for a specific dancer with the dancer id
@@ -58,4 +58,4 @@ async def update_dancer(
     db.commit()
     db.refresh(dancer)
 
-    return dancer_schemas.Dancer.from_orm(dancer)
+    return dancer_schemas.Dancer.model_validate(dancer)

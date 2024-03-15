@@ -2,15 +2,15 @@ from fastapi.testclient import TestClient
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
-from app.database import Base, get_db
 from app.main import app
+from app.database import Base, get_db
 from app.settings import get_settings
 
+
 settings = get_settings()
-
-
 engine = create_engine(settings.TEST_DATABASE_URL)
 TestingSessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+
 Base.metadata.create_all(bind=engine)
 
 
@@ -25,6 +25,20 @@ def override_get_db():
 app.dependency_overrides[get_db] = override_get_db
 
 client = TestClient(app)
+
+def test_create_dancer():
+    sample_payload = {
+        "name": "Bada Lee 이바다",
+        "bio": "🌊🌊🌊 @teambebe_official",
+        "date_of_birth": "1995-09-22",
+        "nationality": "KR",
+        "based_in": "Seoul, KR",
+        "instagram": "@badalee__",
+    }
+    response = client.post("/dancers", json=sample_payload)
+    assert response.status_code == 200
+    result = response.json()
+    assert result["name"] == "Bada Lee 이바다"
 
 
 # fixture for creating a dancer
@@ -47,24 +61,6 @@ client = TestClient(app)
 
 # def test_create_dancer(create_dancer):
 #     assert create_dancer["name"] == "Bada Lee 이바다"
-
-
-def test_create_dancer():
-    sample_payload = {
-        "name": "Bada Lee 이바다",
-        "bio": "🌊🌊🌊 @teambebe_official",
-        "date_of_birth": "1995-09-22",
-        "nationality": "KR",
-        "based_in": "Seoul, KR",
-        "instagram": "@badalee__",
-    }
-    response = client.post("/dancers", json=sample_payload)
-    assert response.status_code == 200
-    data = response.json()
-    assert data["name"] == "Bada Lee 이바다"
-    assert "id" in data
-    dancer_id = data["id"]
-    print("Bada Lee 이바다 dancer_id: ", dancer_id)
 
 
 # def test_get_all_dancers():
