@@ -25,6 +25,8 @@ class Dancer(Base):
     based_in = Column(String(255))
     instagram = Column(String, unique=True)
     youtube = Column(String(255), nullable=True)
+    agency = Column(String(255), nullable=True)
+    contact_email = Column(String(255), nullable=True)
 
     def __repr__(self):
         """returns strings representation of model instance"""

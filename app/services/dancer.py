@@ -48,6 +48,8 @@ async def update_dancer(
     dancer.based_in = dancer_data.based_in
     dancer.instagram = dancer_data.instagram
     dancer.youtube = dancer_data.youtube
+    dancer.agency = dancer_data.agency
+    dancer.contact_email = dancer_data.contact_email
 
     db.commit()
     db.refresh(dancer)
