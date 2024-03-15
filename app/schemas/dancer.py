@@ -16,6 +16,8 @@ class BaseDancer(BaseModel):
     based_in: str
     instagram: str
     youtube: Optional[str] = None
+    agency: Optional[str] = None
+    contact_email: Optional[str] = None
 
 
 class Dancer(BaseDancer):
