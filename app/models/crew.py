@@ -4,7 +4,7 @@ from sqlalchemy import ARRAY, Boolean, Column, Enum, Integer, String, Text
 from sqlalchemy.dialects.postgresql import UUID
 
 from app.database import Base
-from .training import StyleEnum
+from app.enums.style import Style
 
 
 class Crew(Base):
@@ -22,7 +22,7 @@ class Crew(Base):
     based_in = Column(String(255))
     founded_in = Column(Integer, nullable=True)
     home_studio_id = Column(UUID(as_uuid=True))
-    styles = Column(ARRAY(Enum(StyleEnum, name="style_enum")))
+    styles = Column(ARRAY(Enum(Style, name="style_enum")))
     director_ids = Column(ARRAY(UUID(as_uuid=True)))
     captain_ids = Column(ARRAY(UUID(as_uuid=True)))
     member_ids = Column(ARRAY(UUID(as_uuid=True)))

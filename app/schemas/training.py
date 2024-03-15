@@ -2,12 +2,13 @@ from pydantic import BaseModel, ConfigDict, UUID4
 from datetime import date, datetime, time
 from typing import List, Optional
 
-from app.models.training import LevelEnum, StyleEnum
+from app.enums.level import Level
+from app.enums.style import Style
 
 
 class TrainingBase(BaseModel):
-    level: LevelEnum
-    style: StyleEnum
+    level: Level
+    style: Style
     instructor_ids: List[UUID4]
     description: Optional[str] = None
     date: date

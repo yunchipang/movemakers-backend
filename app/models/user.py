@@ -3,7 +3,7 @@ import bcrypt
 import jwt
 from datetime import datetime
 
-from sqlalchemy import Column, String, LargeBinary, DateTime
+from sqlalchemy import Column, LargeBinary, String, DateTime
 from sqlalchemy.dialects.postgresql import UUID
 
 from app.database import Base

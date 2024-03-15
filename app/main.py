@@ -37,7 +37,7 @@ async def signup(
     db: Session = Depends(database.get_db),
 ):
     # check duplicated email
-    existing_user = user_services.get_user(email=user.email, db=db)
+    existing_user = await user_services.get_user(email=user.email, db=db)
     if existing_user:
         raise HTTPException(status_code=400, detail="Email is already in use.")
 
