@@ -14,7 +14,7 @@ async def create_user(
     db.add(user)
     db.commit()
     db.refresh(user)
-    return user_schemas.User.from_orm(user)
+    return user_schemas.User.model_validate(user)
 
 
 async def get_user(email: str, db: "Session"):

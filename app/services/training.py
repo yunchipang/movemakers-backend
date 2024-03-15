@@ -15,14 +15,13 @@ async def create_training(
     db.add(training)
     db.commit()
     db.refresh(training)
-    return training_schemas.Training.from_orm(training)
+    return training_schemas.Training.model_validate(training)
 
 
 # query database to get all trainings
 async def get_all_trainings(db: "Session") -> List[training_schemas.Training]:
     trainings = db.query(training_models.Training).all()
-    return list(map(training_schemas.Training.from_orm, trainings))
-
+    return [training_schemas.Training.model_validate(training) for training in trainings]
 
 # query database for a specific training with training id
 async def get_training(training_id: str, db: "Session"):

@@ -17,13 +17,13 @@ async def create_crew(
     db.add(crew)
     db.commit()
     db.refresh(crew)
-    return crew_schemas.Crew.from_orm(crew)
+    return crew_schemas.Crew.model_validate(crew)
 
 
 # query database to get all crews
 async def get_all_crews(db: "Session") -> List[crew_schemas.Crew]:
     crews = db.query(crew_models.Crew).all()
-    return list(map(crew_schemas.Crew.from_orm, crews))
+    return [crew_schemas.Crew.model_validate(crew) for crew in crews]
 
 
 # query database for a specific crew with the crew id
@@ -63,4 +63,4 @@ async def update_crew(
     db.commit()
     db.refresh(crew)
 
-    return crew_schemas.Crew.from_orm(crew)
+    return crew_schemas.Crew.model_validate(crew)

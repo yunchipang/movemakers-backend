@@ -15,13 +15,13 @@ async def create_studio(
     db.add(studio)
     db.commit()
     db.refresh(studio)
-    return studio_schemas.Studio.from_orm(studio)
+    return studio_schemas.Studio.model_validate(studio)
 
 
 # query database to get all studios
 async def get_all_studios(db: "Session") -> List[studio_schemas.Studio]:
     studios = db.query(studio_models.Studio).all()
-    return list(map(studio_schemas.Studio.from_orm, studios))
+    return [studio_schemas.Studio.model_validate(studio) for studio in studios]
 
 
 # query database for a specific studio with the studio id
@@ -62,4 +62,4 @@ async def update_studio(
     db.commit()
     db.refresh(studio)
 
-    return studio_schemas.Studio.from_orm(studio)
+    return studio_schemas.Studio.model_validate(studio)
