@@ -21,7 +21,9 @@ async def create_training(
 # query database to get all trainings
 async def get_all_trainings(db: "Session") -> List[training_schemas.Training]:
     trainings = db.query(training_models.Training).all()
-    return [training_schemas.Training.model_validate(training) for training in trainings]
+    return [
+        training_schemas.Training.model_validate(training) for training in trainings
+    ]
 
 
 # query database for a specific training with training id

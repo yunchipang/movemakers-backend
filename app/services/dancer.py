@@ -34,12 +34,6 @@ async def get_dancer(dancer_id: str, db: "Session"):
     return dancer
 
 
-# delete a specific dancer from the database
-async def delete_dancer(dancer: dancer_models.Dancer, db: "Session"):
-    db.delete(dancer)
-    db.commit()
-
-
 # update a specific dancer in the database
 async def update_dancer(
     dancer_data: dancer_schemas.CreateDancer,
@@ -59,3 +53,9 @@ async def update_dancer(
     db.refresh(dancer)
 
     return dancer_schemas.Dancer.model_validate(dancer)
+
+
+# delete a specific dancer from the database
+async def delete_dancer(dancer: dancer_models.Dancer, db: "Session"):
+    db.delete(dancer)
+    db.commit()
