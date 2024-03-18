@@ -51,14 +51,15 @@ async def update_training(
     # feed data one to one into the training object
     training.level = training_data.level
     training.style = training_data.style
-    training.instructor_ids = training_data.instructor_ids
     training.description = training_data.description
     training.date = training_data.date
     training.time = training_data.time
     training.duration = training_data.duration
     training.price = training_data.price
     training.currency = training_data.currency
-    training.studio_id = training_data.studio_id
     training.flyer = training_data.flyer
-    training.max_slots = training_data.max_slots
+    training.capacity = training_data.capacity
     training.is_active = training_data.is_active
+
+    training.studio_id = training_data.studio_id
+    training.instructors = training_data.instructors

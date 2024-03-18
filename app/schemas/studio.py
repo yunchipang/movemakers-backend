@@ -1,5 +1,6 @@
-from pydantic import BaseModel, ConfigDict, UUID4
-from typing import List, Optional
+from pydantic import BaseModel, UUID4
+from typing import Optional
+from app.models.dancer import Dancer
 
 
 class BaseStudio(BaseModel):
@@ -8,18 +9,20 @@ class BaseStudio(BaseModel):
     email: str
     phone: str
     opening_hours: str
-    owner_ids: Optional[List[UUID4]] = None
+    owners: Optional[Dancer] = None
     room_count: Optional[int] = None
     founded_in: Optional[int] = None
     instagram: str
     youtube: str
     website: str
 
+    class Config:
+        from_attributes = True
+        arbitrary_types_allowed = True
+
 
 class Studio(BaseStudio):
     id: UUID4
-
-    model_config = ConfigDict(from_attributes=True)
 
 
 class CreateStudio(BaseStudio):

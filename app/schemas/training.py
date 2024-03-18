@@ -1,33 +1,37 @@
-from pydantic import BaseModel, ConfigDict, UUID4
+from pydantic import BaseModel, UUID4
 from datetime import date, datetime, time
 from typing import List, Optional
 
 from app.enums.level import Level
 from app.enums.style import Style
+from app.models.dancer import Dancer
+from app.models.studio import Studio
 
 
-class TrainingBase(BaseModel):
+class BaseTraining(BaseModel):
     level: Level
     style: Style
-    instructor_ids: List[UUID4]
     description: Optional[str] = None
     date: date
     time: time
     duration: int = 60
     price: int = 18
     currency: str = "USD"
-    studio_id: UUID4
     flyer: Optional[str] = None
-    max_slots: int
-    is_active: bool
+    capacity: int
+    is_active: bool = True
+
+    class Config:
+        from_attributes = True
+        arbitrary_types_allowed = True
 
 
-class Training(TrainingBase):
+class Training(BaseTraining):
     id: UUID4
     created_at: datetime
+    instructors: List[Dancer]
+    studio: Studio
 
-    model_config = ConfigDict(from_attributes=True)
 
-
-class CreateTraining(TrainingBase):
+class CreateTraining(BaseTraining):
     pass

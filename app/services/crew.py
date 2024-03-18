@@ -49,11 +49,10 @@ async def update_crew(
     crew.bio = crew_data.bio
     crew.based_in = crew_data.based_in
     crew.founded_in = crew_data.founded_in
-    crew.home_studio_id = crew_data.home_studio_id
+    crew.home_studio = crew_data.home_studio
     crew.styles = crew_data.styles
-    crew.director_ids = crew_data.director_ids
-    crew.captain_ids = crew_data.captain_ids
-    crew.member_ids = crew_data.member_ids
+    crew.leader = crew_data.leader
+    crew.members = crew_data.members
     crew.rehearsal_schedules = crew_data.rehearsal_schedules
     crew.instagram = crew_data.instagram
     crew.youtube = crew_data.youtube

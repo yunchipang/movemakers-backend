@@ -1,7 +1,9 @@
-from pydantic import BaseModel, ConfigDict, HttpUrl, UUID4
+from pydantic import BaseModel, HttpUrl, UUID4
 from typing import List, Optional
 
 from app.enums.style import Style
+from app.models.dancer import Dancer
+from app.models.studio import Studio
 
 
 class BaseCrew(BaseModel):
@@ -9,22 +11,23 @@ class BaseCrew(BaseModel):
     bio: Optional[str] = None
     based_in: str
     founded_in: int
-    home_studio_id: Optional[UUID4] = None
+    home_studio: Optional[Studio] = None
+    leader: Dancer
+    members: List[Dancer]
     styles: List[Style]
-    director_ids: List[UUID4]
-    captain_ids: Optional[List[UUID4]] = None
-    member_ids: Optional[List[UUID4]] = None
     rehearsal_schedules: Optional[str] = None
     instagram: str
     youtube: Optional[str] = None
     website: Optional[HttpUrl] = None
     is_active: bool
 
+    class Config:
+        from_attributes = True
+        arbitrary_types_allowed = True
+
 
 class Crew(BaseCrew):
     id: UUID4
-
-    model_config = ConfigDict(from_attributes=True)
 
 
 class CreateCrew(BaseCrew):

@@ -3,20 +3,22 @@ import uuid
 from sqlalchemy import (
     Boolean,
     Column,
+    ForeignKey,
     Integer,
     String,
     Enum,
     Date,
     DateTime,
     Time,
-    ARRAY,
 )
 from sqlalchemy.dialects.postgresql import UUID
+from sqlalchemy.orm import relationship
 from datetime import datetime
 
 from app.database import Base
 from app.enums.level import Level
 from app.enums.style import Style
+from app.association import training_instructor_association
 
 
 class Training(Base):
@@ -32,20 +34,23 @@ class Training(Base):
     created_at = Column(DateTime, default=datetime.utcnow)
     level = Column(Enum(Level))
     style = Column(Enum(Style))
-    instructor_ids = Column(ARRAY(UUID(as_uuid=True)))
     description = Column(String, nullable=True)
     date = Column(Date())
     time = Column(Time())
     duration = Column(Integer, default=60)
     price = Column(Integer, default=18)
     currency = Column(String, default="USD")
-    studio_id = Column(UUID(as_uuid=True))
     flyer = Column(String, nullable=True)  # flyer is a URL to the image
-    max_slots = Column(Integer)
+    capacity = Column(Integer)
     is_active = Column(Boolean)
 
-    class Config:
-        orm_mode = True
+    studio_id = Column(UUID(as_uuid=True), ForeignKey("studios.id"), nullable=True)
+    studio = relationship("Studio")
+
+    # relationship to the Dancer model
+    instructors = relationship(
+        "Dancer", secondary=training_instructor_association, back_populates="instructed_trainings"
+    )
 
     def __repr__(self):
         """returns strings representation of model instance"""

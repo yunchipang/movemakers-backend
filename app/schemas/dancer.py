@@ -1,4 +1,4 @@
-from pydantic import BaseModel, ConfigDict, UUID4
+from pydantic import BaseModel, UUID4
 from typing import Optional
 from datetime import date
 
@@ -8,6 +8,7 @@ from datetime import date
 
 
 # BaseDancer includes the most basic data that can be public facing
+# the foundational model that includes the most basic and common fields that are required across multiple endpoints or operations
 class BaseDancer(BaseModel):
     name: str
     bio: Optional[str] = None
@@ -19,11 +20,14 @@ class BaseDancer(BaseModel):
     agency: Optional[str] = None
     contact_email: Optional[str] = None
 
+    class Config:
+        from_attributes = True
+        arbitrary_types_allowed = True
 
+
+# extends BaseDancer by adding fields that are specific
 class Dancer(BaseDancer):
     id: UUID4
-
-    model_config = ConfigDict(from_attributes=True)
 
 
 class CreateDancer(BaseDancer):
