@@ -45,7 +45,7 @@ class Training(Base):
     is_active = Column(Boolean)
 
     studio_id = Column(UUID(as_uuid=True), ForeignKey("studios.id"), nullable=True)
-    studio = relationship("Studio")
+    studio = relationship("Studio", back_populates="trainings")
 
     # relationship to the Dancer model
     instructors = relationship(
@@ -60,4 +60,4 @@ class Training(Base):
         # return "<Training level={!r}, style={!r}, instructors={!r}>".format(
         #     self.level, self.style, instructor_names
         # )
-        return "<Training {id!r}>".format(id=self.id)
+        return f"<Training {self.id!r}>"

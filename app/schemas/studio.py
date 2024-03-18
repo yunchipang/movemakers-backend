@@ -1,4 +1,4 @@
-from pydantic import BaseModel, UUID4
+from pydantic import BaseModel, ConfigDict, UUID4
 from typing import Optional
 from app.models.dancer import Dancer
 
@@ -16,9 +16,7 @@ class BaseStudio(BaseModel):
     youtube: str
     website: str
 
-    class Config:
-        from_attributes = True
-        arbitrary_types_allowed = True
+    model_config = ConfigDict(from_attributes=True, arbitrary_types_allowed=True)
 
 
 class Studio(BaseStudio):

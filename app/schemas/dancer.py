@@ -1,4 +1,4 @@
-from pydantic import BaseModel, UUID4
+from pydantic import BaseModel, ConfigDict, UUID4
 from typing import Optional
 from datetime import date
 
@@ -20,9 +20,7 @@ class BaseDancer(BaseModel):
     agency: Optional[str] = None
     contact_email: Optional[str] = None
 
-    class Config:
-        from_attributes = True
-        arbitrary_types_allowed = True
+    model_config = ConfigDict(from_attributes=True, arbitrary_types_allowed=True)
 
 
 # extends BaseDancer by adding fields that are specific

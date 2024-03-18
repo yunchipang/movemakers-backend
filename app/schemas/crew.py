@@ -1,4 +1,4 @@
-from pydantic import BaseModel, HttpUrl, UUID4
+from pydantic import BaseModel, ConfigDict, HttpUrl, UUID4
 from typing import List, Optional
 
 from app.enums.style import Style
@@ -21,9 +21,7 @@ class BaseCrew(BaseModel):
     website: Optional[HttpUrl] = None
     is_active: bool
 
-    class Config:
-        from_attributes = True
-        arbitrary_types_allowed = True
+    model_config = ConfigDict(from_attributes=True, arbitrary_types_allowed=True)
 
 
 class Crew(BaseCrew):

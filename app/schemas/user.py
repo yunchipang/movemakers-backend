@@ -1,13 +1,11 @@
-from pydantic import BaseModel, Field, EmailStr, UUID4
+from pydantic import BaseModel, ConfigDict, Field, EmailStr, UUID4
 
 
 # user
 class BaseUser(BaseModel):
     email: EmailStr
 
-    class Config:
-        from_attributes = True
-        arbitrary_types_allowed = True
+    model_config = ConfigDict(from_attributes=True, arbitrary_types_allowed=True)
 
 
 class User(BaseUser):

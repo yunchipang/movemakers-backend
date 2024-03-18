@@ -1,4 +1,4 @@
-from pydantic import BaseModel, UUID4
+from pydantic import BaseModel, ConfigDict, UUID4
 from datetime import date, datetime, time
 from typing import List, Optional
 
@@ -21,9 +21,7 @@ class BaseTraining(BaseModel):
     capacity: int
     is_active: bool = True
 
-    class Config:
-        from_attributes = True
-        arbitrary_types_allowed = True
+    model_config = ConfigDict(from_attributes=True, arbitrary_types_allowed=True)
 
 
 class Training(BaseTraining):
