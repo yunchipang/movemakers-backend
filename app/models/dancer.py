@@ -5,7 +5,7 @@ from sqlalchemy.orm import relationship
 from sqlalchemy.dialects.postgresql import UUID
 
 from app.database import Base
-from app.association import studio_owner_association
+from app.association import studio_owner_association, training_instructor_association
 
 
 # models data classes define teh SQL tables
@@ -32,6 +32,11 @@ class Dancer(Base):
 
     owned_studios = relationship(
         "Studio", secondary=studio_owner_association, back_populates="owners"
+    )
+    instructed_trainings = relationship(
+        "Training",
+        secondary=training_instructor_association,
+        back_populates="instructors",
     )
 
     def __repr__(self):
