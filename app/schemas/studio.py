@@ -28,4 +28,15 @@ class CreateStudio(BaseStudio):
     owner_ids: Optional[List[UUID4]] = []
 
 
-# todo: class UpdateStudio(BaseStudio)
+class UpdateStudio(BaseStudio):
+    name: Optional[str] = None
+    address: Optional[str] = None
+    email: Optional[str] = None
+    phone: Optional[str] = None
+    opening_hours: Optional[str] = None
+    room_count: Optional[int] = None
+    founded_in: Optional[int] = None
+    instagram: Optional[str] = None
+    youtube: Optional[str] = None
+    website: Optional[str] = None
+    owner_ids: Optional[List[UUID4]] = []

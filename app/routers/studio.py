@@ -51,13 +51,12 @@ async def delete_studio(studio_id: str, db: Session = Depends(database.get_db)):
 @router.put("/{studio_id}", response_model=studio_schemas.Studio)
 async def update_studio(
     studio_id: str,
-    studio_data: studio_schemas.CreateStudio,
+    studio_data: studio_schemas.UpdateStudio,
     db: Session = Depends(database.get_db),
 ):
-    studio = await studio_services.get_studio(studio_id=studio_id, db=db)
-    if studio is None:
-        raise HTTPException(status_code=404, detail="Studio does not exist")
-
-    return await studio_services.update_studio(
-        studio_data=studio_data, studio=studio, db=db
+    updated_studio = await studio_services.update_studio(
+        studio_id=studio_id, studio_data=studio_data, db=db
     )
+    if updated_studio is None:
+        raise HTTPException(status_code=404, detail="Studio not found")
+    return updated_studio
