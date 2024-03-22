@@ -18,7 +18,7 @@ async def create_studio(
 
     # exclude owner_ids from studio
     owner_ids: List[uuid.UUID] = studio.owner_ids if studio.owner_ids else []
-    studio_data = studio.dict(exclude={"owner_ids"})
+    studio_data = studio.model_dump(exclude={"owner_ids"})
 
     # create the studio instance without the owners
     new_studio = studio_models.Studio(**studio_data)
@@ -78,7 +78,7 @@ async def update_studio(
         raise Exception("Studio not found")
 
     # apply the updates to the studio, skipping any None values
-    for k, v in studio_data.dict(exclude_unset=True).items():
+    for k, v in studio_data.model_dump(exclude_unset=True).items():
         if k != "owner_ids" and hasattr(studio, k):
             setattr(studio, k, v)
 
