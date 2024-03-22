@@ -3,7 +3,7 @@ version: "3.8"
 services:
   app:
     build: .
-    container_name: movemakers-fastapi
+    container_name: app
     command: >
       bash -c 'while !</dev/tcp/db/5432; do sleep 1; done;
       uvicorn app.main:app --host 0.0.0.0 --reload'
@@ -20,7 +20,7 @@ services:
 
   db:
     image: postgres:alpine
-    container_name: movemakers-postgres
+    container_name: db
     ports:
       - 5433:5432 # <host_port>:<container_port>
     volumes:
@@ -32,7 +32,7 @@ services:
 
   testdb:
     image: postgres:alpine
-    container_name: test-movemakers-postgres
+    container_name: testdb
     ports:
       - 5434:5432 # <host_port>:<container_port>
     environment:
