@@ -19,11 +19,11 @@ class BaseDancer(BaseModel):
     agency: Optional[str] = None
     contact_email: Optional[str] = None
 
+    model_config = ConfigDict(from_attributes=True)
+
 
 class Dancer(BaseDancer):
     id: UUID4
-
-    model_config = ConfigDict(from_attributes=True)
 
 
 class CreateDancer(BaseDancer):
