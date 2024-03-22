@@ -1,9 +1,11 @@
 import uuid
 
 from sqlalchemy import Column, String, Text, Date
+from sqlalchemy.orm import relationship
 from sqlalchemy.dialects.postgresql import UUID
 
 from app.database import Base
+from app.association import studio_owner_association
 
 
 # models data classes define teh SQL tables
@@ -27,6 +29,10 @@ class Dancer(Base):
     youtube = Column(String(255), nullable=True)
     agency = Column(String(255), nullable=True)
     contact_email = Column(String(255), nullable=True)
+
+    owned_studios = relationship(
+        "Studio", secondary=studio_owner_association, back_populates="owners"
+    )
 
     def __repr__(self):
         """returns strings representation of model instance"""

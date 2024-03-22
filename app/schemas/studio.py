@@ -1,5 +1,6 @@
 from pydantic import BaseModel, ConfigDict, UUID4
 from typing import List, Optional
+from app.schemas.dancer import Dancer
 
 
 class BaseStudio(BaseModel):
@@ -8,7 +9,6 @@ class BaseStudio(BaseModel):
     email: str
     phone: str
     opening_hours: str
-    owner_ids: Optional[List[UUID4]] = None
     room_count: Optional[int] = None
     founded_in: Optional[int] = None
     instagram: str
@@ -18,9 +18,14 @@ class BaseStudio(BaseModel):
     model_config = ConfigDict(from_attributes=True)
 
 
+# serves as the response model for endpoints querying studio details
 class Studio(BaseStudio):
     id: UUID4
+    owners: List[Dancer] = []
 
 
 class CreateStudio(BaseStudio):
-    pass
+    owner_ids: Optional[List[UUID4]] = []
+
+
+# todo: class UpdateStudio(BaseStudio)
