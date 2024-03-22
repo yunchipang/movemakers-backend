@@ -7,9 +7,9 @@ class BaseUser(BaseModel):
 
     model_config = ConfigDict(from_attributes=True)
 
+
 class User(BaseUser):
     id: UUID4
-
 
 
 class CreateUser(BaseUser):

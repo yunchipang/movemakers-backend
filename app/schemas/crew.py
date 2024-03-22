@@ -22,9 +22,9 @@ class BaseCrew(BaseModel):
 
     model_config = ConfigDict(from_attributes=True)
 
+
 class Crew(BaseCrew):
     id: UUID4
-
 
 
 class CreateCrew(BaseCrew):

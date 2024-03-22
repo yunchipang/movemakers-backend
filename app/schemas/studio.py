@@ -17,9 +17,9 @@ class BaseStudio(BaseModel):
 
     model_config = ConfigDict(from_attributes=True)
 
+
 class Studio(BaseStudio):
     id: UUID4
-
 
 
 class CreateStudio(BaseStudio):
