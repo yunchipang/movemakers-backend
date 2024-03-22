@@ -20,13 +20,14 @@ class TrainingBase(BaseModel):
     flyer: Optional[str] = None
     max_slots: int
     is_active: bool
+    
+    model_config = ConfigDict(from_attributes=True)
 
 
 class Training(TrainingBase):
     id: UUID4
     created_at: datetime
 
-    model_config = ConfigDict(from_attributes=True)
 
 
 class CreateTraining(TrainingBase):

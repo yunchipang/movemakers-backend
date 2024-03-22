@@ -15,11 +15,11 @@ class BaseStudio(BaseModel):
     youtube: str
     website: str
 
+    model_config = ConfigDict(from_attributes=True)
 
 class Studio(BaseStudio):
     id: UUID4
 
-    model_config = ConfigDict(from_attributes=True)
 
 
 class CreateStudio(BaseStudio):

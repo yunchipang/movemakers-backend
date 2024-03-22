@@ -20,11 +20,11 @@ class BaseCrew(BaseModel):
     website: Optional[HttpUrl] = None
     is_active: bool
 
+    model_config = ConfigDict(from_attributes=True)
 
 class Crew(BaseCrew):
     id: UUID4
 
-    model_config = ConfigDict(from_attributes=True)
 
 
 class CreateCrew(BaseCrew):
