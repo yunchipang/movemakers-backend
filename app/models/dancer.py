@@ -1,11 +1,12 @@
 import uuid
 
-from sqlalchemy import Column, String, Text, Date
+from sqlalchemy import Column, Date, Enum, String, Text
 from sqlalchemy.orm import relationship
 from sqlalchemy.dialects.postgresql import UUID
 
 from app.database import Base
 from app.association import studio_owner_association, training_instructor_association
+from app.enums.pronouns import Pronouns
 
 
 # models data classes define teh SQL tables
@@ -21,6 +22,7 @@ class Dancer(Base):
         nullable=False,
     )
     name = Column(String(255), index=True)
+    pronouns = Column(Enum(Pronouns), nullable=True)
     bio = Column(Text)
     date_of_birth = Column(Date, nullable=True)
     nationality = Column(String(255))

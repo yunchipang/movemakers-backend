@@ -1,5 +1,5 @@
 def test_get_all_studios(test_app, sample_studio_id):
-    response = test_app.get("/studios")
+    response = test_app.get("/studios/")
     assert response.status_code == 200
     studios = response.json()
     assert any(

@@ -6,6 +6,7 @@ class Style(enum.Enum):
     BREAKING = "Breaking"
     CHOREOGRAPHY = "Choreography"
     CONTEMPORARY = "Contemporary"
+    FREESTYLE = "Freestyle"
     HEELS = "Heels"
     HIP_HOP = "Hip-hop"
     JAZZ_FUNK = "Jazz Funk"

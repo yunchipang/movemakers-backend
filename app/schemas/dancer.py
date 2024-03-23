@@ -2,6 +2,7 @@ from pydantic import BaseModel, ConfigDict, UUID4
 from typing import Optional
 from datetime import date
 
+from app.enums.pronouns import Pronouns
 
 # 3 schema classes, with the latter 2 inherits the first class BaseDancer
 # to avoid duplication of model fields
@@ -10,6 +11,7 @@ from datetime import date
 # BaseDancer includes the most basic data that can be public facing
 class BaseDancer(BaseModel):
     name: str
+    pronouns: Optional[Pronouns] = None
     bio: Optional[str] = None
     date_of_birth: Optional[date] = None
     nationality: str

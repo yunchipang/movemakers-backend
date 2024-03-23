@@ -23,7 +23,7 @@ async def create_studio(
     # create the studio instance without the owners
     new_studio = studio_models.Studio(**studio_data)
     db.add(new_studio)
-    db.flush()  # flush to assign an ID to new_studio without committing the transaction
+    db.flush() # flush to assign an ID to new_studio without committing the transaction
 
     # associate owners with the new studio if owner_ids were provided
     if owner_ids:

@@ -42,7 +42,7 @@ class Training(Base):
     max_slots = Column(Integer)
     is_active = Column(Boolean)
 
-    studio_id = Column(UUID(as_uuid=True), ForeignKey('studios.id'))
+    studio_id = Column(UUID(as_uuid=True), ForeignKey("studios.id"), nullable=False)
     studio = relationship("Studio", back_populates="trainings")
     instructors = relationship(
         "Dancer",

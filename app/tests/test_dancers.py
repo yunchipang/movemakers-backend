@@ -1,5 +1,5 @@
 def test_get_all_dancers(test_app, sample_dancer_id):
-    response = test_app.get("/dancers")
+    response = test_app.get("/dancers/")
     assert response.status_code == 200
     dancers = response.json()
     assert any(

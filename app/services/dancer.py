@@ -42,6 +42,7 @@ async def update_dancer(
 ) -> dancer_schemas.Dancer:
     # feed data one to one into the dancer object
     dancer.name = dancer_data.name
+    dancer.pronouns = dancer_data.pronouns
     dancer.bio = dancer_data.bio
     dancer.date_of_birth = dancer_data.date_of_birth
     dancer.nationality = dancer_data.nationality
