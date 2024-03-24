@@ -29,7 +29,7 @@ def test_app():
     Base.metadata.drop_all(bind=engine)
 
 
-@pytest.fixture(scope="module")
+@pytest.fixture(scope="session")
 def sample_dancer_id(test_app):
     sample_payload = {
         "name": "리아킴 | Lia Kim",
@@ -39,12 +39,15 @@ def sample_dancer_id(test_app):
         "based_in": "Seoul",
         "instagram": "@liakimhappy",
     }
-    response = test_app.post("/dancers", json=sample_payload)
+    response = test_app.post("/dancers/", json=sample_payload)
+    assert (
+        response.status_code == 200
+    ), f"Failed to create sample dancer. Status code: {response.status_code}. Response body: {response.text}"
     data = response.json()
     return data["id"]
 
 
-@pytest.fixture(scope="module")
+@pytest.fixture(scope="session")
 def sample_studio_id(test_app, sample_dancer_id):
     sample_payload = {
         "name": "1MILLION Dance Studio",
@@ -53,11 +56,14 @@ def sample_studio_id(test_app, sample_dancer_id):
         "phone": "+82 02-512-6756",
         "opening_hours": "Monday: 4–10 PM; Tuesday: 4–10 PM; Wednesday: 4–10 PM; Thursday: 4–10 PM; Friday: 4–10 PM; Saturday: 3–9:30 PM; Sunday: 3–9:30 PM",
         "founded_in": 2013,
-        "instagram": "1milliondance",
-        "youtube": "1MILLION_Dance",
+        "instagram": "@1milliondance",
+        "youtube": "@1MILLION_Dance",
         "website": "https://www.1milliondance.com/",
         "owner_ids": [sample_dancer_id],
     }
-    response = test_app.post("/studios", json=sample_payload)
+    response = test_app.post("/studios/", json=sample_payload)
+    assert (
+        response.status_code == 200
+    ), f"Failed to create sample studio. Status code: {response.status_code}. Response body: {response.text}"
     data = response.json()
     return data["id"]

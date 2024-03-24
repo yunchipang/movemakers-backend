@@ -6,6 +6,8 @@ from app.schemas import dancer as dancer_schemas
 if TYPE_CHECKING:
     from sqlalchemy.orm import Session
 
+import uuid
+
 
 # create a dancer instance in database using the dancer data passed in
 async def create_dancer(
@@ -36,20 +38,24 @@ async def get_dancer(dancer_id: str, db: "Session"):
 
 # update a specific dancer in the database
 async def update_dancer(
-    dancer_data: dancer_schemas.CreateDancer,
-    dancer: dancer_models.Dancer,
+    dancer_id: uuid.UUID,
+    dancer_data: dancer_schemas.UpdateDancer,
     db: "Session",
 ) -> dancer_schemas.Dancer:
-    # feed data one to one into the dancer object
-    dancer.name = dancer_data.name
-    dancer.bio = dancer_data.bio
-    dancer.date_of_birth = dancer_data.date_of_birth
-    dancer.nationality = dancer_data.nationality
-    dancer.based_in = dancer_data.based_in
-    dancer.instagram = dancer_data.instagram
-    dancer.youtube = dancer_data.youtube
-    dancer.agency = dancer_data.agency
-    dancer.contact_email = dancer_data.contact_email
+
+    # fetch the existing dancer from the database
+    dancer = (
+        db.query(dancer_models.Dancer)
+        .filter(dancer_models.Dancer.id == dancer_id)
+        .first()
+    )
+    if not dancer:
+        raise Exception("Dancer not found")
+
+    # apply the updates to the dancer, skipping any None values
+    for k, v in dancer_data.model_dump(exclude_unset=True).items():
+        if hasattr(dancer, k):
+            setattr(dancer, k, v)
 
     db.commit()
     db.refresh(dancer)

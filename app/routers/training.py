@@ -50,13 +50,12 @@ async def delete_training(training_id: str, db: Session = Depends(database.get_d
 @router.put("/{training_id}", response_model=training_schemas.Training)
 async def update_training(
     training_id: str,
-    training_data: training_schemas.CreateTraining,
+    training_data: training_schemas.UpdateTraining,
     db: Session = Depends(database.get_db),
 ):
-    training = await training_services.get_training(training_id=training_id, db=db)
-    if training is None:
-        raise HTTPException(status_code=404, detail="Training does not exist")
-
-    return await training_services.update_training(
-        training_data=training_data, training=training, db=db
+    updated_training = await training_services.update_training(
+        training_id=training_id, training_data=training_data, db=db
     )
+    if updated_training is None:
+        raise HTTPException(status_code=404, detail="Training not found")
+    return updated_training
