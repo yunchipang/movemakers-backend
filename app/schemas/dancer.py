@@ -30,3 +30,16 @@ class Dancer(BaseDancer):
 
 class CreateDancer(BaseDancer):
     pass
+
+
+class UpdateDancer(BaseDancer):
+    name: Optional[str] = None
+    pronouns: Optional[Pronouns] = None
+    bio: Optional[str] = None
+    date_of_birth: Optional[date] = None
+    nationality: Optional[str] = None
+    based_in: Optional[str] = None
+    instagram: Optional[str] = None
+    youtube: Optional[str] = None
+    agency: Optional[str] = None
+    contact_email: Optional[str] = None

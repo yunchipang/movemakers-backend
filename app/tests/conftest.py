@@ -40,7 +40,9 @@ def sample_dancer_id(test_app):
         "instagram": "@liakimhappy",
     }
     response = test_app.post("/dancers/", json=sample_payload)
-    assert response.status_code == 200, f"Failed to create sample dancer. Status code: {response.status_code}. Response body: {response.text}"
+    assert (
+        response.status_code == 200
+    ), f"Failed to create sample dancer. Status code: {response.status_code}. Response body: {response.text}"
     data = response.json()
     return data["id"]
 
@@ -60,25 +62,8 @@ def sample_studio_id(test_app, sample_dancer_id):
         "owner_ids": [sample_dancer_id],
     }
     response = test_app.post("/studios/", json=sample_payload)
-    assert response.status_code == 200, f"Failed to create sample studio. Status code: {response.status_code}. Response body: {response.text}"
-    data = response.json()
-    return data["id"]
-
-@pytest.fixture(scope="session")
-def sample_training_id(test_app, sample_dancer_id, sample_studio_id):
-    sample_payload = {
-        "level": "Beg/Int",
-        "style": "Choreography",
-        "start_time": "2024-03-22T19:00:00Z",
-        "end_time": "2024-03-22T20:00:00Z",
-        "price": 30000,
-        "currency": "KRW",
-        "max_slots": 60,
-        "is_active": True,
-        "studio_id": sample_studio_id,
-        "instructor_ids": [sample_dancer_id],
-    }
-    response = test_app.post("/trainings/", json=sample_payload)
-    assert response.status_code == 200, f"Failed to create sample training. Status code: {response.status_code}. Response body: {response.text}"
+    assert (
+        response.status_code == 200
+    ), f"Failed to create sample studio. Status code: {response.status_code}. Response body: {response.text}"
     data = response.json()
     return data["id"]

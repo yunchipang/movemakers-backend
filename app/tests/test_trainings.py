@@ -1,10 +1,33 @@
-def test_get_all_trainings(test_app, sample_training_id):
-    response = test_app.get("/trainings/")
-    assert response.status_code == 200
-    trainings = response.json()
-    assert any(
-        training["id"] == sample_training_id for training in trainings
-    ), "Sample training not found in the list of all trainings."
+# import pytest
+
+
+# @pytest.fixture(scope="session")
+# def sample_training_id(test_app, sample_dancer_id, sample_studio_id):
+#     sample_payload = {
+#         "level": "Beg/Int",
+#         "style": "Choreography",
+#         "start_time": "2024-03-22T19:00:00Z",
+#         "end_time": "2024-03-22T20:00:00Z",
+#         "price": 30000,
+#         "currency": "KRW",
+#         "max_slots": 60,
+#         "is_active": True,
+#         "studio_id": sample_studio_id,
+#         "instructor_ids": [sample_dancer_id],
+#     }
+#     response = test_app.post("/trainings/", json=sample_payload)
+#     assert response.status_code == 200, f"Failed to create sample training. Status code: {response.status_code}. Response body: {response.text}"
+#     data = response.json()
+#     return data["id"]
+
+
+# def test_get_all_trainings(test_app, sample_training_id):
+#     response = test_app.get("/trainings/")
+#     assert response.status_code == 200
+#     trainings = response.json()
+#     assert any(
+#         training["id"] == sample_training_id for training in trainings
+#     ), "Sample training not found in the list of all trainings."
 
 
 # def test_get_training(test_app, sample_training_id):

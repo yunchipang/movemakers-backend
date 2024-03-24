@@ -16,12 +16,6 @@ def test_get_dancer(test_app, sample_dancer_id):
 
 def test_update_dancer(test_app, sample_dancer_id):
     updated_sample_payload = {
-        "name": "리아킴 | Lia Kim",
-        "bio": "Choreographer\nCo-Founder of @1milliondance\nLeader of @1million_swf",
-        "date_of_birth": "1984-05-24",
-        "nationality": "KR",
-        "based_in": "Seoul",
-        "instagram": "@liakimhappy",
         "youtube": "@liakimhappy",
     }
     response = test_app.put(f"/dancers/{sample_dancer_id}", json=updated_sample_payload)
