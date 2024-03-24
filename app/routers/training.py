@@ -53,8 +53,8 @@ async def update_training(
     training_data: training_schemas.UpdateTraining,
     db: Session = Depends(database.get_db),
 ):
-    updated_training = await training_services.update_studio(
-        studio_id=training_id, studio_data=training_data, db=db
+    updated_training = await training_services.update_training(
+        training_id=training_id, training_data=training_data, db=db
     )
     if updated_training is None:
         raise HTTPException(status_code=404, detail="Training not found")

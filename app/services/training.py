@@ -93,7 +93,7 @@ async def update_training(
     if training_data.instructor_ids is not None:
         new_instructors = (
             db.query(dancer_models.Dancer)
-            .filter(dancer_models.Dancer.in_(training_data.instructor_ids))
+            .filter(dancer_models.Dancer.id.in_(training_data.instructor_ids))
             .all()
         )
         training.instructors = new_instructors
