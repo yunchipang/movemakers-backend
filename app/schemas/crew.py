@@ -2,8 +2,8 @@ from pydantic import BaseModel, ConfigDict, HttpUrl, UUID4
 from typing import List, Optional
 
 from app.enums.style import Style
-from app.models.dancer import Dancer
-from app.models.studio import Studio
+from app.schemas.dancer import Dancer
+from app.schemas.studio import Studio
 
 
 class BaseCrew(BaseModel):

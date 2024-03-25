@@ -29,9 +29,7 @@ class Crew(Base):
     website = Column(String(255))
     is_active = Column(Boolean, nullable=True, default=True)
 
-    home_studio_id = Column(
-        UUID(as_uuid=True), ForeignKey("studios.id"), nullable=True
-    )
+    home_studio_id = Column(UUID(as_uuid=True), ForeignKey("studios.id"), nullable=True)
     home_studio = relationship("Studio", back_populates="homed_crews")
     leaders = relationship(
         "Dancer", secondary=crew_leader_association, back_populates="leading_crews"

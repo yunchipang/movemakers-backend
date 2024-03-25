@@ -47,32 +47,32 @@ def test_get_all_crews(test_app, crew_id):
     ), "Crew not found in the list of all crews."
 
 
-# def test_get_crew(test_app, crew_id):
-#     response = test_app.get(f"/crews/{crew_id}")
-#     assert response.status_code == 200
-#     data = response.json()
-#     assert data["id"] == crew_id
+def test_get_crew(test_app, crew_id):
+    response = test_app.get(f"/crews/{crew_id}")
+    assert response.status_code == 200
+    data = response.json()
+    assert data["id"] == crew_id
 
 
-# def test_update_crew(test_app, crew_id):
-#     updated_payload = {"name": "1MILLION SWF"}
-#     response = test_app.put(f"/crews/{crew_id}", json=updated_payload)
-#     assert response.status_code == 200
-#     data = response.json()
-#     assert data["name"] == "1MILLION SWF", "Crew was not updated successfully."
+def test_update_crew(test_app, crew_id):
+    updated_payload = {"name": "1MILLION SWF"}
+    response = test_app.put(f"/crews/{crew_id}", json=updated_payload)
+    assert response.status_code == 200
+    data = response.json()
+    assert data["name"] == "1MILLION SWF", "Crew was not updated successfully."
 
-#     # fetch the crew to verify the update took effect
-#     response = test_app.get(f"/crews/{crew_id}")
-#     assert response.status_code == 200
-#     data = response.json()
-#     assert data["name"] == "1MILLION SWF", "Crew update did not persist."
+    # fetch the crew to verify the update took effect
+    response = test_app.get(f"/crews/{crew_id}")
+    assert response.status_code == 200
+    data = response.json()
+    assert data["name"] == "1MILLION SWF", "Crew update did not persist."
 
 
-# def test_delete_crew(test_app, crew_id):
-#     # delete the crew
-#     delete_response = test_app.delete(f"/crews/{crew_id}")
-#     assert delete_response.status_code == 200
+def test_delete_crew(test_app, crew_id):
+    # delete the crew
+    delete_response = test_app.delete(f"/crews/{crew_id}")
+    assert delete_response.status_code == 200
 
-#     # attempt to fetch the deleted crew
-#     fetch_response = test_app.get(f"/crews/{crew_id}")
-#     assert fetch_response.status_code == 404, "Crew was not deleted successfully."
+    # attempt to fetch the deleted crew
+    fetch_response = test_app.get(f"/crews/{crew_id}")
+    assert fetch_response.status_code == 404, "Crew was not deleted successfully."

@@ -1,4 +1,4 @@
-from typing import TYPE_CHECKING, List, Optional
+from typing import TYPE_CHECKING, List
 
 from app.models import crew as crew_models
 from app.models import dancer as dancer_models
@@ -25,7 +25,7 @@ async def create_crew(
     db.add(new_crew)
     db.flush()
 
-    if crew_data.home_studio_id:
+    if crew.home_studio_id:
         home_studio = (
             db.query(studio_models.Studio)
             .filter(studio_models.Studio.id == crew.home_studio_id)

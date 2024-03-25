@@ -84,14 +84,14 @@ async def update_training(
         if k != "studio_id" and k != "instructor_ids" and hasattr(training, k):
             setattr(training, k, v)
 
-    if training_data.studio_id is not None:
+    if training_data.studio_id:
         new_studio = (
             db.query(studio_models.Studio)
             .filter(studio_models.Studio.id == training_data.studio_id)
             .first()
         )
         training.studio = new_studio
-    if training_data.instructor_ids is not None:
+    if training_data.instructor_ids:
         new_instructors = (
             db.query(dancer_models.Dancer)
             .filter(dancer_models.Dancer.id.in_(training_data.instructor_ids))

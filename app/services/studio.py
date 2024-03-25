@@ -81,7 +81,7 @@ async def update_studio(
             setattr(studio, k, v)
 
     # if owner_ids are provided, update the studio's owners
-    if studio_data.owner_ids is not None:
+    if studio_data.owner_ids:
         # query the database for the specified Dancer objects
         new_owners = (
             db.query(dancer_models.Dancer)
