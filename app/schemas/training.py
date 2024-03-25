@@ -18,7 +18,7 @@ class BaseTraining(BaseModel):
     currency: str = "USD"
     flyer: Optional[str] = None
     max_slots: int
-    is_active: bool
+    is_active: Optional[bool] = True
 
     model_config = ConfigDict(from_attributes=True)
 

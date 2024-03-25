@@ -5,7 +5,12 @@ from sqlalchemy.orm import relationship
 from sqlalchemy.dialects.postgresql import UUID
 
 from app.database import Base
-from app.association import studio_owner_association, training_instructor_association
+from app.association import (
+    studio_owner_association,
+    training_instructor_association,
+    crew_leader_association,
+    crew_member_association,
+)
 from app.enums.pronouns import Pronouns
 
 
@@ -39,6 +44,12 @@ class Dancer(Base):
         "Training",
         secondary=training_instructor_association,
         back_populates="instructors",
+    )
+    leading_crews = relationship(
+        "Crew", secondary=crew_leader_association, back_populates="leaders"
+    )
+    member_of_crews = relationship(
+        "Crew", secondary=crew_member_association, back_populates="members"
     )
 
     def __repr__(self):

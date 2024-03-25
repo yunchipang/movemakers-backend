@@ -14,10 +14,8 @@ import uuid
 async def create_studio(
     studio: studio_schemas.CreateStudio, db: "Session"
 ) -> studio_schemas.Studio:
-    # studio = studio_models.Studio(**studio.model_dump())
 
     # exclude owner_ids from studio
-    owner_ids: List[uuid.UUID] = studio.owner_ids if studio.owner_ids else []
     studio_data = studio.model_dump(exclude={"owner_ids"})
 
     # create the studio instance without the owners
@@ -26,10 +24,10 @@ async def create_studio(
     db.flush()  # flush to assign an ID to new_studio without committing the transaction
 
     # associate owners with the new studio if owner_ids were provided
-    if owner_ids:
+    if studio.owner_ids:
         owners = (
             db.query(dancer_models.Dancer)
-            .filter(dancer_models.Dancer.id.in_(owner_ids))
+            .filter(dancer_models.Dancer.id.in_(studio.owner_ids))
             .all()
         )
         new_studio.owners = owners

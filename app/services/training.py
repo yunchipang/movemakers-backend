@@ -15,8 +15,8 @@ import uuid
 async def create_training(
     training: training_schemas.CreateTraining, db: "Session"
 ) -> training_schemas.Training:
-    studio_id: uuid.UUID = training.studio_id
-    instructor_ids: List[uuid.UUID] = training.instructor_ids
+    # studio_id: uuid.UUID = training.studio_id
+    # instructor_ids: List[uuid.UUID] = training.instructor_ids
     training_data = training.model_dump(exclude={"studio", "instructor_ids"})
 
     new_training = training_models.Training(**training_data)
@@ -25,13 +25,13 @@ async def create_training(
 
     studio = (
         db.query(studio_models.Studio)
-        .filter(studio_models.Studio.id == studio_id)
+        .filter(studio_models.Studio.id == training.studio_id)
         .first()
     )
     new_training.studio = studio
     instructors = (
         db.query(dancer_models.Dancer)
-        .filter(dancer_models.Dancer.id.in_(instructor_ids))
+        .filter(dancer_models.Dancer.id.in_(training.instructor_ids))
         .all()
     )
     new_training.instructors = instructors
@@ -71,6 +71,7 @@ async def update_training(
     training_data: training_schemas.UpdateTraining,
     db: "Session",
 ) -> training_schemas.Training:
+
     training = (
         db.query(training_models.Training)
         .filter(training_models.Training.id == training_id)
@@ -86,7 +87,7 @@ async def update_training(
     if training_data.studio_id is not None:
         new_studio = (
             db.query(studio_models.Studio)
-            .fitler(studio_models.Studio.id == training_data.studio_id)
+            .filter(studio_models.Studio.id == training_data.studio_id)
             .first()
         )
         training.studio = new_studio

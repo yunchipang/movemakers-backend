@@ -1,8 +1,12 @@
-from typing import TYPE_CHECKING, List
+from typing import TYPE_CHECKING, List, Optional
 
 from app.models import crew as crew_models
+from app.models import dancer as dancer_models
+from app.models import studio as studio_models
 from app.schemas import crew as crew_schemas
 
+
+import uuid
 
 if TYPE_CHECKING:
     from sqlalchemy.orm import Session
@@ -12,12 +16,38 @@ if TYPE_CHECKING:
 async def create_crew(
     crew: crew_schemas.CreateCrew, db: "Session"
 ) -> crew_schemas.Crew:
+    # home_studio_id: Optional[uuid.UUID] = crew.home_studio_id
+    # leader_ids: List[uuid.UUID] = crew.leader_ids
+    # member_ids: List[uuid.UUID] = crew.member_ids
+    crew_data = crew.model_dump(exclude={"home_studio_id", "leader_ids", "member_ids"})
 
-    crew = crew_models.Crew(**crew.model_dump())
-    db.add(crew)
+    new_crew = crew_models.Crew(**crew_data)
+    db.add(new_crew)
+    db.flush()
+
+    if crew_data.home_studio_id:
+        home_studio = (
+            db.query(studio_models.Studio)
+            .filter(studio_models.Studio.id == crew.home_studio_id)
+            .first()
+        )
+        new_crew.home_studio = home_studio
+    leaders = (
+        db.query(dancer_models.Dancer)
+        .filter(dancer_models.Dancer.id.in_(crew.leader_ids))
+        .all()
+    )
+    new_crew.leaders = leaders
+    members = (
+        db.query(dancer_models.Dancer)
+        .filter(dancer_models.Dancer.id.in_(crew.member_ids))
+        .all()
+    )
+    new_crew.members = members
+
     db.commit()
-    db.refresh(crew)
-    return crew_schemas.Crew.model_validate(crew)
+    db.refresh(new_crew)
+    return crew_schemas.Crew.model_validate(new_crew)
 
 
 # query database to get all crews
@@ -40,25 +70,46 @@ async def delete_crew(crew: crew_models.Crew, db: "Session"):
 
 # update a specific crew in the database
 async def update_crew(
-    crew_data: crew_schemas.CreateCrew,
-    crew: crew_models.Crew,
+    crew_id: uuid.UUID,
+    crew_data: crew_schemas.UpdateCrew,
     db: "Session",
 ) -> crew_schemas.Crew:
-    # feed data one to one into the crew object
-    crew.name = crew_data.name
-    crew.bio = crew_data.bio
-    crew.based_in = crew_data.based_in
-    crew.founded_in = crew_data.founded_in
-    crew.home_studio_id = crew_data.home_studio_id
-    crew.styles = crew_data.styles
-    crew.director_ids = crew_data.director_ids
-    crew.captain_ids = crew_data.captain_ids
-    crew.member_ids = crew_data.member_ids
-    crew.rehearsal_schedules = crew_data.rehearsal_schedules
-    crew.instagram = crew_data.instagram
-    crew.youtube = crew_data.youtube
-    crew.website = crew_data.website
-    crew.is_active = crew_data.is_active
+
+    # fetch exisiting crew by id from the database
+    crew = db.query(crew_models.Crew).filter(crew_models.Crew.id == crew_id).first()
+    if not crew:
+        raise Exception("Crew not found")
+
+    for k, v in crew_data.model_dump(exclude_unset=True).items():
+        if (
+            k != "home_studio_id"
+            and k != "leader_ids"
+            and k != "member_ids"
+            and hasattr(crew, k)
+        ):
+            setattr(crew, k, v)
+    # set home_studio, leaders and members
+    if crew_data.home_studio_id:
+        new_home_studio = (
+            db.query(crew_models.Crew)
+            .filter(crew_models.Crew.id == crew_data.home_studio_id)
+            .first()
+        )
+        crew.home_studio = new_home_studio
+    if crew_data.leader_ids:
+        new_leaders = (
+            db.query(crew_models.Crew)
+            .filter(crew_models.Crew.id.in_(crew_data.leader_ids))
+            .all()
+        )
+        crew.leaders = new_leaders
+    if crew_data.member_ids:
+        new_members = (
+            db.query(crew_models.Crew)
+            .filter(crew_models.Crew.id.in_(crew_data.member_ids))
+            .all()
+        )
+        crew.members = new_members
 
     db.commit()
     db.refresh(crew)

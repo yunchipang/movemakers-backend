@@ -30,7 +30,7 @@ def test_app():
 
 
 @pytest.fixture(scope="session")
-def sample_dancer_id(test_app):
+def core_dancer_id(test_app):
     sample_payload = {
         "name": "리아킴 | Lia Kim",
         "bio": "Choreographer\nCo-Founder of @1milliondance\nLeader of @1million_swf",
@@ -48,7 +48,7 @@ def sample_dancer_id(test_app):
 
 
 @pytest.fixture(scope="session")
-def sample_studio_id(test_app, sample_dancer_id):
+def core_studio_id(test_app, core_dancer_id):
     sample_payload = {
         "name": "1MILLION Dance Studio",
         "address": "33, Ttukseom-ro 13-gil, Seongdong-gu, Seoul, Republic of Korea",
@@ -59,7 +59,7 @@ def sample_studio_id(test_app, sample_dancer_id):
         "instagram": "@1milliondance",
         "youtube": "@1MILLION_Dance",
         "website": "https://www.1milliondance.com/",
-        "owner_ids": [sample_dancer_id],
+        "owner_ids": [core_dancer_id],
     }
     response = test_app.post("/studios/", json=sample_payload)
     assert (
