@@ -2,7 +2,7 @@ import pytest
 
 
 @pytest.fixture(scope="module")
-def training_id(test_app, sample_dancer_id, sample_studio_id):
+def training_id(test_app, core_dancer_id, core_studio_id):
     payload = {
         "level": "Beg/Int",
         "style": "Choreography",
@@ -11,9 +11,8 @@ def training_id(test_app, sample_dancer_id, sample_studio_id):
         "price": 30000,
         "currency": "KRW",
         "max_slots": 60,
-        "is_active": True,
-        "studio_id": sample_studio_id,
-        "instructor_ids": [sample_dancer_id],
+        "studio_id": core_studio_id,
+        "instructor_ids": [core_dancer_id],
     }
     response = test_app.post("/trainings/", json=payload)
     assert (
@@ -29,7 +28,7 @@ def test_get_all_trainings(test_app, training_id):
     trainings = response.json()
     assert any(
         training["id"] == training_id for training in trainings
-    ), "Sample training not found in the list of all trainings."
+    ), "Training not found in the list of all trainings."
 
 
 def test_get_training(test_app, training_id):
@@ -54,10 +53,10 @@ def test_update_training(test_app, training_id):
 
 
 def test_delete_training(test_app, training_id):
-    # delete the studio
+    # delete the crew
     delete_response = test_app.delete(f"/trainings/{training_id}")
     assert delete_response.status_code == 200
 
-    # attempt to fetch the deleted studio
+    # attempt to fetch the deleted crew
     fetch_response = test_app.get(f"/trainings/{training_id}")
     assert fetch_response.status_code == 404, "Training was not deleted successfully."

@@ -33,6 +33,7 @@ class Studio(Base):
         "Dancer", secondary=studio_owner_association, back_populates="owned_studios"
     )
     trainings = relationship("Training", back_populates="studio")
+    homed_crews = relationship("Crew", back_populates="home_studio")
 
     def __repr__(self):
         """returns strings representation of model instance"""

@@ -51,11 +51,12 @@ async def delete_crew(crew_id: str, db: Session = Depends(database.get_db)):
 @router.put("/{crew_id}", response_model=crew_schemas.Crew)
 async def update_crew(
     crew_id: str,
-    crew_data: crew_schemas.CreateCrew,
+    crew_data: crew_schemas.UpdateCrew,
     db: Session = Depends(database.get_db),
 ):
-    crew = await crew_services.get_crew(crew_id=crew_id, db=db)
-    if crew is None:
-        raise HTTPException(status_code=404, detail="Crew does not exist")
-
-    return await crew_services.update_crew(crew_data=crew_data, crew=crew, db=db)
+    updated_crew = await crew_services.update_crew(
+        crew_id=crew_id, crew_data=crew_data, db=db
+    )
+    if updated_crew is None:
+        raise HTTPException(status_code=404, detail="Crew not found")
+    return updated_crew

@@ -40,7 +40,7 @@ class Training(Base):
     currency = Column(String, default="USD")
     flyer = Column(String, nullable=True)  # flyer is a URL to the image
     max_slots = Column(Integer)
-    is_active = Column(Boolean)
+    is_active = Column(Boolean, nullable=True, default=True)
 
     studio_id = Column(UUID(as_uuid=True), ForeignKey("studios.id"), nullable=False)
     studio = relationship("Studio", back_populates="trainings")
@@ -52,6 +52,7 @@ class Training(Base):
 
     def __repr__(self):
         """returns strings representation of model instance"""
+        # todo
         # instructor_names = ", ".join(
         #     [str(instructor) for instructor in self.instructors]
         # )

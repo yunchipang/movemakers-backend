@@ -2,6 +2,8 @@ from pydantic import BaseModel, ConfigDict, HttpUrl, UUID4
 from typing import List, Optional
 
 from app.enums.style import Style
+from app.schemas.dancer import Dancer
+from app.schemas.studio import Studio
 
 
 class BaseCrew(BaseModel):
@@ -9,23 +11,38 @@ class BaseCrew(BaseModel):
     bio: Optional[str] = None
     based_in: str
     founded_in: int
-    home_studio_id: Optional[UUID4] = None
     styles: List[Style]
-    director_ids: List[UUID4]
-    captain_ids: Optional[List[UUID4]] = None
-    member_ids: Optional[List[UUID4]] = None
-    rehearsal_schedules: Optional[str] = None
     instagram: str
     youtube: Optional[str] = None
     website: Optional[HttpUrl] = None
-    is_active: bool
+    is_active: Optional[bool] = True
 
-    model_config = ConfigDict(from_attributes=True)
+    model_config = ConfigDict(from_attributes=True, arbitrary_types_allowed=True)
 
 
 class Crew(BaseCrew):
     id: UUID4
+    home_studio: Optional[Studio] = None
+    leaders: List[Dancer]
+    members: List[Dancer]
 
 
 class CreateCrew(BaseCrew):
-    pass
+    home_studio_id: Optional[UUID4] = None
+    leader_ids: List[UUID4]
+    member_ids: List[UUID4]
+
+
+class UpdateCrew(BaseCrew):
+    name: Optional[str] = None
+    bio: Optional[str] = None
+    based_in: Optional[str] = None
+    founded_in: Optional[int] = None
+    styles: Optional[List[Style]] = []
+    instagram: Optional[str] = None
+    youtube: Optional[str] = None
+    website: Optional[HttpUrl] = None
+    is_active: Optional[bool] = None
+    home_studio_id: Optional[UUID4] = None
+    leader_ids: Optional[List[UUID4]] = []
+    member_ids: Optional[List[UUID4]] = []

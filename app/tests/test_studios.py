@@ -2,17 +2,17 @@ import pytest
 
 
 @pytest.fixture(scope="module")
-def studio_id(test_app, sample_dancer_id):
+def studio_id(test_app, core_dancer_id):
     payload = {
         "name": "1MILLION Dance Studio Daejeon",
         "address": "56, Dunsan-ro, Seo-gu, Daejeon, Republic of Korea",
         "email": "1mdaejeon@1milliondance.com",
         "phone": "+82 042-488-6756",
         "opening_hours": "Monday: 4–10 PM; Tuesday: 4–10 PM; Wednesday: 4–10 PM; Thursday: 4–10 PM; Friday: 4–10 PM; Saturday: 3–9:30 PM; Sunday: 3–9:30 PM",
-        "instagram": "@1milliondance",
+        "instagram": "@1million_daejeon",
         "youtube": "@1MILLIONDanceStudioDJofficial",
         "website": "https://www.1milliondance.com/",
-        "owner_ids": [sample_dancer_id],
+        "owner_ids": [core_dancer_id],
     }
     response = test_app.post("/studios/", json=payload)
     assert (
