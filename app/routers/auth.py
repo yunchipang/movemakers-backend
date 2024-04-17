@@ -11,7 +11,7 @@ from app.models import user as user_models
 from app.schemas import user as user_schemas
 from app.schemas import token as token_schemas
 from app.services import user as user_services
-from app.security import generate_token
+from app.security import hash_password, generate_token
 from app.settings import get_settings
 
 
@@ -25,12 +25,19 @@ async def signup(
     user: user_schemas.CreateUser,
     db: Session=Depends(get_db),
 ):
-    """processes request to register user account"""
-    existing_user = await user_services.get_user_by_email(email=user.email, db=db)
-    if existing_user:
+    """processes request to register a user account by checking for duplicate username and email."""
+    # check if the username and/or email is already in use
+    existing_user_by_username = await user_services.get_user_by_username(username=user.username, db=db)
+    if existing_user_by_username:
+        raise HTTPException(status_code=400, detail="Username is already in use.")
+    
+    existing_user_by_email = await user_services.get_user_by_email(email=user.email, db=db)
+    if existing_user_by_email:
         raise HTTPException(status_code=400, detail="Email is already in use.")
     
-    user.hashed_password = user_models.User.hash_password(user.hashed_password)
+    hashed_password = hash_password(user.hashed_password)
+    hashed_password_bytes = hashed_password.encode('utf-8') if isinstance(hashed_password, str) else hashed_password
+    user.hashed_password = hashed_password_bytes
     created_user = await user_services.create_user(user=user, db=db)
     return created_user
 
