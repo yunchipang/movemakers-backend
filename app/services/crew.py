@@ -16,9 +16,6 @@ if TYPE_CHECKING:
 async def create_crew(
     crew: crew_schemas.CreateCrew, db: "Session"
 ) -> crew_schemas.Crew:
-    # home_studio_id: Optional[uuid.UUID] = crew.home_studio_id
-    # leader_ids: List[uuid.UUID] = crew.leader_ids
-    # member_ids: List[uuid.UUID] = crew.member_ids
     crew_data = crew.model_dump(exclude={"home_studio_id", "leader_ids", "member_ids"})
 
     new_crew = crew_models.Crew(**crew_data)
