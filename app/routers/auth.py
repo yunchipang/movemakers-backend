@@ -1,12 +1,20 @@
-from fastapi import APIRouter, Depends, HTTPException
-from typing import Dict
+from datetime import timedelta
+from typing import Annotated
+
+from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi.security import OAuth2PasswordRequestForm
+
 from sqlalchemy.orm import Session
 
-from app import database
-
-from app.models import user as user_models
+from app.database import get_db
 from app.schemas import user as user_schemas
+from app.schemas import token as token_schemas
 from app.services import user as user_services
+from app.security import hash_password, generate_token
+from app.settings import get_settings
+
+
+settings = get_settings()
 
 router = APIRouter()
 
@@ -14,30 +22,39 @@ router = APIRouter()
 @router.post("/signup/", response_model=user_schemas.User)
 async def signup(
     user: user_schemas.CreateUser,
-    db: Session = Depends(database.get_db),
+    db: Session=Depends(get_db),
 ):
-    # check duplicated email
-    existing_user = await user_services.get_user(email=user.email, db=db)
-    if existing_user:
+    """processes request to register a user account by checking for duplicate username and email."""
+    # check if the username and/or email is already in use
+    existing_user_by_username = await user_services.get_user_by_username(username=user.username, db=db)
+    if existing_user_by_username:
+        raise HTTPException(status_code=400, detail="Username is already in use.")
+    
+    existing_user_by_email = await user_services.get_user_by_email(email=user.email, db=db)
+    if existing_user_by_email:
         raise HTTPException(status_code=400, detail="Email is already in use.")
-
-    """processes request to register user account"""
-    user.hashed_password = user_models.User.hash_password(user.hashed_password)
-    # return await user_services.create_user(user=user, db=db)
+    
+    hashed_password = hash_password(user.hashed_password)
+    hashed_password_bytes = hashed_password.encode('utf-8') if isinstance(hashed_password, str) else hashed_password
+    user.hashed_password = hashed_password_bytes
     created_user = await user_services.create_user(user=user, db=db)
     return created_user
 
 
-@router.post("/login/", response_model=Dict)
-async def login(
-    payload: user_schemas.UserLogin,
-    db: Session = Depends(database.get_db),
-):
-    """processes user's auth and returns a token on successful auth"""
-    user = await user_services.get_user(email=payload.email, db=db)
-    if not user or not user.validate_password(payload.password):
+@router.post("/login")
+async def login_for_access_token(
+    form_data: Annotated[OAuth2PasswordRequestForm, Depends()],
+    db: Session=Depends(get_db)
+) -> token_schemas.Token:
+    user = await user_services.authenticate_user(form_data.username, form_data.password, db=db)
+    if not user:
         raise HTTPException(
-            status_code=401,
-            detail="Invalid user credentials.",
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Incorrect username or password",
+            headers={"WWW-Authenticate": "Bearer"},
         )
-    return user.generate_token()
+    access_token_expires = timedelta(minutes=settings.JWT_EXPIRE_MINUTES)
+    access_token = generate_token(
+        data={"sub": user.username}, expires_delta=access_token_expires
+    )
+    return token_schemas.Token(access_token=access_token, token_type="bearer")

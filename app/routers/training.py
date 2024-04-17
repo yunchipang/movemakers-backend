@@ -4,7 +4,7 @@ from fastapi import APIRouter, Depends, HTTPException
 
 from sqlalchemy.orm import Session
 
-from app import database
+from app.database import get_db
 from app.schemas import training as training_schemas
 from app.services import training as training_services
 
@@ -16,20 +16,20 @@ router = APIRouter()
 @router.post("/", response_model=training_schemas.Training)
 async def create_training(
     training: training_schemas.CreateTraining,
-    db: Session = Depends(database.get_db),
+    db: Session=Depends(get_db),
 ):
     return await training_services.create_training(training=training, db=db)
 
 
 # get all trainings
 @router.get("/", response_model=List[training_schemas.Training])
-async def get_trainings(db: Session = Depends(database.get_db)):
+async def get_trainings(db: Session=Depends(get_db)):
     return await training_services.get_all_trainings(db=db)
 
 
 # get a training by id
 @router.get("/{training_id}", response_model=training_schemas.Training)
-async def get_training(training_id: str, db: Session = Depends(database.get_db)):
+async def get_training(training_id: str, db: Session=Depends(get_db)):
     training = await training_services.get_training(training_id=training_id, db=db)
     if training is None:
         raise HTTPException(status_code=404, detail="Training does not exist")
@@ -38,7 +38,7 @@ async def get_training(training_id: str, db: Session = Depends(database.get_db))
 
 # delete a training by id
 @router.delete("/{training_id}")
-async def delete_training(training_id: str, db: Session = Depends(database.get_db)):
+async def delete_training(training_id: str, db: Session=Depends(get_db)):
     training = await training_services.get_training(training_id=training_id, db=db)
     if training is None:
         raise HTTPException(status_code=404, detail="Training does not exist")
@@ -51,7 +51,7 @@ async def delete_training(training_id: str, db: Session = Depends(database.get_d
 async def update_training(
     training_id: str,
     training_data: training_schemas.UpdateTraining,
-    db: Session = Depends(database.get_db),
+    db: Session=Depends(get_db),
 ):
     updated_training = await training_services.update_training(
         training_id=training_id, training_data=training_data, db=db

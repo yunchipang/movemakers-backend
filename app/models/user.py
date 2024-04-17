@@ -1,9 +1,7 @@
 import uuid
-import bcrypt
-import jwt
-from datetime import datetime
 
-from sqlalchemy import Column, LargeBinary, String, DateTime
+from sqlalchemy import Boolean, Column, LargeBinary, String, DateTime
+from sqlalchemy.sql import func
 from sqlalchemy.dialects.postgresql import UUID
 
 from app.database import Base
@@ -23,26 +21,15 @@ class User(Base):
         unique=True,
         nullable=False,
     )
+    username = Column(String(225), nullable=False, unique=True)
     email = Column(String(225), nullable=False, unique=True)
+    first_name = Column(String(225), nullable=True)
+    last_name = Column(String(225), nullable=True)
     hashed_password = Column(LargeBinary, nullable=False)
-    created_at = Column(DateTime, default=datetime.utcnow)
+    disabled = Column(Boolean, default=False)
+    created_at = Column(DateTime, default=func.now())
 
     def __repr__(self):
         """returns strings representation of model instance"""
         return "<User {email!r}>".format(email=self.email)
 
-    @staticmethod
-    def hash_password(password) -> str:
-        """transforms password from its raw textual form to cryptographic hashes"""
-        return bcrypt.hashpw(password.encode(), bcrypt.gensalt())
-
-    def validate_password(self, password) -> bool:
-        """confirms password validity"""
-        # verify the provided password against the stored hashed password
-        return bcrypt.checkpw(password.encode(), self.hashed_password)
-
-    def generate_token(self) -> dict:
-        """generate access token for user"""
-        return {
-            "access_token": jwt.encode({"email": self.email}, settings.JWT_SECRET_KEY)
-        }
