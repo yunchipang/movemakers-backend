@@ -7,7 +7,6 @@ from fastapi.security import OAuth2PasswordRequestForm
 from sqlalchemy.orm import Session
 
 from app.database import get_db
-from app.models import user as user_models
 from app.schemas import user as user_schemas
 from app.schemas import token as token_schemas
 from app.services import user as user_services
@@ -42,7 +41,7 @@ async def signup(
     return created_user
 
 
-@router.post("/token")
+@router.post("/login")
 async def login_for_access_token(
     form_data: Annotated[OAuth2PasswordRequestForm, Depends()],
     db: Session=Depends(get_db)
