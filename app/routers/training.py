@@ -78,3 +78,21 @@ async def register_user_for_training(
         )
 
     return {"message": "User successfully registered for the training"}
+
+
+# cancel a user's registration for a training
+@router.delete("/{training_id}/cancel")
+async def cancel_registration_for_training(
+    training_id: str,
+    user: user_models.User = Depends(user_services.get_current_user),
+    db: Session = Depends(get_db),
+):
+    cancellation_successful = await training_services.cancel_user_registration(
+        training_id=training_id, user_id=user.id, db=db
+    )
+    if not cancellation_successful:
+        raise HTTPException(
+            status_code=404, detail="Training does not exist or cancellation failed"
+        )
+
+    return {"message": "User successfully unregistered from the training"}

@@ -142,3 +142,40 @@ async def register_user_for_training(
     db.commit()
 
     return True
+
+
+async def cancel_user_registration(
+    training_id: str, user_id: str, db: Session = Depends(get_db)
+) -> bool:
+    # check if the training exists
+    training = (
+        db.query(training_models.Training)
+        .filter(training_models.Training.id == training_id)
+        .first()
+    )
+    if not training:
+        return False
+
+    # check if the user exists
+    user = db.query(user_models.User).filter(user_models.User.id == user_id).first()
+    if not user:
+        return False
+
+    # check if user is indeed currently registered to the training
+    is_registered = (
+        db.query(training_registration)
+        .filter_by(training_id=training_id, user_id=user_id)
+        .first()
+    )
+    if not is_registered:
+        return False  # user is not registered
+
+    # unregister the user from the training
+    try:
+        training.participants.remove(user)
+        db.commit()
+        return True
+    except Exception as e:
+        db.rollback()
+        print(f"Failed to unregister user: {e}")
+        return False
