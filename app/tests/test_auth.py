@@ -22,6 +22,7 @@ def test_signup_email_already_exists(test_app):
     assert response.status_code == 400
     assert response.json().get("detail") == "Email is already in use."
 
+
 def test_signup_username_already_exists(test_app):
     payload = {
         "email": "anotheremail@example.com",

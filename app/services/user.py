@@ -1,5 +1,5 @@
 from jose import JWTError, jwt
-from typing import Annotated, TYPE_CHECKING
+from typing import Annotated
 
 from fastapi import Depends, HTTPException, status
 
@@ -15,12 +15,9 @@ from app.settings import get_settings
 
 settings = get_settings()
 
-if TYPE_CHECKING:
-    from sqlalchemy.orm import Session
-
 
 async def create_user(
-    user: user_schemas.CreateUser, db: "Session"
+    user: user_schemas.CreateUser, db: Session = Depends(get_db)
 ) -> user_schemas.User:
     user = user_models.User(**user.model_dump())
     db.add(user)
@@ -28,20 +25,29 @@ async def create_user(
     db.refresh(user)
     return user_schemas.User.model_validate(user)
 
-async def get_user_by_username(username: str, db: "Session"):
-    return db.query(user_models.User).filter(user_models.User.username == username).first()
 
-async def get_user_by_email(email: str, db: "Session"):
+async def get_user_by_username(username: str, db: Session = Depends(get_db)):
+    return (
+        db.query(user_models.User).filter(user_models.User.username == username).first()
+    )
+
+
+async def get_user_by_email(email: str, db: Session = Depends(get_db)):
     return db.query(user_models.User).filter(user_models.User.email == email).first()
-    
-async def get_current_user(token: Annotated[str, Depends(oauth2_scheme)], db: Session=Depends(get_db)):
+
+
+async def get_current_user(
+    token: Annotated[str, Depends(oauth2_scheme)], db: Session = Depends(get_db)
+):
     credentials_exception = HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
         detail="Could not validate credentials",
         headers={"WWW-Authenticate": "Bearer"},
     )
     try:
-        payload = jwt.decode(token, settings.JWT_SECRET_KEY, algorithms=[settings.JWT_ALGORITHM])
+        payload = jwt.decode(
+            token, settings.JWT_SECRET_KEY, algorithms=[settings.JWT_ALGORITHM]
+        )
         username: str = payload.get("sub")
         if username is None:
             raise credentials_exception
@@ -53,6 +59,7 @@ async def get_current_user(token: Annotated[str, Depends(oauth2_scheme)], db: Se
         raise credentials_exception
     return user
 
+
 async def get_current_active_user(
     current_user: Annotated[user_schemas.User, Depends(get_current_user)],
 ):
@@ -60,7 +67,10 @@ async def get_current_active_user(
         raise HTTPException(status_code=400, detail="Inactive user")
     return current_user
 
-async def authenticate_user(username: str, password: str, db: "Session"):
+
+async def authenticate_user(
+    username: str, password: str, db: Session = Depends(get_db)
+):
     user = await get_user_by_username(username, db)
     if not user:
         return False

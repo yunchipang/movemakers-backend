@@ -28,3 +28,10 @@ crew_member_association = Table(
     Column("crew_id", ForeignKey("crews.id"), primary_key=True),
     Column("member_id", ForeignKey("dancers.id"), primary_key=True),
 )
+
+training_registration = Table(
+    "training_registration",
+    Base.metadata,
+    Column("training_id", ForeignKey("trainings.id"), primary_key=True),
+    Column("user_id", ForeignKey("users.id"), primary_key=True),
+)

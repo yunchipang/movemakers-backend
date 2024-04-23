@@ -17,7 +17,7 @@ from app.database import Base
 from app.enums.level import Level
 from app.enums.style import Style
 
-from app.association import training_instructor_association
+from app.association import training_instructor_association, training_registration
 
 
 class Training(Base):
@@ -48,6 +48,9 @@ class Training(Base):
         "Dancer",
         secondary=training_instructor_association,
         back_populates="instructed_trainings",
+    )
+    participants = relationship(
+        "User", secondary=training_registration, back_populates="registered_trainings"
     )
 
     def __repr__(self):

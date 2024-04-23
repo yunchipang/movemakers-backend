@@ -1,22 +1,24 @@
-from typing import TYPE_CHECKING, List
+from typing import List
 
+from fastapi import Depends
+
+from app.database import get_db
+from app.models import user as user_models
 from app.models import dancer as dancer_models
 from app.models import studio as studio_models
 from app.models import training as training_models
 from app.schemas import training as training_schemas
+from app.association import training_registration
 
-if TYPE_CHECKING:
-    from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session
 
 import uuid
 
 
 # create a training instance in database using the training data passed in
 async def create_training(
-    training: training_schemas.CreateTraining, db: "Session"
+    training: training_schemas.CreateTraining, db: Session = Depends(get_db)
 ) -> training_schemas.Training:
-    # studio_id: uuid.UUID = training.studio_id
-    # instructor_ids: List[uuid.UUID] = training.instructor_ids
     training_data = training.model_dump(exclude={"studio", "instructor_ids"})
 
     new_training = training_models.Training(**training_data)
@@ -42,7 +44,9 @@ async def create_training(
 
 
 # query database to get all trainings
-async def get_all_trainings(db: "Session") -> List[training_schemas.Training]:
+async def get_all_trainings(
+    db: Session = Depends(get_db),
+) -> List[training_schemas.Training]:
     trainings = db.query(training_models.Training).all()
     return [
         training_schemas.Training.model_validate(training) for training in trainings
@@ -50,7 +54,7 @@ async def get_all_trainings(db: "Session") -> List[training_schemas.Training]:
 
 
 # query database for a specific training with training id
-async def get_training(training_id: str, db: "Session"):
+async def get_training(training_id: str, db: Session = Depends(get_db)):
     training = (
         db.query(training_models.Training)
         .filter(training_models.Training.id == training_id)
@@ -60,7 +64,9 @@ async def get_training(training_id: str, db: "Session"):
 
 
 # delete a specific training from the database
-async def delete_training(training: training_models.Training, db: "Session"):
+async def delete_training(
+    training: training_models.Training, db: Session = Depends(get_db)
+):
     db.delete(training)
     db.commit()
 
@@ -69,7 +75,7 @@ async def delete_training(training: training_models.Training, db: "Session"):
 async def update_training(
     training_id: uuid.UUID,
     training_data: training_schemas.UpdateTraining,
-    db: "Session",
+    db: Session = Depends(get_db),
 ) -> training_schemas.Training:
 
     training = (
@@ -103,3 +109,36 @@ async def update_training(
     db.refresh(training)
 
     return training_schemas.Training.model_validate(training)
+
+
+async def register_user_for_training(
+    training_id: str, user_id: str, db: Session = Depends(get_db)
+) -> bool:
+    # check if the training exists
+    training = (
+        db.query(training_models.Training)
+        .filter(training_models.Training.id == training_id)
+        .first()
+    )
+    if not training:
+        return False
+
+    # check if the user exists
+    user = db.query(user_models.User).filter(user_models.User.id == user_id).first()
+    if not user:
+        return False
+
+    # check if the user is already registered for the training
+    is_registered = (
+        db.query(training_registration)
+        .filter_by(training_id=training_id, user_id=user_id)
+        .first()
+    )
+    if is_registered:
+        return True
+
+    # register the user to the training
+    training.participants.append(user)
+    db.commit()
+
+    return True
