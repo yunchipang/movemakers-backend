@@ -1,6 +1,6 @@
 from typing import List
 
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, status
 
 from sqlalchemy.orm import Session
 
@@ -63,21 +63,18 @@ async def update_training(
 
 
 # register a user for a training
-@router.post("/{training_id}/register")
+@router.post("/{training_id}/register", status_code=status.HTTP_201_CREATED)
 async def register_user_for_training(
     training_id: str,
     user: user_models.User = Depends(user_services.get_current_user),
     db: Session = Depends(get_db),
 ):
-    registration_successful = await training_services.register_user_for_training(
+    success, message = await training_services.register_user_for_training(
         training_id=training_id, user_id=user.id, db=db
     )
-    if not registration_successful:
-        raise HTTPException(
-            status_code=404, detail="Training does not exist or registration failed"
-        )
-
-    return {"message": "User successfully registered for the training"}
+    if not success:
+        raise HTTPException(status_code=400, detail=message)
+    return {"message": message}
 
 
 # cancel a user's registration for a training
@@ -87,12 +84,9 @@ async def cancel_registration_for_training(
     user: user_models.User = Depends(user_services.get_current_user),
     db: Session = Depends(get_db),
 ):
-    cancellation_successful = await training_services.cancel_user_registration(
+    success, message = await training_services.cancel_user_registration(
         training_id=training_id, user_id=user.id, db=db
     )
-    if not cancellation_successful:
-        raise HTTPException(
-            status_code=404, detail="Training does not exist or cancellation failed"
-        )
-
-    return {"message": "User successfully unregistered from the training"}
+    if not success:
+        raise HTTPException(status_code=400, detail=message)
+    return {"message": message}

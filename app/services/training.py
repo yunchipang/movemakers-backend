@@ -113,7 +113,7 @@ async def update_training(
 
 async def register_user_for_training(
     training_id: str, user_id: str, db: Session = Depends(get_db)
-) -> bool:
+) -> tuple[bool, str]:
     # check if the training exists
     training = (
         db.query(training_models.Training)
@@ -121,12 +121,16 @@ async def register_user_for_training(
         .first()
     )
     if not training:
-        return False
+        return False, "Training does not exist"
 
     # check if the user exists
     user = db.query(user_models.User).filter(user_models.User.id == user_id).first()
     if not user:
-        return False
+        return False, "User does not exist"
+
+    # check if the training is full
+    if len(training.participants) >= training.max_slots:
+        return False, "Training is full"
 
     # check if the user is already registered for the training
     is_registered = (
@@ -135,18 +139,18 @@ async def register_user_for_training(
         .first()
     )
     if is_registered:
-        return True
+        return False, "User is already registered"
 
     # register the user to the training
     training.participants.append(user)
     db.commit()
 
-    return True
+    return True, "User successfully registered for the training"
 
 
 async def cancel_user_registration(
     training_id: str, user_id: str, db: Session = Depends(get_db)
-) -> bool:
+) -> tuple[bool, str]:
     # check if the training exists
     training = (
         db.query(training_models.Training)
@@ -154,12 +158,12 @@ async def cancel_user_registration(
         .first()
     )
     if not training:
-        return False
+        return False, "Training does not exist"
 
     # check if the user exists
     user = db.query(user_models.User).filter(user_models.User.id == user_id).first()
     if not user:
-        return False
+        return False, "User does not exist"
 
     # check if user is indeed currently registered to the training
     is_registered = (
@@ -168,14 +172,13 @@ async def cancel_user_registration(
         .first()
     )
     if not is_registered:
-        return False  # user is not registered
+        return False, "User is not registered for this training"
 
     # unregister the user from the training
     try:
         training.participants.remove(user)
         db.commit()
-        return True
+        return True, "User successfully unregistered from the training"
     except Exception as e:
         db.rollback()
-        print(f"Failed to unregister user: {e}")
-        return False
+        return False, f"Failed to unregister user: {e}"

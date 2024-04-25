@@ -19,7 +19,7 @@ settings = get_settings()
 router = APIRouter()
 
 
-@router.post("/signup/", response_model=user_schemas.User)
+@router.post("/signup/", response_model=user_schemas.User, status_code=status.HTTP_201_CREATED)
 async def signup(
     user: user_schemas.CreateUser,
     db: Session = Depends(get_db),
@@ -49,7 +49,7 @@ async def signup(
     return created_user
 
 
-@router.post("/login")
+@router.post("/login/")
 async def login_for_access_token(
     form_data: Annotated[OAuth2PasswordRequestForm, Depends()],
     db: Session = Depends(get_db),
