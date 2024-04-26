@@ -28,21 +28,24 @@ def test_app():
     # teardown: drop all tables after all tests are done
     Base.metadata.drop_all(bind=engine)
 
+
 USER1 = {
     "username": "testuser1",
     "email": "testuser1@example.com",
-    "password": "password123"
+    "password": "password123",
 }
 USER2 = {
     "username": "testuser2",
     "email": "testuser2@example.com",
-    "password": "password123"
+    "password": "password123",
 }
 USER3 = {
     "username": "testuser3",
     "email": "testuser3@example.com",
-    "password": "password123"
+    "password": "password123",
 }
+
+
 @pytest.fixture(scope="session")
 def auth_token(test_app):
     def get_token(user_data):
@@ -51,11 +54,11 @@ def auth_token(test_app):
         # step 1: sign up the user
         response = test_app.post("/auth/signup/", json=user_data)
         assert response.status_code == 201
-        
+
         # step 2: login to get the token
         login_payload = {
             "username": user_data["username"],
-            "password": user_data["password"]
+            "password": user_data["password"],
         }
         response = test_app.post("/auth/login/", data=login_payload, headers=headers)
         assert response.status_code == 200
