@@ -7,7 +7,7 @@ sample_user = {
 
 def test_signup_success(test_app):
     response = test_app.post("/auth/signup/", json=sample_user)
-    assert response.status_code == 200
+    assert response.status_code == 201
     data = response.json()
     assert data["id"]
 
@@ -21,6 +21,7 @@ def test_signup_email_already_exists(test_app):
     response = test_app.post("/auth/signup/", json=payload)
     assert response.status_code == 400
     assert response.json().get("detail") == "Email is already in use."
+
 
 def test_signup_username_already_exists(test_app):
     payload = {

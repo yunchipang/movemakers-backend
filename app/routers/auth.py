@@ -19,34 +19,46 @@ settings = get_settings()
 router = APIRouter()
 
 
-@router.post("/signup/", response_model=user_schemas.User)
+@router.post(
+    "/signup/", response_model=user_schemas.User, status_code=status.HTTP_201_CREATED
+)
 async def signup(
     user: user_schemas.CreateUser,
-    db: Session=Depends(get_db),
+    db: Session = Depends(get_db),
 ):
     """processes request to register a user account by checking for duplicate username and email."""
     # check if the username and/or email is already in use
-    existing_user_by_username = await user_services.get_user_by_username(username=user.username, db=db)
+    existing_user_by_username = await user_services.get_user_by_username(
+        username=user.username, db=db
+    )
     if existing_user_by_username:
         raise HTTPException(status_code=400, detail="Username is already in use.")
-    
-    existing_user_by_email = await user_services.get_user_by_email(email=user.email, db=db)
+
+    existing_user_by_email = await user_services.get_user_by_email(
+        email=user.email, db=db
+    )
     if existing_user_by_email:
         raise HTTPException(status_code=400, detail="Email is already in use.")
-    
+
     hashed_password = hash_password(user.hashed_password)
-    hashed_password_bytes = hashed_password.encode('utf-8') if isinstance(hashed_password, str) else hashed_password
+    hashed_password_bytes = (
+        hashed_password.encode("utf-8")
+        if isinstance(hashed_password, str)
+        else hashed_password
+    )
     user.hashed_password = hashed_password_bytes
     created_user = await user_services.create_user(user=user, db=db)
     return created_user
 
 
-@router.post("/login")
+@router.post("/login/")
 async def login_for_access_token(
     form_data: Annotated[OAuth2PasswordRequestForm, Depends()],
-    db: Session=Depends(get_db)
+    db: Session = Depends(get_db),
 ) -> token_schemas.Token:
-    user = await user_services.authenticate_user(form_data.username, form_data.password, db=db)
+    user = await user_services.authenticate_user(
+        form_data.username, form_data.password, db=db
+    )
     if not user:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,

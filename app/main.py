@@ -12,6 +12,7 @@ async def lifespan(app: FastAPI):
     yield  # this yield is necessary for the context manager to work correctly
     print("Shutting down...")  # optionally, handle any shutdown logic here
 
+
 app = FastAPI(lifespan=lifespan)
 
 # register routers

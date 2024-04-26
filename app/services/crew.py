@@ -1,20 +1,21 @@
-from typing import TYPE_CHECKING, List
+from typing import List
 
+from fastapi import Depends
+
+from app.database import get_db
 from app.models import crew as crew_models
 from app.models import dancer as dancer_models
 from app.models import studio as studio_models
 from app.schemas import crew as crew_schemas
 
-
 import uuid
 
-if TYPE_CHECKING:
-    from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session
 
 
 # create a crew instance in database using the crew data passed in
 async def create_crew(
-    crew: crew_schemas.CreateCrew, db: "Session"
+    crew: crew_schemas.CreateCrew, db: Session = Depends(get_db)
 ) -> crew_schemas.Crew:
     crew_data = crew.model_dump(exclude={"home_studio_id", "leader_ids", "member_ids"})
 
@@ -48,19 +49,19 @@ async def create_crew(
 
 
 # query database to get all crews
-async def get_all_crews(db: "Session") -> List[crew_schemas.Crew]:
+async def get_all_crews(db: Session = Depends(get_db)) -> List[crew_schemas.Crew]:
     crews = db.query(crew_models.Crew).all()
     return [crew_schemas.Crew.model_validate(crew) for crew in crews]
 
 
 # query database for a specific crew with the crew id
-async def get_crew(crew_id: str, db: "Session"):
+async def get_crew(crew_id: str, db: Session = Depends(get_db)):
     crew = db.query(crew_models.Crew).filter(crew_models.Crew.id == crew_id).first()
     return crew
 
 
 # delete a specific crew from the database
-async def delete_crew(crew: crew_models.Crew, db: "Session"):
+async def delete_crew(crew: crew_models.Crew, db: Session = Depends(get_db)):
     db.delete(crew)
     db.commit()
 
@@ -69,7 +70,7 @@ async def delete_crew(crew: crew_models.Crew, db: "Session"):
 async def update_crew(
     crew_id: uuid.UUID,
     crew_data: crew_schemas.UpdateCrew,
-    db: "Session",
+    db: Session = Depends(get_db),
 ) -> crew_schemas.Crew:
 
     # fetch exisiting crew by id from the database

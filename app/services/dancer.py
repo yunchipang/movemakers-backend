@@ -1,17 +1,19 @@
-from typing import TYPE_CHECKING, List
+from typing import List
 
+from fastapi import Depends
+
+from app.database import get_db
 from app.models import dancer as dancer_models
 from app.schemas import dancer as dancer_schemas
 
-if TYPE_CHECKING:
-    from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session
 
 import uuid
 
 
 # create a dancer instance in database using the dancer data passed in
 async def create_dancer(
-    dancer: dancer_schemas.CreateDancer, db: "Session"
+    dancer: dancer_schemas.CreateDancer, db: Session = Depends(get_db)
 ) -> dancer_schemas.Dancer:
     dancer = dancer_models.Dancer(**dancer.model_dump())
     db.add(dancer)
@@ -21,13 +23,13 @@ async def create_dancer(
 
 
 # query database to get all dancers
-async def get_all_dancers(db: "Session") -> List[dancer_schemas.Dancer]:
+async def get_all_dancers(db: Session = Depends(get_db)) -> List[dancer_schemas.Dancer]:
     dancers = db.query(dancer_models.Dancer).all()
     return [dancer_schemas.Dancer.model_validate(dancer) for dancer in dancers]
 
 
 # query database for a specific dancer with the dancer id
-async def get_dancer(dancer_id: str, db: "Session"):
+async def get_dancer(dancer_id: str, db: Session = Depends(get_db)):
     dancer = (
         db.query(dancer_models.Dancer)
         .filter(dancer_models.Dancer.id == dancer_id)
@@ -40,7 +42,7 @@ async def get_dancer(dancer_id: str, db: "Session"):
 async def update_dancer(
     dancer_id: uuid.UUID,
     dancer_data: dancer_schemas.UpdateDancer,
-    db: "Session",
+    db: Session = Depends(get_db),
 ) -> dancer_schemas.Dancer:
 
     # fetch the existing dancer from the database
@@ -64,6 +66,6 @@ async def update_dancer(
 
 
 # delete a specific dancer from the database
-async def delete_dancer(dancer: dancer_models.Dancer, db: "Session"):
+async def delete_dancer(dancer: dancer_models.Dancer, db: Session = Depends(get_db)):
     db.delete(dancer)
     db.commit()

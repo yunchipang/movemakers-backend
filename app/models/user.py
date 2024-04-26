@@ -1,6 +1,7 @@
 import uuid
 
 from sqlalchemy import Boolean, Column, LargeBinary, String, DateTime
+from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
 from sqlalchemy.dialects.postgresql import UUID
 
@@ -29,7 +30,10 @@ class User(Base):
     disabled = Column(Boolean, default=False)
     created_at = Column(DateTime, default=func.now())
 
+    registered_trainings = relationship(
+        "Training", secondary="training_registration", back_populates="participants"
+    )
+
     def __repr__(self):
         """returns strings representation of model instance"""
         return "<User {email!r}>".format(email=self.email)
-

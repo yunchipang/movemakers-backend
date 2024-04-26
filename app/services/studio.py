@@ -1,18 +1,20 @@
-from typing import TYPE_CHECKING, List
+from typing import List
 
+from fastapi import Depends
+
+from app.database import get_db
 from app.models import dancer as dancer_models
 from app.models import studio as studio_models
 from app.schemas import studio as studio_schemas
 
-if TYPE_CHECKING:
-    from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session
 
 import uuid
 
 
 # create a studio instance in database using the studio data passed in
 async def create_studio(
-    studio: studio_schemas.CreateStudio, db: "Session"
+    studio: studio_schemas.CreateStudio, db: Session = Depends(get_db)
 ) -> studio_schemas.Studio:
 
     # exclude owner_ids from studio
@@ -38,13 +40,13 @@ async def create_studio(
 
 
 # query database to get all studios
-async def get_all_studios(db: "Session") -> List[studio_schemas.Studio]:
+async def get_all_studios(db: Session = Depends(get_db)) -> List[studio_schemas.Studio]:
     studios = db.query(studio_models.Studio).all()
     return [studio_schemas.Studio.model_validate(studio) for studio in studios]
 
 
 # query database for a specific studio with the studio id
-async def get_studio(studio_id: str, db: "Session"):
+async def get_studio(studio_id: str, db: Session = Depends(get_db)):
     studio = (
         db.query(studio_models.Studio)
         .filter(studio_models.Studio.id == studio_id)
@@ -54,7 +56,7 @@ async def get_studio(studio_id: str, db: "Session"):
 
 
 # delete a specific studio from the database
-async def delete_studio(studio: studio_models.Studio, db: "Session"):
+async def delete_studio(studio: studio_models.Studio, db: Session = Depends(get_db)):
     db.delete(studio)
     db.commit()
 
@@ -63,7 +65,7 @@ async def delete_studio(studio: studio_models.Studio, db: "Session"):
 async def update_studio(
     studio_id: uuid.UUID,
     studio_data: studio_schemas.UpdateStudio,
-    db: "Session",
+    db: Session = Depends(get_db),
 ) -> studio_schemas.Studio:
 
     # fetch the existing studio from the database

@@ -29,6 +29,48 @@ def test_app():
     Base.metadata.drop_all(bind=engine)
 
 
+USER1 = {
+    "username": "testuser1",
+    "email": "testuser1@example.com",
+    "password": "password123",
+}
+USER2 = {
+    "username": "testuser2",
+    "email": "testuser2@example.com",
+    "password": "password123",
+}
+USER3 = {
+    "username": "testuser3",
+    "email": "testuser3@example.com",
+    "password": "password123",
+}
+
+
+@pytest.fixture(scope="session")
+def auth_token(test_app):
+    def get_token(user_data):
+        headers = {"Content-Type": "application/x-www-form-urlencoded"}
+
+        # step 1: sign up the user
+        response = test_app.post("/auth/signup/", json=user_data)
+        assert response.status_code == 201
+
+        # step 2: login to get the token
+        login_payload = {
+            "username": user_data["username"],
+            "password": user_data["password"],
+        }
+        response = test_app.post("/auth/login/", data=login_payload, headers=headers)
+        assert response.status_code == 200
+        token = response.json()["access_token"]
+        return token
+
+    token1 = get_token(USER1)
+    token2 = get_token(USER2)
+    token3 = get_token(USER3)
+    return {"user1": token1, "user2": token2, "user3": token3}
+
+
 @pytest.fixture(scope="session")
 def core_dancer_id(test_app):
     sample_payload = {
