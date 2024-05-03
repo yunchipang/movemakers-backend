@@ -5,7 +5,7 @@ from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import relationship
 
 from app.association import (
-    choreography_choreographer_association,
+    # choreography_choreographer_association,
     crew_leader_association,
     crew_member_association,
     studio_owner_association,
@@ -52,11 +52,11 @@ class Dancer(Base):
     member_of_crews = relationship(
         "Crew", secondary=crew_member_association, back_populates="members"
     )
-    choreographies = relationship(
-        "Choreography",
-        secondary=choreography_choreographer_association,
-        back_populates="choreographers",
-    )
+    # choreos = relationship(
+    #     "Choreography",
+    #     secondary=choreography_choreographer_association,
+    #     back_populates="choreographers",
+    # )
 
     def __repr__(self):
         """returns strings representation of model instance"""

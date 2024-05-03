@@ -37,16 +37,16 @@ training_registration_association = Table(
     Column("user_id", ForeignKey("users.id"), primary_key=True),
 )
 
-choreography_choreographer_association = Table(
-    "choreography_choreographer",
-    Base.metadata,
-    Column("choreography_id", ForeignKey("choreographies.id"), primary_key=True),
-    Column("choreographer_id", ForeignKey("dancers.id"), primary_key=True),
-)
+# choreography_choreographer_association = Table(
+#     "choreography_choreographer",
+#     Base.metadata,
+#     Column("choreography_id", ForeignKey("choreos.id"), primary_key=True),
+#     Column("choreographer_id", ForeignKey("dancers.id"), primary_key=True),
+# )
 
-choreography_music_association = Table(
-    "choreography_music",
-    Base.metadata,
-    Column("choreography_id", ForeignKey("choreographies.id"), primary_key=True),
-    Column("music_id", ForeignKey("music.id"), primary_key=True),
-)
+# choreography_music_association = Table(
+#     "choreography_music",
+#     Base.metadata,
+#     Column("choreography_id", ForeignKey("choreos.id"), primary_key=True),
+#     Column("music_id", ForeignKey("music.id"), primary_key=True),
+# )
