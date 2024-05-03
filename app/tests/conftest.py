@@ -110,3 +110,18 @@ def core_studio_id(test_app, core_dancer_id):
     ), f"Failed to create sample studio. Status code: {response.status_code}. Response body: {response.text}"
     data = response.json()
     return data["id"]
+
+
+@pytest.fixture(scope="session")
+def core_spotify_track_id(test_app):
+    payload = {
+        "spotify_track_id": "6XpEm7VJ7TZxZTawH8BCSW",
+        "name": "Jump",
+        "artist": "Tyla",
+    }
+    response = test_app.post("/music/", json=payload)
+    assert (
+        response.status_code == 200
+    ), f"Failed to create music. Status code: {response.status_code}. Response body: {response.text}"
+    data = response.json()
+    return data["spotify_track_id"]

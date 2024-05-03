@@ -3,7 +3,7 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI
 
 from app import database
-from app.routers import auth, crew, dancer, music, studio, training, user
+from app.routers import auth, choreography, crew, dancer, music, studio, training, user
 
 
 @asynccontextmanager
@@ -24,7 +24,7 @@ app.include_router(training.router, prefix="/trainings", tags=["trainings"])
 app.include_router(studio.router, prefix="/studios", tags=["studios"])
 app.include_router(crew.router, prefix="/crews", tags=["crews"])
 app.include_router(music.router, prefix="/music", tags=["music"])
-# app.include_router(choreography.router, prefix="/choreos", tags=["choreos"])
+app.include_router(choreography.router, prefix="/choreos", tags=["choreos"])
 
 
 @app.get("/")

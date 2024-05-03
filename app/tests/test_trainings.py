@@ -123,10 +123,10 @@ class TestRegistration:
 
 
 def test_delete_training(test_app, training_id):
-    # delete the crew
+    # delete the training
     delete_response = test_app.delete(f"/trainings/{training_id}")
     assert delete_response.status_code == 200
 
-    # attempt to fetch the deleted crew
+    # attempt to fetch the deleted training
     fetch_response = test_app.get(f"/trainings/{training_id}")
     assert fetch_response.status_code == 404, "Training was not deleted successfully."

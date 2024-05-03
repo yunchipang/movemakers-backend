@@ -1,4 +1,5 @@
 from sqlalchemy import Column, String
+from sqlalchemy.orm import relationship
 
 from app.database import Base
 
@@ -12,5 +13,10 @@ class Music(Base):
     name = Column(String, nullable=False)
     artist = Column(String, nullable=False)
 
+    # fk to the choreos table
+    choreos = relationship("Choreography", back_populates="music")
+
     def __repr__(self):
-        return f"<Music {self.name} by {self.artist}>"
+        return "<Music: {name!r} by {artist!r}>".format(
+            name=self.name, artist=self.artist
+        )

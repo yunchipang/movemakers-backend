@@ -23,6 +23,7 @@ async def create_training(
     db.add(new_training)
     db.flush()
 
+    # todo: use studio services
     studio = (
         db.query(studio_models.Studio)
         .filter(studio_models.Studio.id == training.studio_id)
@@ -59,14 +60,6 @@ async def get_training(training_id: str, db: Session = Depends(get_db)):
         .first()
     )
     return training
-
-
-# delete a specific training from the database
-async def delete_training(
-    training: training_models.Training, db: Session = Depends(get_db)
-):
-    db.delete(training)
-    db.commit()
 
 
 # update a specific training
@@ -107,6 +100,14 @@ async def update_training(
     db.refresh(training)
 
     return training_schemas.Training.model_validate(training)
+
+
+# delete a specific training from the database
+async def delete_training(
+    training: training_models.Training, db: Session = Depends(get_db)
+):
+    db.delete(training)
+    db.commit()
 
 
 async def register_user_for_training(
