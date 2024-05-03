@@ -1,30 +1,37 @@
 # movemakers-fastapi
 
+(wip) find your favorite instructors, studios, classes, crews, and even choreographies!
+
 ### lint & format
 
-```
-❯ ruff check . --fix # run linter (ruff)
-❯ black .  # run formatter (black)
-```
+```sh
+# lint
+❯ ruff check --fix .
+❯ ruff check --fix --select I
 
-### migrations
-
-```
-❯ docker compose exec web alembic init alembic # init migration directory
-❯ docker compose exec web alembic revision --autogenerate -m "<migration message>" # generate migration file
-❯ docker compose exec web alembic upgrade head # apply migrations
+# format
+❯ black .
 ```
 
 ### tests
 
+```sh
+❯ docker exec -it app bash
 ```
-❯ python3 -m pytest
+
+```sh
+root@01c3febebb0d:/app# pytest
 ```
 
 ### run app in docker
 
-```
-❯ docker-compose down # shut down
-❯ docker-compose down -v # shut down and remove the volumes
-❯ docker-compose up -d --build # build & run
+```sh
+# shut down
+❯ docker-compose down
+
+# shut down and remove volumes
+❯ docker-compose down -v
+
+# build & run in detached mode
+❯ docker-compose up -d --build
 ```
