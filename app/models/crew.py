@@ -1,12 +1,12 @@
 import uuid
 
 from sqlalchemy import ARRAY, Boolean, Column, Enum, ForeignKey, Integer, String, Text
-from sqlalchemy.orm import relationship
 from sqlalchemy.dialects.postgresql import UUID
+from sqlalchemy.orm import relationship
 
+from app.association import crew_leader_association, crew_member_association
 from app.database import Base
 from app.enums.style import Style
-from app.association import crew_leader_association, crew_member_association
 
 
 class Crew(Base):

@@ -1,11 +1,12 @@
-from pydantic import BaseModel, ConfigDict, UUID4
 from datetime import datetime
 from typing import List, Optional
 
+from pydantic import UUID4, BaseModel, ConfigDict
+
 from app.enums.level import Level
 from app.enums.style import Style
-from app.schemas.studio import Studio
 from app.schemas.dancer import Dancer
+from app.schemas.studio import Studio
 
 
 class BaseTraining(BaseModel):

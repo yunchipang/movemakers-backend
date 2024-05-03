@@ -1,5 +1,6 @@
-from app.database import Base
 from sqlalchemy import Column, ForeignKey, Table
+
+from app.database import Base
 
 studio_owner_association = Table(
     "studio_owner",
@@ -29,9 +30,23 @@ crew_member_association = Table(
     Column("member_id", ForeignKey("dancers.id"), primary_key=True),
 )
 
-training_registration = Table(
+training_registration_association = Table(
     "training_registration",
     Base.metadata,
     Column("training_id", ForeignKey("trainings.id"), primary_key=True),
     Column("user_id", ForeignKey("users.id"), primary_key=True),
+)
+
+choreography_choreographer_association = Table(
+    "choreography_choreographer",
+    Base.metadata,
+    Column("choreography_id", ForeignKey("choreographies.id"), primary_key=True),
+    Column("choreographer_id", ForeignKey("dancers.id"), primary_key=True),
+)
+
+choreography_music_association = Table(
+    "choreography_music",
+    Base.metadata,
+    Column("choreography_id", ForeignKey("choreographies.id"), primary_key=True),
+    Column("music_id", ForeignKey("music.id"), primary_key=True),
 )

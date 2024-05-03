@@ -1,13 +1,11 @@
 from typing import List
 
 from fastapi import APIRouter, Depends, HTTPException
-
 from sqlalchemy.orm import Session
 
 from app.database import get_db
 from app.schemas import dancer as dancer_schemas
 from app.services import dancer as dancer_services
-
 
 router = APIRouter()
 

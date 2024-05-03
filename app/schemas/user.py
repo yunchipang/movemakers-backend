@@ -1,4 +1,4 @@
-from pydantic import BaseModel, Field, EmailStr, ConfigDict, UUID4
+from pydantic import UUID4, BaseModel, ConfigDict, EmailStr, Field
 
 
 # user

@@ -1,17 +1,15 @@
-from jose import JWTError, jwt
 from typing import Annotated
 
 from fastapi import Depends, HTTPException, status
-
+from jose import JWTError, jwt
 from sqlalchemy.orm import Session
 
 from app.database import get_db
 from app.models import user as user_models
-from app.schemas import user as user_schemas
 from app.schemas import token as token_schemas
+from app.schemas import user as user_schemas
 from app.security import oauth2_scheme, validate_password
 from app.settings import get_settings
-
 
 settings = get_settings()
 

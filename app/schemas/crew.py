@@ -1,5 +1,6 @@
-from pydantic import BaseModel, ConfigDict, HttpUrl, UUID4
 from typing import List, Optional
+
+from pydantic import UUID4, BaseModel, ConfigDict, HttpUrl
 
 from app.enums.style import Style
 from app.schemas.dancer import Dancer

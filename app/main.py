@@ -1,8 +1,9 @@
 from contextlib import asynccontextmanager
+
 from fastapi import FastAPI
 
 from app import database
-from app.routers import dancer, training, studio, crew, auth, user
+from app.routers import auth, crew, dancer, studio, training, user
 
 
 @asynccontextmanager

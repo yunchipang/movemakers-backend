@@ -1,14 +1,13 @@
 from typing import List
 
 from fastapi import APIRouter, Depends, HTTPException, status
-
 from sqlalchemy.orm import Session
 
 from app.database import get_db
+from app.models import user as user_models
 from app.schemas import training as training_schemas
 from app.services import training as training_services
 from app.services import user as user_services
-from app.models import user as user_models
 
 router = APIRouter()
 

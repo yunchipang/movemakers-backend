@@ -1,5 +1,7 @@
-from pydantic import BaseModel, ConfigDict, UUID4
 from typing import List, Optional
+
+from pydantic import UUID4, BaseModel, ConfigDict
+
 from app.schemas.dancer import Dancer
 
 
