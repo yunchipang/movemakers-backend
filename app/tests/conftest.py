@@ -1,10 +1,11 @@
 import pytest
+from fastapi.testclient import TestClient
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
-from app.main import app
+
 from app.database import Base, get_db
+from app.main import app
 from app.settings import get_settings
-from fastapi.testclient import TestClient
 
 
 @pytest.fixture(scope="session")
@@ -109,3 +110,18 @@ def core_studio_id(test_app, core_dancer_id):
     ), f"Failed to create sample studio. Status code: {response.status_code}. Response body: {response.text}"
     data = response.json()
     return data["id"]
+
+
+@pytest.fixture(scope="session")
+def core_spotify_track_id(test_app):
+    payload = {
+        "spotify_track_id": "6XpEm7VJ7TZxZTawH8BCSW",
+        "name": "Jump",
+        "artist": "Tyla",
+    }
+    response = test_app.post("/music/", json=payload)
+    assert (
+        response.status_code == 200
+    ), f"Failed to create music. Status code: {response.status_code}. Response body: {response.text}"
+    data = response.json()
+    return data["spotify_track_id"]

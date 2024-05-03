@@ -3,21 +3,24 @@ import uuid
 from sqlalchemy import (
     Boolean,
     Column,
+    DateTime,
+    Enum,
     ForeignKey,
     Integer,
     String,
-    Enum,
-    DateTime,
+    Text,
 )
-from sqlalchemy.orm import relationship
 from sqlalchemy.dialects.postgresql import UUID
-from datetime import datetime
+from sqlalchemy.orm import relationship
+from sqlalchemy.sql import func
 
+from app.association import (
+    training_instructor_association,
+    training_registration_association,
+)
 from app.database import Base
 from app.enums.level import Level
 from app.enums.style import Style
-
-from app.association import training_instructor_association, training_registration
 
 
 class Training(Base):
@@ -30,10 +33,10 @@ class Training(Base):
         unique=True,
         nullable=False,
     )
-    created_at = Column(DateTime, default=datetime.utcnow)
+    created_at = Column(DateTime, default=func.now())
     level = Column(Enum(Level))
     style = Column(Enum(Style))
-    description = Column(String, nullable=True)
+    description = Column(Text, nullable=True)
     start_time = Column(DateTime, nullable=False)
     end_time = Column(DateTime, nullable=False)
     price = Column(Integer, default=18)
@@ -50,7 +53,9 @@ class Training(Base):
         back_populates="instructed_trainings",
     )
     participants = relationship(
-        "User", secondary=training_registration, back_populates="registered_trainings"
+        "User",
+        secondary=training_registration_association,
+        back_populates="registered_trainings",
     )
 
     def __repr__(self):

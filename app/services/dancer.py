@@ -1,14 +1,12 @@
+import uuid
 from typing import List
 
 from fastapi import Depends
+from sqlalchemy.orm import Session
 
 from app.database import get_db
 from app.models import dancer as dancer_models
 from app.schemas import dancer as dancer_schemas
-
-from sqlalchemy.orm import Session
-
-import uuid
 
 
 # create a dancer instance in database using the dancer data passed in

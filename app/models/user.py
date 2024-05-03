@@ -1,13 +1,12 @@
 import uuid
 
-from sqlalchemy import Boolean, Column, LargeBinary, String, DateTime
+from sqlalchemy import Boolean, Column, DateTime, LargeBinary, String
+from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
-from sqlalchemy.dialects.postgresql import UUID
 
 from app.database import Base
 from app.settings import get_settings
-
 
 settings = get_settings()
 

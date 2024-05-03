@@ -3,16 +3,14 @@ from typing import Annotated
 
 from fastapi import APIRouter, Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordRequestForm
-
 from sqlalchemy.orm import Session
 
 from app.database import get_db
-from app.schemas import user as user_schemas
 from app.schemas import token as token_schemas
+from app.schemas import user as user_schemas
+from app.security import generate_token, hash_password
 from app.services import user as user_services
-from app.security import hash_password, generate_token
 from app.settings import get_settings
-
 
 settings = get_settings()
 

@@ -1,11 +1,11 @@
 import uuid
 
 from sqlalchemy import Column, Integer, String
-from sqlalchemy.orm import relationship
 from sqlalchemy.dialects.postgresql import UUID
+from sqlalchemy.orm import relationship
 
-from app.database import Base
 from app.association import studio_owner_association
+from app.database import Base
 
 
 class Studio(Base):

@@ -1,16 +1,14 @@
+import uuid
 from typing import List
 
 from fastapi import Depends
+from sqlalchemy.orm import Session
 
 from app.database import get_db
 from app.models import crew as crew_models
 from app.models import dancer as dancer_models
 from app.models import studio as studio_models
 from app.schemas import crew as crew_schemas
-
-import uuid
-
-from sqlalchemy.orm import Session
 
 
 # create a crew instance in database using the crew data passed in

@@ -1,15 +1,13 @@
+import uuid
 from typing import List
 
 from fastapi import Depends
+from sqlalchemy.orm import Session
 
 from app.database import get_db
 from app.models import dancer as dancer_models
 from app.models import studio as studio_models
 from app.schemas import studio as studio_schemas
-
-from sqlalchemy.orm import Session
-
-import uuid
 
 
 # create a studio instance in database using the studio data passed in

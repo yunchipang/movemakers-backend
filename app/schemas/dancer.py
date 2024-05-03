@@ -1,6 +1,7 @@
-from pydantic import BaseModel, ConfigDict, UUID4
-from typing import Optional
 from datetime import date
+from typing import Optional
+
+from pydantic import UUID4, BaseModel, ConfigDict
 
 from app.enums.pronouns import Pronouns
 

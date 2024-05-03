@@ -1,6 +1,6 @@
 from typing import Annotated
 
-from fastapi import Depends, APIRouter
+from fastapi import APIRouter, Depends
 
 from app.schemas import user as user_schemas
 from app.services import user as user_services

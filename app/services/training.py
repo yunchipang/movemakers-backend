@@ -1,18 +1,16 @@
+import uuid
 from typing import List
 
 from fastapi import Depends
+from sqlalchemy.orm import Session
 
+from app.association import training_registration_association
 from app.database import get_db
-from app.models import user as user_models
 from app.models import dancer as dancer_models
 from app.models import studio as studio_models
 from app.models import training as training_models
+from app.models import user as user_models
 from app.schemas import training as training_schemas
-from app.association import training_registration
-
-from sqlalchemy.orm import Session
-
-import uuid
 
 
 # create a training instance in database using the training data passed in
@@ -25,6 +23,7 @@ async def create_training(
     db.add(new_training)
     db.flush()
 
+    # todo: use studio services
     studio = (
         db.query(studio_models.Studio)
         .filter(studio_models.Studio.id == training.studio_id)
@@ -61,14 +60,6 @@ async def get_training(training_id: str, db: Session = Depends(get_db)):
         .first()
     )
     return training
-
-
-# delete a specific training from the database
-async def delete_training(
-    training: training_models.Training, db: Session = Depends(get_db)
-):
-    db.delete(training)
-    db.commit()
 
 
 # update a specific training
@@ -111,6 +102,14 @@ async def update_training(
     return training_schemas.Training.model_validate(training)
 
 
+# delete a specific training from the database
+async def delete_training(
+    training: training_models.Training, db: Session = Depends(get_db)
+):
+    db.delete(training)
+    db.commit()
+
+
 async def register_user_for_training(
     training_id: str, user_id: str, db: Session = Depends(get_db)
 ) -> tuple[bool, str]:
@@ -134,7 +133,7 @@ async def register_user_for_training(
 
     # check if the user is already registered for the training
     is_registered = (
-        db.query(training_registration)
+        db.query(training_registration_association)
         .filter_by(training_id=training_id, user_id=user_id)
         .first()
     )
@@ -167,7 +166,7 @@ async def cancel_user_registration(
 
     # check if user is indeed currently registered to the training
     is_registered = (
-        db.query(training_registration)
+        db.query(training_registration_association)
         .filter_by(training_id=training_id, user_id=user_id)
         .first()
     )
