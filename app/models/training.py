@@ -22,7 +22,7 @@ from app.database import Base
 from app.enums.level import Level
 from app.enums.style import Style
 
-from app.utils.formatting import format_instructors
+from app.utils.formatting import format_dancers
 
 
 class Training(Base):
@@ -62,5 +62,5 @@ class Training(Base):
 
     def __repr__(self):
         """returns strings representation of model instance"""
-        instructors_string = format_instructors(self.instructors)
+        instructors_string = format_dancers(self.instructors)
         return f"<Training {self.id}: {self.level.value} {self.style.value} w/ {instructors_string}>"

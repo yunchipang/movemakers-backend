@@ -35,6 +35,14 @@ async def get_choreography(choreo_id: str, db: Session = Depends(get_db)):
     return choreography
 
 
+@router.get("/{choreo_id}/repr", response_model=dict)
+async def get_choreography_repr(choreo_id: str, db: Session = Depends(get_db)):
+    choreography = await choreography_services.get_choreography(choreo_id=choreo_id, db=db)
+    if choreography is None:
+        raise HTTPException(status_code=404, detail="Choreography does not exist")
+    return {"__repr__": repr(choreography)}
+
+
 @router.put("/{choreo_id}", response_model=choreography_schemas.Choreography)
 async def update_choreography(
     choreo_id: str,
