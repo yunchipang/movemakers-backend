@@ -30,11 +30,10 @@ async def get_music(spotify_track_id: str, db: Session = Depends(get_db)):
         raise HTTPException(status_code=404, detail="Music does not exist")
     return music
 
+
 @router.get("/{spotify_track_id}/repr", response_model=dict)
 async def get_music_repr(spotify_track_id: str, db: Session = Depends(get_db)):
-    music = await music_services.get_music(
-        spotify_track_id=spotify_track_id, db=db
-    )
+    music = await music_services.get_music(spotify_track_id=spotify_track_id, db=db)
     if music is None:
         raise HTTPException(status_code=404, detail="Music does not exist")
     return {"__repr__": repr(music)}
