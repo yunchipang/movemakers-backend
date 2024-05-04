@@ -40,4 +40,4 @@ class Crew(Base):
 
     def __repr__(self):
         """returns strings representation of model instance"""
-        return "<Crew {name!r}>".format(name=self.name)
+        return "<Crew: {name!r}>".format(name=self.name)

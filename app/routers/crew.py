@@ -33,6 +33,15 @@ async def get_crew(crew_id: str, db: Session = Depends(get_db)):
         raise HTTPException(status_code=404, detail="Crew does not exist")
     return crew
 
+@router.get("/{crew_id}/repr", response_model=dict)
+async def get_crew_repr(crew_id: str, db: Session = Depends(get_db)):
+    crew = await crew_services.get_crew(
+        crew_id=crew_id, db=db
+    )
+    if crew is None:
+        raise HTTPException(status_code=404, detail="Crew does not exist")
+    return {"__repr__": repr(crew)}
+
 
 # delete a crew by id
 @router.delete("/{crew_id}")

@@ -7,4 +7,3 @@ def format_dancers(dancers):
         return " and ".join(dancer_names)
     else:
         return ", ".join(dancer_names[:-1]) + ", and " + dancer_names[-1]
-    

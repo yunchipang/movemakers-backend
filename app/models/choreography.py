@@ -41,7 +41,9 @@ class Choreography(Base):
     music = relationship("Music", back_populates="choreos")
 
     def __repr__(self):
-        choreographer_names = format_dancers(self.choreographers)
-        music_name = self.music.name
-        music_artist = self.music.artist
-        return f"<Choreography {self.id}: {music_name} by {music_artist} choreographed by {choreographer_names}>"
+        choreographers = format_dancers(self.choreographers)
+        return "<Choreography: {music!r} by {artist!r} choreographed by {choreographers!r}>".format(
+            music=self.music.name,
+            artist=self.music.artist,
+            choreographers=choreographers,
+        )
