@@ -34,6 +34,14 @@ async def get_dancer(dancer_id: str, db: Session = Depends(get_db)):
     return dancer
 
 
+@router.get("/{dancer_id}/repr", response_model=dict)
+async def get_dancer_repr(dancer_id: str, db: Session = Depends(get_db)):
+    dancer = await dancer_services.get_dancer(dancer_id=dancer_id, db=db)
+    if dancer is None:
+        raise HTTPException(status_code=404, detail="Dancer does not exist")
+    return {"__repr__": repr(dancer)}
+
+
 # update a dancer by id
 @router.put("/{dancer_id}", response_model=dancer_schemas.Dancer)
 async def update_dancer(

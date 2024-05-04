@@ -34,6 +34,14 @@ async def get_studio(studio_id: str, db: Session = Depends(get_db)):
     return studio
 
 
+@router.get("/{studio_id}/repr", response_model=dict)
+async def get_studio_repr(studio_id: str, db: Session = Depends(get_db)):
+    studio = await studio_services.get_studio(studio_id=studio_id, db=db)
+    if studio is None:
+        raise HTTPException(status_code=404, detail="Studio does not exist")
+    return {"__repr__": repr(studio)}
+
+
 # delete a studio by id
 @router.delete("/{studio_id}")
 async def delete_studio(studio_id: str, db: Session = Depends(get_db)):

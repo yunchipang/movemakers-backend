@@ -21,6 +21,7 @@ from app.association import (
 from app.database import Base
 from app.enums.level import Level
 from app.enums.style import Style
+from app.utils.formatting import format_dancers
 
 
 class Training(Base):
@@ -60,11 +61,7 @@ class Training(Base):
 
     def __repr__(self):
         """returns strings representation of model instance"""
-        # todo
-        # instructor_names = ", ".join(
-        #     [str(instructor) for instructor in self.instructors]
-        # )
-        # return "<Training level={!r}, style={!r}, instructors={!r}>".format(
-        #     self.level, self.style, instructor_names
-        # )
-        return "<Training {id!r}>".format(id=self.id)
+        instructors_string = format_dancers(self.instructors)
+        return (
+            f"<Training: {self.level.value} {self.style.value} w/ {instructors_string}>"
+        )

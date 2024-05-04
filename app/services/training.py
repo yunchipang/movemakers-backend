@@ -39,6 +39,7 @@ async def create_training(
 
     db.commit()
     db.refresh(new_training)
+
     return training_schemas.Training.model_validate(new_training)
 
 

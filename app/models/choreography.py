@@ -11,6 +11,7 @@ from app.association import (
 from app.database import Base
 from app.enums.level import Level
 from app.enums.style import Style
+from app.utils.formatting import format_dancers
 
 
 class Choreography(Base):
@@ -40,9 +41,9 @@ class Choreography(Base):
     music = relationship("Music", back_populates="choreos")
 
     def __repr__(self):
-        choreographer_names = ", ".join(
-            choreographer.name for choreographer in self.choreographers
+        choreographers = format_dancers(self.choreographers)
+        return "<Choreography: {music!r} by {artist!r} choreographed by {choreographers!r}>".format(
+            music=self.music.name,
+            artist=self.music.artist,
+            choreographers=choreographers,
         )
-        music_name = self.music.name
-        music_artist = self.music.artist
-        return f"<Choreography {self.id}, {music_name} by {music_artist} choreographed by {choreographer_names}>"

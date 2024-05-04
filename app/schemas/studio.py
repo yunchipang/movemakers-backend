@@ -7,15 +7,15 @@ from app.schemas.dancer import Dancer
 
 class BaseStudio(BaseModel):
     name: str
-    address: str
-    email: str
-    phone: str
-    opening_hours: str
+    address: Optional[str] = None
+    email: Optional[str] = None
+    phone: Optional[str] = None
+    opening_hours: Optional[str] = None
     room_count: Optional[int] = None
     founded_in: Optional[int] = None
     instagram: str
-    youtube: str
-    website: str
+    youtube: Optional[str] = None
+    website: Optional[str] = None
 
     model_config = ConfigDict(from_attributes=True)
 
