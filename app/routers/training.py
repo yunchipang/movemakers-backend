@@ -35,6 +35,14 @@ async def get_training(training_id: str, db: Session = Depends(get_db)):
         raise HTTPException(status_code=404, detail="Training does not exist")
     return training
 
+# get a training repr by id
+@router.get("/{training_id}/repr", response_model=dict)
+async def get_training_repr(training_id: str, db: Session = Depends(get_db)):
+    training = await training_services.get_training(training_id=training_id, db=db)
+    if training is None:
+        raise HTTPException(status_code=404, detail="Training does not exist")
+    return {"__repr__": repr(training)}
+
 
 # update a training by id
 @router.put("/{training_id}", response_model=training_schemas.Training)

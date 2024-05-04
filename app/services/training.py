@@ -39,6 +39,7 @@ async def create_training(
 
     db.commit()
     db.refresh(new_training)
+
     return training_schemas.Training.model_validate(new_training)
 
 
@@ -60,6 +61,13 @@ async def get_training(training_id: str, db: Session = Depends(get_db)):
         .first()
     )
     return training
+
+
+async def get_training_repr(training_id: str, db: Session = Depends(get_db)):
+    training = await get_training(training_id, db=db)
+    if not training:
+        return {"error": "Training not found"}
+    return {"__repr__": repr(training)}
 
 
 # update a specific training
