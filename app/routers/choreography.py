@@ -4,6 +4,7 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 
 from app.database import get_db
+from app.exceptions import choreography as choreography_exceptions
 from app.schemas import choreography as choreography_schemas
 from app.services import choreography as choreography_services
 
@@ -27,21 +28,23 @@ async def get_all_choreos(db: Session = Depends(get_db)):
 
 @router.get("/{choreo_id}", response_model=choreography_schemas.Choreography)
 async def get_choreography(choreo_id: str, db: Session = Depends(get_db)):
-    choreography = await choreography_services.get_choreography(
-        choreo_id=choreo_id, db=db
-    )
-    if choreography is None:
-        raise HTTPException(status_code=404, detail="Choreography does not exist")
+    try:
+        choreography = await choreography_services.get_choreography(
+            choreo_id=choreo_id, db=db
+        )
+    except choreography_exceptions.ChoreographyNotFoundError as e:
+        raise HTTPException(status_code=404, detail=str(e))
     return choreography
 
 
 @router.get("/{choreo_id}/repr", response_model=dict)
 async def get_choreography_repr(choreo_id: str, db: Session = Depends(get_db)):
-    choreography = await choreography_services.get_choreography(
-        choreo_id=choreo_id, db=db
-    )
-    if choreography is None:
-        raise HTTPException(status_code=404, detail="Choreography does not exist")
+    try:
+        choreography = await choreography_services.get_choreography(
+            choreo_id=choreo_id, db=db
+        )
+    except choreography_exceptions.ChoreographyNotFoundError as e:
+        raise HTTPException(status_code=404, detail=str(e))
     return {"__repr__": repr(choreography)}
 
 
@@ -54,17 +57,16 @@ async def update_choreography(
     updated_choreography = await choreography_services.update_choreography(
         choreo_id=choreo_id, choreo_data=choreo_data, db=db
     )
-    if updated_choreography is None:
-        raise HTTPException(status_code=404, detail="Choreography not found")
     return updated_choreography
 
 
 @router.delete("/{choreo_id}")
 async def delete_choreography(choreo_id: str, db: Session = Depends(get_db)):
-    choreography = await choreography_services.get_choreography(
-        choreo_id=choreo_id, db=db
-    )
-    if choreography is None:
-        raise HTTPException(status_code=404, detail="Choreography does not exist")
+    try:
+        choreography = await choreography_services.get_choreography(
+            choreo_id=choreo_id, db=db
+        )
+    except choreography_exceptions.ChoreographyNotFoundError as e:
+        raise HTTPException(status_code=404, detail=str(e))
     await choreography_services.delete_choreography(choreography, db=db)
     return "Successfully deleted the choreography"

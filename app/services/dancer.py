@@ -45,7 +45,6 @@ async def update_dancer(
     dancer_data: dancer_schemas.UpdateDancer,
     db: Session = Depends(get_db),
 ) -> dancer_schemas.Dancer:
-
     dancer = await get_dancer(dancer_id=dancer_id, db=db)
     for k, v in dancer_data.model_dump(exclude_unset=True).items():
         if hasattr(dancer, k):
