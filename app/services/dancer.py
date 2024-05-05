@@ -5,6 +5,7 @@ from fastapi import Depends
 from sqlalchemy.orm import Session
 
 from app.database import get_db
+from app.exceptions import dancer as dancer_exceptions
 from app.models import dancer as dancer_models
 from app.schemas import dancer as dancer_schemas
 
@@ -33,17 +34,9 @@ async def get_dancer(dancer_id: str, db: Session = Depends(get_db)):
         .filter(dancer_models.Dancer.id == dancer_id)
         .first()
     )
+    if not dancer:
+        raise dancer_exceptions.DancerNotFoundError(dancer_id)
     return dancer
-
-
-# query database for a list for dancer ids
-async def get_dancers(dancer_ids: List[str], db: Session = Depends(get_db)):
-    dancers = (
-        db.query(dancer_models.Dancer)
-        .filter(dancer_models.Dancer.id.in_(dancer_ids))
-        .all()
-    )
-    return dancers
 
 
 # update a specific dancer in the database
@@ -53,16 +46,7 @@ async def update_dancer(
     db: Session = Depends(get_db),
 ) -> dancer_schemas.Dancer:
 
-    # fetch the existing dancer from the database
-    dancer = (
-        db.query(dancer_models.Dancer)
-        .filter(dancer_models.Dancer.id == dancer_id)
-        .first()
-    )
-    if not dancer:
-        raise Exception("Dancer not found")
-
-    # apply the updates to the dancer, skipping any None values
+    dancer = await get_dancer(dancer_id=dancer_id, db=db)
     for k, v in dancer_data.model_dump(exclude_unset=True).items():
         if hasattr(dancer, k):
             setattr(dancer, k, v)
