@@ -41,14 +41,7 @@ async def update_music(
     db: Session = Depends(get_db),
 ) -> music_schemas.Music:
 
-    music = (
-        db.query(music_models.Music)
-        .filter(music_models.Music.spotify_track_id == spotify_track_id)
-        .first()
-    )
-    if not music:
-        raise Exception("Music not found")
-
+    music = await get_music(spotify_track_id=spotify_track_id, db=db)
     for k, v in music_data.model_dump(exclude_unset=True).items():
         if hasattr(music, k):
             setattr(music, k, v)

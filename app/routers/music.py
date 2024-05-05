@@ -51,16 +51,15 @@ async def update_music(
     updated_music = await music_services.update_music(
         spotify_track_id=spotify_track_id, music_data=music_data, db=db
     )
-    if music_data is None:
-        raise HTTPException(status_code=404, detail="Music not found")
     return updated_music
 
 
 @router.delete("/{spotify_track_id}")
 async def delete_music(spotify_track_id: str, db: Session = Depends(get_db)):
-    music = await music_services.get_music(spotify_track_id=spotify_track_id, db=db)
-    if music is None:
-        raise HTTPException(status_code=404, detail="Music does not exist")
+    try:
+        music = await music_services.get_music(spotify_track_id=spotify_track_id, db=db)
+    except music_exceptions.MusicNotFoundError as e:
+        raise HTTPException(status_code=404, detail=str(e))
 
     await music_services.delete_music(music, db=db)
     return "Successfully deleted the music"
