@@ -21,7 +21,7 @@ async def create_dancer(
 
 # get all dancers
 @router.get("/", response_model=List[dancer_schemas.Dancer])
-async def get_dancers(db: Session = Depends(get_db)):
+async def get_all_dancers(db: Session = Depends(get_db)):
     return await dancer_services.get_all_dancers(db=db)
 
 

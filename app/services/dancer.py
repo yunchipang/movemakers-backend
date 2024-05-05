@@ -36,6 +36,16 @@ async def get_dancer(dancer_id: str, db: Session = Depends(get_db)):
     return dancer
 
 
+# query database for a list for dancer ids
+async def get_dancers(dancer_ids: List[str], db: Session = Depends(get_db)):
+    dancers = (
+        db.query(dancer_models.Dancer)
+        .filter(dancer_models.Dancer.id.in_(dancer_ids))
+        .all()
+    )
+    return dancers
+
+
 # update a specific dancer in the database
 async def update_dancer(
     dancer_id: uuid.UUID,

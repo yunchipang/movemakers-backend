@@ -8,6 +8,7 @@ from app.database import get_db
 from app.models import choreography as choreography_models
 from app.models import dancer as dancer_models
 from app.schemas import choreography as choreography_schemas
+from app.services import dancer as dancer_services
 from app.services import music as music_services
 
 
@@ -20,14 +21,12 @@ async def create_choreography(
     db.add(new_choreo)
     db.flush()
 
+    # assign music for this choreography
     music = await music_services.get_music(choreography.music_id, db=db)
     new_choreo.music = music
-    # todo: use dancer services here
-    choreographers = (
-        db.query(dancer_models.Dancer)
-        .filter(dancer_models.Dancer.id.in_(choreography.choreographer_ids))
-        .all()
-    )
+
+    # assign choreographers for this choreography
+    choreographers = await dancer_services.get_dancers(choreography.choreographer_ids)
     new_choreo.choreographers = choreographers
 
     db.commit()
