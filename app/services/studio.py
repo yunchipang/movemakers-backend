@@ -5,9 +5,10 @@ from fastapi import Depends
 from sqlalchemy.orm import Session
 
 from app.database import get_db
-from app.models import dancer as dancer_models
+from app.exceptions import studio as studio_exceptions
 from app.models import studio as studio_models
 from app.schemas import studio as studio_schemas
+from app.services import dancer as dancer_services
 
 
 # create a studio instance in database using the studio data passed in
@@ -25,11 +26,10 @@ async def create_studio(
 
     # associate owners with the new studio if owner_ids were provided
     if studio.owner_ids:
-        owners = (
-            db.query(dancer_models.Dancer)
-            .filter(dancer_models.Dancer.id.in_(studio.owner_ids))
-            .all()
-        )
+        owners = []
+        for owner_id in studio.owner_ids:
+            owner = await dancer_services.get_dancer(owner_id, db=db)
+            owners.append(owner)
         new_studio.owners = owners
 
     db.commit()
@@ -50,13 +50,9 @@ async def get_studio(studio_id: str, db: Session = Depends(get_db)):
         .filter(studio_models.Studio.id == studio_id)
         .first()
     )
+    if not studio:
+        raise studio_exceptions.StudioNotFoundError(studio_id)
     return studio
-
-
-# delete a specific studio from the database
-async def delete_studio(studio: studio_models.Studio, db: Session = Depends(get_db)):
-    db.delete(studio)
-    db.commit()
 
 
 # update a specific studio in the database
@@ -65,32 +61,25 @@ async def update_studio(
     studio_data: studio_schemas.UpdateStudio,
     db: Session = Depends(get_db),
 ) -> studio_schemas.Studio:
-
-    # fetch the existing studio from the database
-    studio = (
-        db.query(studio_models.Studio)
-        .filter(studio_models.Studio.id == studio_id)
-        .first()
-    )
-    if not studio:
-        raise Exception("Studio not found")
-
-    # apply the updates to the studio, skipping any None values
+    studio = await get_studio(studio_id=studio_id, db=db)
     for k, v in studio_data.model_dump(exclude_unset=True).items():
         if k != "owner_ids" and hasattr(studio, k):
             setattr(studio, k, v)
 
-    # if owner_ids are provided, update the studio's owners
     if studio_data.owner_ids:
-        # query the database for the specified Dancer objects
-        new_owners = (
-            db.query(dancer_models.Dancer)
-            .filter(dancer_models.Dancer.id.in_(studio_data.owner_ids))
-            .all()
-        )
+        new_owners = []
+        for owner_id in studio_data.owner_ids:
+            owner = await dancer_services.get_dancer(owner_id, db=db)
+            new_owners.append(owner)
         studio.owners = new_owners
 
     db.commit()
     db.refresh(studio)
 
     return studio_schemas.Studio.model_validate(studio)
+
+
+# delete a specific studio from the database
+async def delete_studio(studio: studio_models.Studio, db: Session = Depends(get_db)):
+    db.delete(studio)
+    db.commit()

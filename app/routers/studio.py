@@ -4,6 +4,7 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 
 from app.database import get_db
+from app.exceptions import studio as studio_exceptions
 from app.schemas import studio as studio_schemas
 from app.services import studio as studio_services
 
@@ -28,29 +29,20 @@ async def get_studios(db: Session = Depends(get_db)):
 # get studio by id
 @router.get("/{studio_id}", response_model=studio_schemas.Studio)
 async def get_studio(studio_id: str, db: Session = Depends(get_db)):
-    studio = await studio_services.get_studio(studio_id=studio_id, db=db)
-    if studio is None:
-        raise HTTPException(status_code=404, detail="Studio does not exist")
+    try:
+        studio = await studio_services.get_studio(studio_id=studio_id, db=db)
+    except studio_exceptions.StudioNotFoundError as e:
+        raise HTTPException(status_code=404, detail=str(e))
     return studio
 
 
 @router.get("/{studio_id}/repr", response_model=dict)
 async def get_studio_repr(studio_id: str, db: Session = Depends(get_db)):
-    studio = await studio_services.get_studio(studio_id=studio_id, db=db)
-    if studio is None:
-        raise HTTPException(status_code=404, detail="Studio does not exist")
+    try:
+        studio = await studio_services.get_studio(studio_id=studio_id, db=db)
+    except studio_exceptions.StudioNotFoundError as e:
+        raise HTTPException(status_code=404, detail=str(e))
     return {"__repr__": repr(studio)}
-
-
-# delete a studio by id
-@router.delete("/{studio_id}")
-async def delete_studio(studio_id: str, db: Session = Depends(get_db)):
-    studio = await studio_services.get_studio(studio_id=studio_id, db=db)
-    if studio is None:
-        raise HTTPException(status_code=404, detail="Studio does not exist")
-
-    await studio_services.delete_studio(studio, db=db)
-    return "Successfully deleted the studio"
 
 
 # update a studio by id
@@ -63,6 +55,16 @@ async def update_studio(
     updated_studio = await studio_services.update_studio(
         studio_id=studio_id, studio_data=studio_data, db=db
     )
-    if updated_studio is None:
-        raise HTTPException(status_code=404, detail="Studio not found")
     return updated_studio
+
+
+# delete a studio by id
+@router.delete("/{studio_id}")
+async def delete_studio(studio_id: str, db: Session = Depends(get_db)):
+    try:
+        studio = await studio_services.get_studio(studio_id=studio_id, db=db)
+    except studio_exceptions.StudioNotFoundError as e:
+        raise HTTPException(status_code=404, detail=str(e))
+
+    await studio_services.delete_studio(studio, db=db)
+    return "Successfully deleted the studio"
