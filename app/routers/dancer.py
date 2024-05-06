@@ -32,7 +32,7 @@ async def get_dancer(dancer_id: str, db: Session = Depends(get_db)):
     try:
         dancer = await dancer_services.get_dancer(dancer_id=dancer_id, db=db)
     except dancer_exceptions.DancerNotFoundError as e:
-        raise HTTPException(status_code=404, detail=str(e))
+        raise HTTPException(status_code=e.status_code, detail=e.detail)
     return dancer
 
 
@@ -41,7 +41,7 @@ async def get_dancer_repr(dancer_id: str, db: Session = Depends(get_db)):
     try:
         dancer = await dancer_services.get_dancer(dancer_id=dancer_id, db=db)
     except dancer_exceptions.DancerNotFoundError as e:
-        raise HTTPException(status_code=404, detail=str(e))
+        raise HTTPException(status_code=e.status_code, detail=e.detail)
     return {"__repr__": repr(dancer)}
 
 
@@ -64,7 +64,7 @@ async def delete_dancer(dancer_id: str, db: Session = Depends(get_db)):
     try:
         dancer = await dancer_services.get_dancer(dancer_id=dancer_id, db=db)
     except dancer_exceptions.DancerNotFoundError as e:
-        raise HTTPException(status_code=404, detail=str(e))
+        raise HTTPException(status_code=e.status_code, detail=e.detail)
 
     await dancer_services.delete_dancer(dancer, db=db)
     return "Successfully deleted the dancer"

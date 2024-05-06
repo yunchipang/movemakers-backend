@@ -31,7 +31,7 @@ async def get_music(spotify_track_id: str, db: Session = Depends(get_db)):
         .first()
     )
     if not music:
-        raise music_exceptions.MusicNotFoundError(spotify_track_id)
+        raise music_exceptions.MusicNotFoundError
     return music
 
 

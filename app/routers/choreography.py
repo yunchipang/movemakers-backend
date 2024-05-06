@@ -33,7 +33,7 @@ async def get_choreography(choreo_id: str, db: Session = Depends(get_db)):
             choreo_id=choreo_id, db=db
         )
     except choreography_exceptions.ChoreographyNotFoundError as e:
-        raise HTTPException(status_code=404, detail=str(e))
+        raise HTTPException(status_code=e.status_code, detail=e.detail)
     return choreography
 
 
@@ -44,7 +44,7 @@ async def get_choreography_repr(choreo_id: str, db: Session = Depends(get_db)):
             choreo_id=choreo_id, db=db
         )
     except choreography_exceptions.ChoreographyNotFoundError as e:
-        raise HTTPException(status_code=404, detail=str(e))
+        raise HTTPException(status_code=e.status_code, detail=e.detail)
     return {"__repr__": repr(choreography)}
 
 
@@ -67,6 +67,6 @@ async def delete_choreography(choreo_id: str, db: Session = Depends(get_db)):
             choreo_id=choreo_id, db=db
         )
     except choreography_exceptions.ChoreographyNotFoundError as e:
-        raise HTTPException(status_code=404, detail=str(e))
+        raise HTTPException(status_code=e.status_code, detail=e.detail)
     await choreography_services.delete_choreography(choreography, db=db)
     return "Successfully deleted the choreography"

@@ -32,7 +32,7 @@ async def get_studio(studio_id: str, db: Session = Depends(get_db)):
     try:
         studio = await studio_services.get_studio(studio_id=studio_id, db=db)
     except studio_exceptions.StudioNotFoundError as e:
-        raise HTTPException(status_code=404, detail=str(e))
+        raise HTTPException(status_code=e.status_code, detail=e.detail)
     return studio
 
 
@@ -41,7 +41,7 @@ async def get_studio_repr(studio_id: str, db: Session = Depends(get_db)):
     try:
         studio = await studio_services.get_studio(studio_id=studio_id, db=db)
     except studio_exceptions.StudioNotFoundError as e:
-        raise HTTPException(status_code=404, detail=str(e))
+        raise HTTPException(status_code=e.status_code, detail=e.detail)
     return {"__repr__": repr(studio)}
 
 
@@ -64,7 +64,7 @@ async def delete_studio(studio_id: str, db: Session = Depends(get_db)):
     try:
         studio = await studio_services.get_studio(studio_id=studio_id, db=db)
     except studio_exceptions.StudioNotFoundError as e:
-        raise HTTPException(status_code=404, detail=str(e))
+        raise HTTPException(status_code=e.status_code, detail=e.detail)
 
     await studio_services.delete_studio(studio, db=db)
     return "Successfully deleted the studio"

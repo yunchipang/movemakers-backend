@@ -1,4 +1,9 @@
-class StudioNotFoundError(Exception):
-    def __init__(self, studio_id: str):
-        self.studio_id = studio_id
-        super().__init__(f"Studio {self.studio_id} not found")
+from fastapi import HTTPException, status
+
+
+class StudioNotFoundError(HTTPException):
+    def __init__(self):
+        super().__init__(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Studio not found",
+        )

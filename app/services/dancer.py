@@ -35,7 +35,7 @@ async def get_dancer(dancer_id: str, db: Session = Depends(get_db)):
         .first()
     )
     if not dancer:
-        raise dancer_exceptions.DancerNotFoundError(dancer_id)
+        raise dancer_exceptions.DancerNotFoundError
     return dancer
 
 

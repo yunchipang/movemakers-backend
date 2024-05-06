@@ -6,11 +6,13 @@ from sqlalchemy.orm import Session
 
 from app.association import training_registration_association
 from app.database import get_db
-from app.models import dancer as dancer_models
-from app.models import studio as studio_models
+from app.exceptions import training as training_exceptions
+from app.exceptions import user as user_exceptions
 from app.models import training as training_models
-from app.models import user as user_models
 from app.schemas import training as training_schemas
+from app.services import dancer as dancer_services
+from app.services import studio as studio_services
+from app.services import user as user_services
 
 
 # create a training instance in database using the training data passed in
@@ -23,18 +25,12 @@ async def create_training(
     db.add(new_training)
     db.flush()
 
-    # todo: use studio services
-    studio = (
-        db.query(studio_models.Studio)
-        .filter(studio_models.Studio.id == training.studio_id)
-        .first()
-    )
+    studio = await studio_services.get_studio(training.studio_id, db=db)
     new_training.studio = studio
-    instructors = (
-        db.query(dancer_models.Dancer)
-        .filter(dancer_models.Dancer.id.in_(training.instructor_ids))
-        .all()
-    )
+    instructors = []
+    for instructor_id in training.instructor_ids:
+        instructor = await dancer_services.get_dancer(instructor_id, db=db)
+        instructors.append(instructor)
     new_training.instructors = instructors
 
     db.commit()
@@ -60,6 +56,8 @@ async def get_training(training_id: str, db: Session = Depends(get_db)):
         .filter(training_models.Training.id == training_id)
         .first()
     )
+    if not training:
+        raise training_exceptions.TrainingNotFoundError
     return training
 
 
@@ -70,31 +68,19 @@ async def update_training(
     db: Session = Depends(get_db),
 ) -> training_schemas.Training:
 
-    training = (
-        db.query(training_models.Training)
-        .filter(training_models.Training.id == training_id)
-        .first()
-    )
-    if not training:
-        raise Exception("Training not found")
-
+    training = await get_training(training_id=training_id, db=db)
     for k, v in training_data.model_dump(exclude_unset=True).items():
         if k != "studio_id" and k != "instructor_ids" and hasattr(training, k):
             setattr(training, k, v)
 
     if training_data.studio_id:
-        new_studio = (
-            db.query(studio_models.Studio)
-            .filter(studio_models.Studio.id == training_data.studio_id)
-            .first()
-        )
+        new_studio = await studio_services.get_studio(training_data.studio_id, db=db)
         training.studio = new_studio
     if training_data.instructor_ids:
-        new_instructors = (
-            db.query(dancer_models.Dancer)
-            .filter(dancer_models.Dancer.id.in_(training_data.instructor_ids))
-            .all()
-        )
+        new_instructors = []
+        for instructor_id in training.instructor_ids:
+            instructor = await dancer_services.get_dancer(instructor_id, db=db)
+            new_instructors.append(instructor)
         training.instructors = new_instructors
 
     db.commit()
@@ -113,57 +99,44 @@ async def delete_training(
 
 async def register_user_for_training(
     training_id: str, user_id: str, db: Session = Depends(get_db)
-) -> tuple[bool, str]:
-    # check if the training exists
-    training = (
-        db.query(training_models.Training)
-        .filter(training_models.Training.id == training_id)
-        .first()
-    )
-    if not training:
-        return False, "Training does not exist"
+) -> str:
 
-    # check if the user exists
-    user = db.query(user_models.User).filter(user_models.User.id == user_id).first()
-    if not user:
-        return False, "User does not exist"
+    try:
+        # get training and user
+        training = await get_training(training_id=training_id, db=db)
+        user = await user_services.get_user_by_id(user_id, db=db)
 
-    # check if the training is full
-    if len(training.participants) >= training.max_slots:
-        return False, "Training is full"
+        # register user to the training
+        # check if the training is full
+        if len(training.participants) >= training.max_slots:
+            raise training_exceptions.TrainingFullError
+        # check if the user is already registered
+        is_registered = (
+            db.query(training_registration_association)
+            .filter_by(training_id=training_id, user_id=user_id)
+            .first()
+        )
+        if is_registered:
+            raise user_exceptions.UserAlreadyRegisteredError
 
-    # check if the user is already registered for the training
-    is_registered = (
-        db.query(training_registration_association)
-        .filter_by(training_id=training_id, user_id=user_id)
-        .first()
-    )
-    if is_registered:
-        return False, "User is already registered"
+        training.participants.append(user)
+        db.commit()
 
-    # register the user to the training
-    training.participants.append(user)
-    db.commit()
+    except training_exceptions.TrainingNotFoundError as e:
+        raise e
+    except user_exceptions.UserNotFoundError as e:
+        raise e
 
-    return True, "User successfully registered for the training"
+    return "User successfully registered for the training"
 
 
 async def cancel_user_registration(
     training_id: str, user_id: str, db: Session = Depends(get_db)
 ) -> tuple[bool, str]:
-    # check if the training exists
-    training = (
-        db.query(training_models.Training)
-        .filter(training_models.Training.id == training_id)
-        .first()
-    )
-    if not training:
-        return False, "Training does not exist"
 
-    # check if the user exists
-    user = db.query(user_models.User).filter(user_models.User.id == user_id).first()
-    if not user:
-        return False, "User does not exist"
+    # check if training and user both exist
+    training = await get_training(training_id, db=db)
+    user = await user_services.get_user_by_id(user_id, db=db)
 
     # check if user is indeed currently registered to the training
     is_registered = (

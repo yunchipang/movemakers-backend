@@ -29,7 +29,7 @@ async def get_music(spotify_track_id: str, db: Session = Depends(get_db)):
     try:
         music = await music_services.get_music(spotify_track_id=spotify_track_id, db=db)
     except music_exceptions.MusicNotFoundError as e:
-        raise HTTPException(status_code=404, detail=str(e))
+        raise HTTPException(status_code=e.status_code, detail=e.detail)
     return music
 
 
@@ -38,7 +38,7 @@ async def get_music_repr(spotify_track_id: str, db: Session = Depends(get_db)):
     try:
         music = await music_services.get_music(spotify_track_id=spotify_track_id, db=db)
     except music_exceptions.MusicNotFoundError as e:
-        raise HTTPException(status_code=404, detail=str(e))
+        raise HTTPException(status_code=e.status_code, detail=e.detail)
     return {"__repr__": repr(music)}
 
 
@@ -59,7 +59,7 @@ async def delete_music(spotify_track_id: str, db: Session = Depends(get_db)):
     try:
         music = await music_services.get_music(spotify_track_id=spotify_track_id, db=db)
     except music_exceptions.MusicNotFoundError as e:
-        raise HTTPException(status_code=404, detail=str(e))
+        raise HTTPException(status_code=e.status_code, detail=e.detail)
 
     await music_services.delete_music(music, db=db)
     return "Successfully deleted the music"

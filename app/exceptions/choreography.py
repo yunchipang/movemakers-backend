@@ -1,4 +1,9 @@
-class ChoreographyNotFoundError(Exception):
-    def __init__(self, choreo_id: str):
-        self.choreo_id = choreo_id
-        super().__init__(f"Choreography {self.choreo_id} not found")
+from fastapi import HTTPException, status
+
+
+class ChoreographyNotFoundError(HTTPException):
+    def __init__(self):
+        super().__init__(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Choreography not found",
+        )

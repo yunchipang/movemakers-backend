@@ -1,4 +1,9 @@
-class MusicNotFoundError(Exception):
-    def __init__(self, spotify_track_id: str):
-        self.spotify_track_id = spotify_track_id
-        super().__init__(f"Music {self.spotify_track_id} not found")
+from fastapi import HTTPException, status
+
+
+class MusicNotFoundError(HTTPException):
+    def __init__(self):
+        super().__init__(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Music not found",
+        )

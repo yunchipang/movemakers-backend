@@ -51,7 +51,7 @@ async def get_studio(studio_id: str, db: Session = Depends(get_db)):
         .first()
     )
     if not studio:
-        raise studio_exceptions.StudioNotFoundError(studio_id)
+        raise studio_exceptions.StudioNotFoundError
     return studio
 
 

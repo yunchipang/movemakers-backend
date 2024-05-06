@@ -54,7 +54,7 @@ async def get_choreography(choreo_id: str, db: Session = Depends(get_db)):
         .first()
     )
     if not choreo:
-        raise choreography_exceptions.ChoreographyNotFoundError(choreo_id)
+        raise choreography_exceptions.ChoreographyNotFoundError
     return choreo
 
 
