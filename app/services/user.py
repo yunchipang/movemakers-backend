@@ -1,3 +1,4 @@
+import uuid
 from typing import Annotated
 
 from fastapi import Depends, HTTPException, status
@@ -22,6 +23,10 @@ async def create_user(
     db.commit()
     db.refresh(user)
     return user_schemas.User.model_validate(user)
+
+
+async def get_user_by_id(id: uuid.UUID, db: Session = Depends(get_db)):
+    return db.query(user_models.User).filter(user_models.User.id == id).first()
 
 
 async def get_user_by_username(username: str, db: Session = Depends(get_db)):

@@ -5,9 +5,10 @@ from fastapi import Depends
 from sqlalchemy.orm import Session
 
 from app.database import get_db
+from app.exceptions import choreography as choreography_exceptions
 from app.models import choreography as choreography_models
-from app.models import dancer as dancer_models
 from app.schemas import choreography as choreography_schemas
+from app.services import dancer as dancer_services
 from app.services import music as music_services
 
 
@@ -20,14 +21,15 @@ async def create_choreography(
     db.add(new_choreo)
     db.flush()
 
+    # assign music for this choreography
     music = await music_services.get_music(choreography.music_id, db=db)
     new_choreo.music = music
-    # todo: use dancer services here
-    choreographers = (
-        db.query(dancer_models.Dancer)
-        .filter(dancer_models.Dancer.id.in_(choreography.choreographer_ids))
-        .all()
-    )
+
+    # assign choreographers for this choreography
+    choreographers = []
+    for choreographer_id in choreography.choreographer_ids:
+        choreographer = await dancer_services.get_dancer(choreographer_id, db=db)
+        choreographers.append(choreographer)
     new_choreo.choreographers = choreographers
 
     db.commit()
@@ -51,6 +53,8 @@ async def get_choreography(choreo_id: str, db: Session = Depends(get_db)):
         .filter(choreography_models.Choreography.id == choreo_id)
         .first()
     )
+    if not choreo:
+        raise choreography_exceptions.ChoreographyNotFoundError
     return choreo
 
 
@@ -60,9 +64,6 @@ async def update_choreography(
     db: Session = Depends(get_db),
 ) -> choreography_schemas.Choreography:
     choreo = await get_choreography(choreo_id, db=db)
-    if not choreo:
-        raise Exception("Choreography not found")
-
     for k, v in choreo_data.model_dump(exclude_unset=True).items():
         if k != "music_id" and k != "choreographer_ids" and hasattr(choreo, k):
             setattr(choreo, k, v)
@@ -70,13 +71,12 @@ async def update_choreography(
     if choreo_data.music_id:
         new_music = await music_services.get_music(choreo_data.music_id, db=db)
         choreo.music = new_music
-    # todo: use dancer services here
+
     if choreo_data.choreographer_ids:
-        new_choreographers = (
-            db.query(dancer_models.Dancer)
-            .filter(dancer_models.Dancer.id.in_(choreo_data.choreographer_ids))
-            .all()
-        )
+        new_choreographers = []
+        for choreographer_id in choreo_data.choreographer_ids:
+            choreographer = await dancer_services.get_dancer(choreographer_id, db=db)
+            new_choreographers.append(choreographer)
         choreo.choreographers = new_choreographers
 
     db.commit()

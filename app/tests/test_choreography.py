@@ -22,7 +22,6 @@ def test_get_all_choreos(test_app, choreography_id):
     response = test_app.get("/choreos/")
     assert response.status_code == 200
     choreos = response.json()
-    print(choreos)
     assert any(
         choreo["id"] == choreography_id for choreo in choreos
     ), "Choreography not found in the list of all choreos."

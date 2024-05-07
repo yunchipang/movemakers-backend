@@ -1,6 +1,7 @@
 import uuid
 
 import pytest
+from fastapi import status
 
 
 @pytest.fixture(scope="module")
@@ -89,7 +90,7 @@ class TestRegistration:
             f"/trainings/{self.training_id}/register",
             headers=self.get_headers(self.tokens["user3"]),
         )
-        assert response.status_code == 400
+        assert response.status_code == status.HTTP_400_BAD_REQUEST
         assert response.json() == {"detail": "Training is full"}
 
     def test_register_training_cancel(self):
@@ -118,8 +119,8 @@ class TestRegistration:
             f"/trainings/{non_existent_training_id}/register",
             headers=self.get_headers(self.tokens["user1"]),
         )
-        assert response.status_code == 400
-        assert response.json() == {"detail": "Training does not exist"}
+        assert response.status_code == 404
+        assert response.json() == {"detail": "Training not found"}
 
 
 def test_delete_training(test_app, training_id):
@@ -129,4 +130,5 @@ def test_delete_training(test_app, training_id):
 
     # attempt to fetch the deleted training
     fetch_response = test_app.get(f"/trainings/{training_id}")
-    assert fetch_response.status_code == 404, "Training was not deleted successfully."
+    assert fetch_response.status_code == 404
+    assert fetch_response.json() == {"detail": "Training not found"}

@@ -6,6 +6,7 @@ from sqlalchemy.orm import Session
 from app.database import get_db
 from app.schemas import crew as crew_schemas
 from app.services import crew as crew_services
+from app.exceptions import crew as crew_exceptions
 
 router = APIRouter()
 
@@ -28,29 +29,20 @@ async def get_crews(db: Session = Depends(get_db)):
 # get crew by id
 @router.get("/{crew_id}", response_model=crew_schemas.Crew)
 async def get_crew(crew_id: str, db: Session = Depends(get_db)):
-    crew = await crew_services.get_crew(crew_id=crew_id, db=db)
-    if crew is None:
-        raise HTTPException(status_code=404, detail="Crew does not exist")
+    try:
+        crew = await crew_services.get_crew(crew_id=crew_id, db=db)
+    except crew_exceptions.CrewNotFoundError as e:
+        raise HTTPException(status_code=e.status_code, detail=e.detail)
     return crew
 
 
 @router.get("/{crew_id}/repr", response_model=dict)
 async def get_crew_repr(crew_id: str, db: Session = Depends(get_db)):
-    crew = await crew_services.get_crew(crew_id=crew_id, db=db)
-    if crew is None:
-        raise HTTPException(status_code=404, detail="Crew does not exist")
+    try:
+        crew = await crew_services.get_crew(crew_id=crew_id, db=db)
+    except crew_exceptions.CrewNotFoundError as e:
+        raise HTTPException(status_code=e.status_code, detail=e.detail)
     return {"__repr__": repr(crew)}
-
-
-# delete a crew by id
-@router.delete("/{crew_id}")
-async def delete_crew(crew_id: str, db: Session = Depends(get_db)):
-    crew = await crew_services.get_crew(crew_id=crew_id, db=db)
-    if crew is None:
-        raise HTTPException(status_code=404, detail="Crew does not exist")
-
-    await crew_services.delete_crew(crew, db=db)
-    return "Successfully deleted the crew"
 
 
 # update a crew by id
@@ -63,6 +55,16 @@ async def update_crew(
     updated_crew = await crew_services.update_crew(
         crew_id=crew_id, crew_data=crew_data, db=db
     )
-    if updated_crew is None:
-        raise HTTPException(status_code=404, detail="Crew not found")
     return updated_crew
+
+
+# delete a crew by id
+@router.delete("/{crew_id}")
+async def delete_crew(crew_id: str, db: Session = Depends(get_db)):
+    try:
+        crew = await crew_services.get_crew(crew_id=crew_id, db=db)
+    except crew_exceptions.CrewNotFoundError as e:
+        raise HTTPException(status_code=e.status_code, detail=e.detail)
+    
+    await crew_services.delete_crew(crew, db=db)
+    return "Successfully deleted the crew"

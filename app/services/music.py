@@ -4,6 +4,7 @@ from fastapi import Depends
 from sqlalchemy.orm import Session
 
 from app.database import get_db
+from app.exceptions import music as music_exceptions
 from app.models import music as music_models
 from app.schemas import music as music_schemas
 
@@ -29,6 +30,8 @@ async def get_music(spotify_track_id: str, db: Session = Depends(get_db)):
         .filter(music_models.Music.spotify_track_id == spotify_track_id)
         .first()
     )
+    if not music:
+        raise music_exceptions.MusicNotFoundError
     return music
 
 
@@ -38,14 +41,7 @@ async def update_music(
     db: Session = Depends(get_db),
 ) -> music_schemas.Music:
 
-    music = (
-        db.query(music_models.Music)
-        .filter(music_models.Music.spotify_track_id == spotify_track_id)
-        .first()
-    )
-    if not music:
-        raise Exception("Music not found")
-
+    music = await get_music(spotify_track_id=spotify_track_id, db=db)
     for k, v in music_data.model_dump(exclude_unset=True).items():
         if hasattr(music, k):
             setattr(music, k, v)

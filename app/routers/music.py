@@ -4,6 +4,7 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 
 from app.database import get_db
+from app.exceptions import music as music_exceptions
 from app.schemas import music as music_schemas
 from app.services import music as music_services
 
@@ -25,17 +26,19 @@ async def get_all_music(db: Session = Depends(get_db)):
 
 @router.get("/{spotify_track_id}", response_model=music_schemas.Music)
 async def get_music(spotify_track_id: str, db: Session = Depends(get_db)):
-    music = await music_services.get_music(spotify_track_id=spotify_track_id, db=db)
-    if music is None:
-        raise HTTPException(status_code=404, detail="Music does not exist")
+    try:
+        music = await music_services.get_music(spotify_track_id=spotify_track_id, db=db)
+    except music_exceptions.MusicNotFoundError as e:
+        raise HTTPException(status_code=e.status_code, detail=e.detail)
     return music
 
 
 @router.get("/{spotify_track_id}/repr", response_model=dict)
 async def get_music_repr(spotify_track_id: str, db: Session = Depends(get_db)):
-    music = await music_services.get_music(spotify_track_id=spotify_track_id, db=db)
-    if music is None:
-        raise HTTPException(status_code=404, detail="Music does not exist")
+    try:
+        music = await music_services.get_music(spotify_track_id=spotify_track_id, db=db)
+    except music_exceptions.MusicNotFoundError as e:
+        raise HTTPException(status_code=e.status_code, detail=e.detail)
     return {"__repr__": repr(music)}
 
 
@@ -48,16 +51,15 @@ async def update_music(
     updated_music = await music_services.update_music(
         spotify_track_id=spotify_track_id, music_data=music_data, db=db
     )
-    if music_data is None:
-        raise HTTPException(status_code=404, detail="Music not found")
     return updated_music
 
 
 @router.delete("/{spotify_track_id}")
 async def delete_music(spotify_track_id: str, db: Session = Depends(get_db)):
-    music = await music_services.get_music(spotify_track_id=spotify_track_id, db=db)
-    if music is None:
-        raise HTTPException(status_code=404, detail="Music does not exist")
+    try:
+        music = await music_services.get_music(spotify_track_id=spotify_track_id, db=db)
+    except music_exceptions.MusicNotFoundError as e:
+        raise HTTPException(status_code=e.status_code, detail=e.detail)
 
     await music_services.delete_music(music, db=db)
     return "Successfully deleted the music"
