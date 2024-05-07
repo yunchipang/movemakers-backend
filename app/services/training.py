@@ -27,10 +27,7 @@ async def create_training(
 
     studio = await studio_services.get_studio(training.studio_id, db=db)
     new_training.studio = studio
-    instructors = []
-    for instructor_id in training.instructor_ids:
-        instructor = await dancer_services.get_dancer(instructor_id, db=db)
-        instructors.append(instructor)
+    instructors = await dancer_services.get_dancers(training.instructor_ids, db=db)
     new_training.instructors = instructors
 
     db.commit()
@@ -77,10 +74,7 @@ async def update_training(
         new_studio = await studio_services.get_studio(training_data.studio_id, db=db)
         training.studio = new_studio
     if training_data.instructor_ids:
-        new_instructors = []
-        for instructor_id in training.instructor_ids:
-            instructor = await dancer_services.get_dancer(instructor_id, db=db)
-            new_instructors.append(instructor)
+        new_instructors = await dancer_services.get_dancers(training_data.instructor_ids, db=db)
         training.instructors = new_instructors
 
     db.commit()

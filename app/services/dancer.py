@@ -39,6 +39,14 @@ async def get_dancer(dancer_id: str, db: Session = Depends(get_db)):
     return dancer
 
 
+async def get_dancers(dancer_ids: List[str], db: Session = Depends(get_db)):
+    dancers = []
+    for dancer_id in dancer_ids:
+        dancer = await get_dancer(dancer_id, db=db)
+        dancers.append(dancer)
+    return dancers
+
+
 # update a specific dancer in the database
 async def update_dancer(
     dancer_id: uuid.UUID,

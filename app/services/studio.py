@@ -26,10 +26,7 @@ async def create_studio(
 
     # associate owners with the new studio if owner_ids were provided
     if studio.owner_ids:
-        owners = []
-        for owner_id in studio.owner_ids:
-            owner = await dancer_services.get_dancer(owner_id, db=db)
-            owners.append(owner)
+        owners = await dancer_services.get_dancers(studio.owner_ids, db=db)
         new_studio.owners = owners
 
     db.commit()
@@ -67,10 +64,7 @@ async def update_studio(
             setattr(studio, k, v)
 
     if studio_data.owner_ids:
-        new_owners = []
-        for owner_id in studio_data.owner_ids:
-            owner = await dancer_services.get_dancer(owner_id, db=db)
-            new_owners.append(owner)
+        new_owners = await dancer_services.get_dancers(studio_data.owner_ids, db=db)
         studio.owners = new_owners
 
     db.commit()
