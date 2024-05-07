@@ -6,10 +6,10 @@ from sqlalchemy.orm import Session
 
 from app.database import get_db
 from app.models import crew as crew_models
-from app.models import dancer as dancer_models
-from app.models import studio as studio_models
 from app.schemas import crew as crew_schemas
-
+from app.services import studio as studio_services
+from app.services import dancer as dancer_services
+from app.exceptions import crew as crew_exceptions
 
 # create a crew instance in database using the crew data passed in
 async def create_crew(
@@ -21,24 +21,21 @@ async def create_crew(
     db.add(new_crew)
     db.flush()
 
+    # get & assign home_studio
     if crew.home_studio_id:
-        home_studio = (
-            db.query(studio_models.Studio)
-            .filter(studio_models.Studio.id == crew.home_studio_id)
-            .first()
-        )
+        home_studio = await studio_services.get_studio(crew.home_studio_id, db=db)
         new_crew.home_studio = home_studio
-    leaders = (
-        db.query(dancer_models.Dancer)
-        .filter(dancer_models.Dancer.id.in_(crew.leader_ids))
-        .all()
-    )
+    # get & assign leaders
+    leaders = []
+    for leader_id in crew.leader_ids:
+        leader = await dancer_services.get_dancer(leader_id, db=db)
+        leaders.append(leader)
     new_crew.leaders = leaders
-    members = (
-        db.query(dancer_models.Dancer)
-        .filter(dancer_models.Dancer.id.in_(crew.member_ids))
-        .all()
-    )
+    # get & assign memebers
+    members = []
+    for member_id in crew.member_ids:
+        member = await dancer_services.get_dancer(member_id, db=db)
+        members.append(member)
     new_crew.members = members
 
     db.commit()
@@ -55,13 +52,9 @@ async def get_all_crews(db: Session = Depends(get_db)) -> List[crew_schemas.Crew
 # query database for a specific crew with the crew id
 async def get_crew(crew_id: str, db: Session = Depends(get_db)):
     crew = db.query(crew_models.Crew).filter(crew_models.Crew.id == crew_id).first()
+    if not crew:
+        raise crew_exceptions.CrewNotFoundError
     return crew
-
-
-# delete a specific crew from the database
-async def delete_crew(crew: crew_models.Crew, db: Session = Depends(get_db)):
-    db.delete(crew)
-    db.commit()
 
 
 # update a specific crew in the database
@@ -71,11 +64,7 @@ async def update_crew(
     db: Session = Depends(get_db),
 ) -> crew_schemas.Crew:
 
-    # fetch exisiting crew by id from the database
-    crew = db.query(crew_models.Crew).filter(crew_models.Crew.id == crew_id).first()
-    if not crew:
-        raise Exception("Crew not found")
-
+    crew = await get_crew(crew_id=crew_id, db=db)
     for k, v in crew_data.model_dump(exclude_unset=True).items():
         if (
             k != "home_studio_id"
@@ -86,28 +75,28 @@ async def update_crew(
             setattr(crew, k, v)
     # set home_studio, leaders and members
     if crew_data.home_studio_id:
-        new_home_studio = (
-            db.query(crew_models.Crew)
-            .filter(crew_models.Crew.id == crew_data.home_studio_id)
-            .first()
-        )
+        new_home_studio = await studio_services.get_studio(crew_data.home_studio_id, db=db)
         crew.home_studio = new_home_studio
     if crew_data.leader_ids:
-        new_leaders = (
-            db.query(crew_models.Crew)
-            .filter(crew_models.Crew.id.in_(crew_data.leader_ids))
-            .all()
-        )
+        new_leaders = []
+        for leader_id in crew.leader_ids:
+            leader = await dancer_services.get_dancer(leader_id, db=db)
+            new_leaders.append(leader)
         crew.leaders = new_leaders
     if crew_data.member_ids:
-        new_members = (
-            db.query(crew_models.Crew)
-            .filter(crew_models.Crew.id.in_(crew_data.member_ids))
-            .all()
-        )
+        new_members = []
+        for member_id in crew.member_ids:
+            member = await dancer_services.get_dancer(member_id, db=db)
+            new_members.append(member)
         crew.members = new_members
 
     db.commit()
     db.refresh(crew)
 
     return crew_schemas.Crew.model_validate(crew)
+
+
+# delete a specific crew from the database
+async def delete_crew(crew: crew_models.Crew, db: Session = Depends(get_db)):
+    db.delete(crew)
+    db.commit()
