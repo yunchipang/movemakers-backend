@@ -26,16 +26,10 @@ async def create_crew(
         home_studio = await studio_services.get_studio(crew.home_studio_id, db=db)
         new_crew.home_studio = home_studio
     # get & assign leaders
-    leaders = []
-    for leader_id in crew.leader_ids:
-        leader = await dancer_services.get_dancer(leader_id, db=db)
-        leaders.append(leader)
+    leaders = await dancer_services.get_dancers(crew.leader_ids, db=db)
     new_crew.leaders = leaders
     # get & assign memebers
-    members = []
-    for member_id in crew.member_ids:
-        member = await dancer_services.get_dancer(member_id, db=db)
-        members.append(member)
+    members = await dancer_services.get_dancers(crew.member_ids, db=db)
     new_crew.members = members
 
     db.commit()
@@ -78,16 +72,10 @@ async def update_crew(
         new_home_studio = await studio_services.get_studio(crew_data.home_studio_id, db=db)
         crew.home_studio = new_home_studio
     if crew_data.leader_ids:
-        new_leaders = []
-        for leader_id in crew.leader_ids:
-            leader = await dancer_services.get_dancer(leader_id, db=db)
-            new_leaders.append(leader)
+        new_leaders = await dancer_services.get_dancers(crew_data.leader_ids, db=db)
         crew.leaders = new_leaders
     if crew_data.member_ids:
-        new_members = []
-        for member_id in crew.member_ids:
-            member = await dancer_services.get_dancer(member_id, db=db)
-            new_members.append(member)
+        new_members = await dancer_services.get_dancers(crew_data.member_ids, db=db)
         crew.members = new_members
 
     db.commit()
