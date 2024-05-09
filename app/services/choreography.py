@@ -26,7 +26,9 @@ async def create_choreography(
     new_choreo.music = music
 
     # assign choreographers for this choreography
-    choreographers = await dancer_services.get_dancers(choreography.choreographer_ids, db=db)
+    choreographers = await dancer_services.get_dancers(
+        choreography.choreographer_ids, db=db
+    )
     new_choreo.choreographers = choreographers
 
     db.commit()
@@ -70,7 +72,9 @@ async def update_choreography(
         choreo.music = new_music
 
     if choreo_data.choreographer_ids:
-        new_choreographers = await dancer_services.get_dancers(choreo_data.choreographer_ids, db=db)
+        new_choreographers = await dancer_services.get_dancers(
+            choreo_data.choreographer_ids, db=db
+        )
         choreo.choreographers = new_choreographers
 
     db.commit()
