@@ -28,6 +28,7 @@ class Dancer(Base):
         nullable=False,
     )
     name = Column(String(255), index=True)
+    name_orig = Column(String(255), index=True)
     image_url = Column(String(500), nullable=True)
     pronouns = Column(Enum(Pronouns), nullable=True)
     bio = Column(Text)
