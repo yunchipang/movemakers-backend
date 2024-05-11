@@ -4,9 +4,9 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 
 from app.database import get_db
+from app.exceptions import crew as crew_exceptions
 from app.schemas import crew as crew_schemas
 from app.services import crew as crew_services
-from app.exceptions import crew as crew_exceptions
 
 router = APIRouter()
 
@@ -65,6 +65,6 @@ async def delete_crew(crew_id: str, db: Session = Depends(get_db)):
         crew = await crew_services.get_crew(crew_id=crew_id, db=db)
     except crew_exceptions.CrewNotFoundError as e:
         raise HTTPException(status_code=e.status_code, detail=e.detail)
-    
+
     await crew_services.delete_crew(crew, db=db)
     return "Successfully deleted the crew"

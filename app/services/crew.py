@@ -5,11 +5,12 @@ from fastapi import Depends
 from sqlalchemy.orm import Session
 
 from app.database import get_db
+from app.exceptions import crew as crew_exceptions
 from app.models import crew as crew_models
 from app.schemas import crew as crew_schemas
-from app.services import studio as studio_services
 from app.services import dancer as dancer_services
-from app.exceptions import crew as crew_exceptions
+from app.services import studio as studio_services
+
 
 # create a crew instance in database using the crew data passed in
 async def create_crew(
@@ -69,7 +70,9 @@ async def update_crew(
             setattr(crew, k, v)
     # set home_studio, leaders and members
     if crew_data.home_studio_id:
-        new_home_studio = await studio_services.get_studio(crew_data.home_studio_id, db=db)
+        new_home_studio = await studio_services.get_studio(
+            crew_data.home_studio_id, db=db
+        )
         crew.home_studio = new_home_studio
     if crew_data.leader_ids:
         new_leaders = await dancer_services.get_dancers(crew_data.leader_ids, db=db)

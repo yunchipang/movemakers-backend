@@ -1,6 +1,6 @@
 import uuid
 
-from sqlalchemy import Column, Date, Enum, String, Text
+from sqlalchemy import Column, Date, Enum, LargeBinary, String, Text
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import relationship
 
@@ -28,12 +28,14 @@ class Dancer(Base):
         nullable=False,
     )
     name = Column(String(255), index=True)
+    name_orig = Column(String(255), index=True)
+    image_url = Column(String(500))
     pronouns = Column(Enum(Pronouns), nullable=True)
-    bio = Column(Text)
+    bio = Column(Text, nullable=True)
     date_of_birth = Column(Date, nullable=True)
-    nationality = Column(String(255))
-    based_in = Column(String(255))
-    instagram = Column(String, unique=True)
+    nationality = Column(String(255), nullable=True)
+    based_in = Column(String(255), nullable=True)
+    instagram = Column(String, unique=True, nullable=True)
     youtube = Column(String(255), nullable=True)
     agency = Column(String(255), nullable=True)
     contact_email = Column(String(255), nullable=True)

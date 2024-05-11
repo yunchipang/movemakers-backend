@@ -74,7 +74,9 @@ async def update_training(
         new_studio = await studio_services.get_studio(training_data.studio_id, db=db)
         training.studio = new_studio
     if training_data.instructor_ids:
-        new_instructors = await dancer_services.get_dancers(training_data.instructor_ids, db=db)
+        new_instructors = await dancer_services.get_dancers(
+            training_data.instructor_ids, db=db
+        )
         training.instructors = new_instructors
 
     db.commit()

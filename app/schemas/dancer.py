@@ -12,6 +12,8 @@ from app.enums.pronouns import Pronouns
 # BaseDancer includes the most basic data that can be public facing
 class BaseDancer(BaseModel):
     name: str
+    name_orig: str
+    image_url: str = None
     pronouns: Optional[Pronouns] = None
     bio: Optional[str] = None
     date_of_birth: Optional[date] = None
@@ -35,6 +37,8 @@ class CreateDancer(BaseDancer):
 
 class UpdateDancer(BaseDancer):
     name: Optional[str] = None
+    name_orig: Optional[str] = None
+    image_url: Optional[str] = None
     pronouns: Optional[Pronouns] = None
     bio: Optional[str] = None
     date_of_birth: Optional[date] = None
