@@ -35,6 +35,7 @@ app.include_router(crew.router, prefix="/crews", tags=["crews"])
 app.include_router(music.router, prefix="/music", tags=["music"])
 app.include_router(choreography.router, prefix="/choreos", tags=["choreos"])
 
+
 @app.get("/")
 async def get_root():
     return {"message": "Welcome to MoveMakers API"}

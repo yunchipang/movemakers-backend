@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Optional
 
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
@@ -7,6 +7,7 @@ from app.database import get_db
 from app.exceptions import crew as crew_exceptions
 from app.schemas import crew as crew_schemas
 from app.services import crew as crew_services
+from app.exceptions import dancer as dancer_exceptions
 
 router = APIRouter()
 
@@ -20,11 +21,13 @@ async def create_crew(
     return await crew_services.create_crew(crew=crew, db=db)
 
 
-# get all crews
+# get crews
 @router.get("/", response_model=List[crew_schemas.Crew])
-async def get_crews(db: Session = Depends(get_db)):
-    return await crew_services.get_all_crews(db=db)
-
+async def get_crews(dancer_id: Optional[str] = None, db: Session = Depends(get_db)):
+    if dancer_id:
+        return await crew_services.get_crews_by_dancer(dancer_id, db)
+    else:
+        return await crew_services.get_all_crews(db=db)
 
 # get crew by id
 @router.get("/{crew_id}", response_model=crew_schemas.Crew)

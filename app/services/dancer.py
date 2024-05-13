@@ -29,11 +29,17 @@ async def get_all_dancers(db: Session = Depends(get_db)) -> List[dancer_schemas.
 
 # query database for a specific dancer with the dancer id
 async def get_dancer(dancer_id: str, db: Session = Depends(get_db)):
-    dancer = (
-        db.query(dancer_models.Dancer)
-        .filter(dancer_models.Dancer.id == dancer_id)
-        .first()
-    )
+    try:
+        # ensure the UUID is correctly formatted before querying
+        valid_dancer_id = uuid.UUID(dancer_id)
+        dancer = (
+            db.query(dancer_models.Dancer)
+            .filter(dancer_models.Dancer.id == valid_dancer_id)
+            .first()
+        )
+    except ValueError:
+        raise dancer_exceptions.InvalidDancerIdError
+
     if not dancer:
         raise dancer_exceptions.DancerNotFoundError
     return dancer
