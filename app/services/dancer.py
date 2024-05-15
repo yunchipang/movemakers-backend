@@ -14,11 +14,11 @@ from app.schemas import dancer as dancer_schemas
 async def create_dancer(
     dancer: dancer_schemas.CreateDancer, db: Session = Depends(get_db)
 ) -> dancer_schemas.Dancer:
-    dancer = dancer_models.Dancer(**dancer.model_dump())
-    db.add(dancer)
+    new_dancer = dancer_models.Dancer(**dancer.model_dump())
+    db.add(new_dancer)
     db.commit()
-    db.refresh(dancer)
-    return dancer_schemas.Dancer.model_validate(dancer)
+    db.refresh(new_dancer)
+    return dancer_schemas.Dancer.model_validate(new_dancer)
 
 
 # query database to get all dancers

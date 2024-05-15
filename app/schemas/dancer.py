@@ -1,9 +1,10 @@
 from datetime import date
-from typing import Optional
+from typing import Dict, Optional
 
 from pydantic import UUID4, BaseModel, ConfigDict
 
 from app.enums.pronouns import Pronouns
+from app.schemas.contact import Contact
 
 # 3 schema classes, with the latter 2 inherits the first class BaseDancer
 # to avoid duplication of model fields
@@ -22,7 +23,7 @@ class BaseDancer(BaseModel):
     instagram: str
     youtube: Optional[str] = None
     agency: Optional[str] = None
-    contact_email: Optional[str] = None
+    contacts: Optional[Dict[str, Contact]] = []
 
     model_config = ConfigDict(from_attributes=True)
 
@@ -47,4 +48,4 @@ class UpdateDancer(BaseDancer):
     instagram: Optional[str] = None
     youtube: Optional[str] = None
     agency: Optional[str] = None
-    contact_email: Optional[str] = None
+    contacts: Optional[Dict[str, Contact]] = []

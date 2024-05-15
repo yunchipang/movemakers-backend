@@ -6,11 +6,12 @@ from sqlalchemy.orm import Session
 
 from app.database import get_db
 from app.exceptions import crew as crew_exceptions
+from app.exceptions import dancer as dancer_exceptions
 from app.models import crew as crew_models
 from app.schemas import crew as crew_schemas
 from app.services import dancer as dancer_services
 from app.services import studio as studio_services
-from app.exceptions import dancer as dancer_exceptions
+
 
 # create a crew instance in database using the crew data passed in
 async def create_crew(

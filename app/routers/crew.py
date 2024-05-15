@@ -7,7 +7,6 @@ from app.database import get_db
 from app.exceptions import crew as crew_exceptions
 from app.schemas import crew as crew_schemas
 from app.services import crew as crew_services
-from app.exceptions import dancer as dancer_exceptions
 
 router = APIRouter()
 
@@ -28,6 +27,7 @@ async def get_crews(dancer_id: Optional[str] = None, db: Session = Depends(get_d
         return await crew_services.get_crews_by_dancer(dancer_id, db)
     else:
         return await crew_services.get_all_crews(db=db)
+
 
 # get crew by id
 @router.get("/{crew_id}", response_model=crew_schemas.Crew)
