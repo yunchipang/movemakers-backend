@@ -7,19 +7,18 @@ from app.schemas.agency import Agency
 
 class BaseContact(BaseModel):
     email: str
-    agency: Optional[Agency]
-
+    
     model_config = ConfigDict(from_attributes=True)
 
 
 class Contact(BaseContact):
     id: UUID4
-
+    agency: Optional[Agency] = None
 
 class CreateContact(BaseContact):
-    pass
+    agency_id: Optional[UUID4] = None
 
 
 class UpdateContact(BaseContact):
     email: Optional[str]
-    agency: Optional[Agency]
+    agency_id: Optional[UUID4] = None
