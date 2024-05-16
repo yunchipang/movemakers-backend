@@ -1,3 +1,5 @@
+from typing import List
+
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 
@@ -19,3 +21,8 @@ async def create_contact(
     except contact_exceptions.ContactDuplicateError as e:
         raise HTTPException(status_code=e.status_code, detail=e.detail)
     return new_contact
+
+
+@router.get("/", response_model=List[contact_schemas.Contact])
+async def get_all_contacts(db: Session = Depends(get_db)):
+    return await contact_services.get_all_contacts(db=db)

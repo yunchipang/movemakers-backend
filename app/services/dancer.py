@@ -8,14 +8,23 @@ from app.database import get_db
 from app.exceptions import dancer as dancer_exceptions
 from app.models import dancer as dancer_models
 from app.schemas import dancer as dancer_schemas
-
+from app.services import contact as contact_services
 
 # create a dancer instance in database using the dancer data passed in
 async def create_dancer(
     dancer: dancer_schemas.CreateDancer, db: Session = Depends(get_db)
 ) -> dancer_schemas.Dancer:
-    new_dancer = dancer_models.Dancer(**dancer.model_dump())
+    dancer_data = dancer.model_dump(exclude={"contact_ids"})
+
+    new_dancer = dancer_models.Dancer(**dancer_data)
     db.add(new_dancer)
+    db.flush()
+
+    # associate contacts to this dancer
+    if dancer.contact_ids:
+        contacts = await contact_services.get_contacts(dancer.contact_ids, db=db)
+        new_dancer.contacts = contacts
+    
     db.commit()
     db.refresh(new_dancer)
     return dancer_schemas.Dancer.model_validate(new_dancer)

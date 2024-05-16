@@ -84,7 +84,6 @@ def core_agency_id(test_app):
         response.status_code == 200
     ), f"Failed to create sample agency. Status code: {response.status_code}. Response body: {response.text}"
     data = response.json()
-    print("!!!!!!!!!! core_agency_id:", data["id"])
     return data["id"]
 
 
@@ -92,14 +91,13 @@ def core_agency_id(test_app):
 def core_contact_id(test_app, core_agency_id):
     payload = {
         "email": "info@jamrepublicagency.com",
-        "agency": core_agency_id,
+        "agency_id": core_agency_id,
     }
     response = test_app.post("/contacts/", json=payload)
     assert (
         response.status_code == 200
     ), f"Failed to create sample contact. Status code: {response.status_code}. Response body: {response.text}"
     data = response.json()
-    print("!!!!!!!!!! core_contact_id:", data["id"])
     return data["id"]
 
 
@@ -113,7 +111,6 @@ def core_dancer_id(test_app, core_contact_id):
         "bio": "Bada Lee, is a dancer and choreographer hailing from South Korea. Bada is a powerhouse in the Korean Entertainment scene where she has choreographed for the likes of AESPA, NCT, and The Boyz to name a few. She also dances for Lisa, CL, and Kai. We look forward to seeing more of BADA in the teaching circuit around the globe.",
         "date_of_birth": "1995-09-22",
         "nationality": "KR",
-        "ethnicity": ["KR"],
         "based_in": "Seoul",
         "instagram": "badalee__",
         "youtube": "Bada_bebe",

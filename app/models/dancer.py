@@ -10,6 +10,7 @@ from app.association import (
     crew_member_association,
     studio_owner_association,
     training_instructor_association,
+    dancer_contact_association,
 )
 from app.database import Base
 from app.enums.pronouns import Pronouns
@@ -37,8 +38,6 @@ class Dancer(Base):
     based_in = Column(String(255), nullable=True)
     instagram = Column(String, unique=True, nullable=True)
     youtube = Column(String(255), nullable=True)
-    agency = Column(String(255), nullable=True)
-    contacts = Column(JSON)
 
     owned_studios = relationship(
         "Studio", secondary=studio_owner_association, back_populates="owners"
@@ -58,6 +57,11 @@ class Dancer(Base):
         "Choreography",
         secondary=choreography_choreographer_association,
         back_populates="choreographers",
+    )
+    contacts = relationship(
+        "Contact",
+        secondary=dancer_contact_association,
+        back_populates="dancers"
     )
 
     def __repr__(self):

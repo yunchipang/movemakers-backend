@@ -1,7 +1,7 @@
 from datetime import date
-from typing import Dict, Optional
+from typing import Optional, List
 
-from pydantic import UUID4, BaseModel, ConfigDict
+from pydantic import UUID4, BaseModel, ConfigDict, Field
 
 from app.enums.pronouns import Pronouns
 from app.schemas.contact import Contact
@@ -22,18 +22,16 @@ class BaseDancer(BaseModel):
     based_in: str
     instagram: str
     youtube: Optional[str] = None
-    agency: Optional[str] = None
-    contacts: Optional[Dict[str, Contact]] = []
 
     model_config = ConfigDict(from_attributes=True)
 
 
 class Dancer(BaseDancer):
     id: UUID4
-
+    contacts: List[Contact]
 
 class CreateDancer(BaseDancer):
-    pass
+    contact_ids: List[UUID4] = Field(default_factory=list)
 
 
 class UpdateDancer(BaseDancer):
@@ -47,5 +45,4 @@ class UpdateDancer(BaseDancer):
     based_in: Optional[str] = None
     instagram: Optional[str] = None
     youtube: Optional[str] = None
-    agency: Optional[str] = None
-    contacts: Optional[Dict[str, Contact]] = []
+    contact_ids: Optional[List[UUID4]] = Field(default_factory=list)

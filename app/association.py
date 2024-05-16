@@ -43,3 +43,9 @@ choreography_choreographer_association = Table(
     Column("choreography_id", ForeignKey("choreos.id"), primary_key=True),
     Column("choreographer_id", ForeignKey("dancers.id"), primary_key=True),
 )
+
+dancer_contact_association = Table(
+    'dancer_contact', Base.metadata,
+    Column('dancer_id', ForeignKey('dancers.id'), primary_key=True),
+    Column('contact_id', ForeignKey('contacts.id'), primary_key=True)
+)
