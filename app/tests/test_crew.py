@@ -4,7 +4,9 @@ import pytest
 @pytest.fixture(scope="module")
 def member_id(test_app):
     payload = {
-        "name": "박혜림 HARIMU 🇰🇷",
+        "name": "HARIMU",
+        "name_orig": "박혜림",
+        "image_url": "https://scontent.cdninstagram.com/v/t51.2885-19/296840194_783755619314668_2379122151401318130_n.jpg?_nc_ht=scontent.cdninstagram.com&_nc_cat=104&_nc_ohc=HEWLyaEPQmQQ7kNvgFxzwCS&edm=APs17CUBAAAA&ccb=7-5&oh=00_AYCgi1By22gsIoGcFupngDDXu9UMLXIa8HZweeybXLqWGA&oe=664C4CA5&_nc_sid=10d13b",
         "nationality": "KR",
         "based_in": "Seoul",
         "instagram": "___harimu___",

@@ -56,7 +56,7 @@ async def get_crew(crew_id: str, db: Session = Depends(get_db)):
 # query database for a list of crews that the input dancer is on, either as a leader of a member
 async def get_crews_by_dancer(dancer_id: str, db: Session = Depends(get_db)):
     try:
-        valid_dancer_id = uuid.UUID(dancer_id)
+        valid_dancer_id = uuid.UUID()
         leading_crews = (
             db.query(crew_models.Crew)
             .filter(crew_models.Crew.leaders.any(id=valid_dancer_id))

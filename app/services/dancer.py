@@ -40,7 +40,10 @@ async def get_all_dancers(db: Session = Depends(get_db)) -> List[dancer_schemas.
 async def get_dancer(dancer_id: str, db: Session = Depends(get_db)):
     try:
         # ensure the UUID is correctly formatted before querying
-        valid_dancer_id = uuid.UUID(dancer_id)
+        if isinstance(dancer_id, uuid.UUID):
+            valid_dancer_id = dancer_id
+        else:
+            valid_dancer_id = uuid.UUID(str(dancer_id))
         dancer = (
             db.query(dancer_models.Dancer)
             .filter(dancer_models.Dancer.id == valid_dancer_id)

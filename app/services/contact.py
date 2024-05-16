@@ -36,9 +36,13 @@ async def get_all_contacts(
 
 async def get_contact(contact_id: str, db: Session = Depends(get_db)):
     try:
+        if isinstance(contact_id, uuid.UUID):
+            valid_contact_id = contact_id
+        else:
+            valid_contact_id = uuid.UUID(str(contact_id))
         contact = (
             db.query(contact_models.Contact)
-            .filter(contact_models.Contact.id == contact_id)
+            .filter(contact_models.Contact.id == valid_contact_id)
             .first()
         )
     except ValueError:

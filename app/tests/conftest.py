@@ -90,6 +90,7 @@ def core_agency_id(test_app):
 @pytest.fixture(scope="session")
 def core_contact_id(test_app, core_agency_id):
     payload = {
+        "type": "global",
         "email": "info@jamrepublicagency.com",
         "agency_id": core_agency_id,
     }
@@ -114,7 +115,7 @@ def core_dancer_id(test_app, core_contact_id):
         "based_in": "Seoul",
         "instagram": "badalee__",
         "youtube": "Bada_bebe",
-        "contacts": {"booking": core_contact_id},
+        "contacts": [core_contact_id]
     }
     response = test_app.post("/dancers/", json=payload)
     assert (
