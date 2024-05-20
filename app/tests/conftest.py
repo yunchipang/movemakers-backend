@@ -73,16 +73,51 @@ def auth_token(test_app):
 
 
 @pytest.fixture(scope="session")
-def core_dancer_id(test_app):
-    sample_payload = {
-        "name": "리아킴 | Lia Kim",
-        "bio": "Choreographer\nCo-Founder of @1milliondance\nLeader of @1million_swf",
-        "date_of_birth": "1984-05-24",
+def core_agency_id(test_app):
+    payload = {
+        "name": "Jam Republic",
+        "website": "https://www.jamrepublicagency.com/",
+        "instagram": "jamrepublictheagency",
+    }
+    response = test_app.post("/agencies/", json=payload)
+    assert (
+        response.status_code == 200
+    ), f"Failed to create sample agency. Status code: {response.status_code}. Response body: {response.text}"
+    data = response.json()
+    return data["id"]
+
+
+@pytest.fixture(scope="session")
+def core_contact_id(test_app, core_agency_id):
+    payload = {
+        "type": "global",
+        "email": "info@jamrepublicagency.com",
+        "agency_id": core_agency_id,
+    }
+    response = test_app.post("/contacts/", json=payload)
+    assert (
+        response.status_code == 200
+    ), f"Failed to create sample contact. Status code: {response.status_code}. Response body: {response.text}"
+    data = response.json()
+    return data["id"]
+
+
+@pytest.fixture(scope="session")
+def core_dancer_id(test_app, core_contact_id):
+    payload = {
+        "name": "Bada Lee",
+        "name_orig": "이바다",
+        "image_url": "https://www.jamrepublicagency.com/assets/images/image26.jpg?v=fefc6ee7",
+        "pronouns": "She/Her",
+        "bio": "Bada Lee, is a dancer and choreographer hailing from South Korea. Bada is a powerhouse in the Korean Entertainment scene where she has choreographed for the likes of AESPA, NCT, and The Boyz to name a few. She also dances for Lisa, CL, and Kai. We look forward to seeing more of BADA in the teaching circuit around the globe.",
+        "date_of_birth": "1995-09-22",
         "nationality": "KR",
         "based_in": "Seoul",
-        "instagram": "@liakimhappy",
+        "instagram": "badalee__",
+        "youtube": "Bada_bebe",
+        "contacts": [core_contact_id]
     }
-    response = test_app.post("/dancers/", json=sample_payload)
+    response = test_app.post("/dancers/", json=payload)
     assert (
         response.status_code == 200
     ), f"Failed to create sample dancer. Status code: {response.status_code}. Response body: {response.text}"

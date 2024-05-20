@@ -4,10 +4,12 @@ import pytest
 @pytest.fixture(scope="module")
 def member_id(test_app):
     payload = {
-        "name": "박혜림 HARIMU 🇰🇷",
+        "name": "HARIMU",
+        "name_orig": "박혜림",
+        "image_url": "https://scontent.cdninstagram.com/v/t51.2885-19/296840194_783755619314668_2379122151401318130_n.jpg?_nc_ht=scontent.cdninstagram.com&_nc_cat=104&_nc_ohc=HEWLyaEPQmQQ7kNvgFxzwCS&edm=APs17CUBAAAA&ccb=7-5&oh=00_AYCgi1By22gsIoGcFupngDDXu9UMLXIa8HZweeybXLqWGA&oe=664C4CA5&_nc_sid=10d13b",
         "nationality": "KR",
         "based_in": "Seoul",
-        "instagram": "@___harimu___",
+        "instagram": "___harimu___",
     }
     response = test_app.post("/dancers/", json=payload)
     assert (
@@ -25,7 +27,7 @@ def crew_id(test_app, core_studio_id, core_dancer_id, member_id):
         "based_in": "Seoul",
         "founded_in": 2022,
         "styles": ["Choreography"],
-        "instagram": "@1million_swf",
+        "instagram": "1million_swf",
         "home_studio_id": core_studio_id,
         "leader_ids": [core_dancer_id],
         "member_ids": [member_id],

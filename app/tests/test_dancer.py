@@ -2,14 +2,18 @@ import pytest
 
 
 @pytest.fixture(scope="module")
-def dancer_id(test_app):
+def dancer_id(test_app, core_contact_id):
     payload = {
-        "name": "Bada Lee 이바다",
-        "bio": "🌊🌊🌊 @teambebe_official",
-        "date_of_birth": "1995-09-22",
-        "nationality": "KR",
-        "based_in": "Seoul",
-        "instagram": "@badalee__",
+        "name": "Akanen Miyoshi",
+        "name_orig": "三好茜",
+        "image_url": "https://www.jamrepublicagency.com/assets/images/image01.jpg?v=fefc6ee7",
+        "pronouns": "She/Her",
+        "bio": "Akanen is a long standing dancer and prominent choreographer in Japan. In the last 5 years her popularity has skyrocketed and she now teaches all around the world. Outside of dance, she has also performed with Japanese Music legends such as SMAP, EXILE, BoA and Daichi Miura.",
+        "date_of_birth": "1989-09-24",
+        "nationality": "JP",
+        "based_in": "Tokyo",
+        "instagram": "akanenmiyoshi",
+        "contacts": {"booking": core_contact_id},
     }
     response = test_app.post("/dancers/", json=payload)
     assert (
@@ -37,18 +41,18 @@ def test_get_dancer(test_app, dancer_id):
 
 def test_update_dancer(test_app, dancer_id):
     updated_payload = {
-        "youtube": "@badalee_",
+        "youtube": "akanenmiyoshi",
     }
     response = test_app.put(f"/dancers/{dancer_id}", json=updated_payload)
     assert response.status_code == 200
     data = response.json()
-    assert data["youtube"] == "@badalee_", "Dancer was not updated successfully."
+    assert data["youtube"] == "akanenmiyoshi", "Dancer was not updated successfully."
 
     # fetch the dancer to verify the update took effect
     response = test_app.get(f"/dancers/{dancer_id}")
     assert response.status_code == 200
     data = response.json()
-    assert data["youtube"] == "@badalee_", "Dancer update did not persist."
+    assert data["youtube"] == "akanenmiyoshi", "Dancer update did not persist."
 
 
 def test_delete_dancer(test_app, dancer_id):

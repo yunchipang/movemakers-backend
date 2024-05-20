@@ -1,7 +1,7 @@
 import uuid
 
 from sqlalchemy import Column, Date, Enum, String, Text
-from sqlalchemy.dialects.postgresql import UUID
+from sqlalchemy.dialects.postgresql import JSON, UUID
 from sqlalchemy.orm import relationship
 
 from app.association import (
@@ -10,6 +10,7 @@ from app.association import (
     crew_member_association,
     studio_owner_association,
     training_instructor_association,
+    dancer_contact_association,
 )
 from app.database import Base
 from app.enums.pronouns import Pronouns
@@ -37,8 +38,6 @@ class Dancer(Base):
     based_in = Column(String(255), nullable=True)
     instagram = Column(String, unique=True, nullable=True)
     youtube = Column(String(255), nullable=True)
-    agency = Column(String(255), nullable=True)
-    contact_email = Column(String(255), nullable=True)
 
     owned_studios = relationship(
         "Studio", secondary=studio_owner_association, back_populates="owners"
@@ -59,7 +58,11 @@ class Dancer(Base):
         secondary=choreography_choreographer_association,
         back_populates="choreographers",
     )
+    contacts = relationship(
+        "Contact",
+        secondary=dancer_contact_association,
+        back_populates="dancers"
+    )
 
     def __repr__(self):
-        """returns strings representation of model instance"""
-        return "<Dancer: {name!r}>".format(name=self.name)
+        return f"<Dancer {self.name!r}>"
