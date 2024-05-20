@@ -73,8 +73,13 @@ async def update_dancer(
 ) -> dancer_schemas.Dancer:
     dancer = await get_dancer(dancer_id=dancer_id, db=db)
     for k, v in dancer_data.model_dump(exclude_unset=True).items():
-        if hasattr(dancer, k):
+        if k != "contact_ids" and hasattr(dancer, k):
             setattr(dancer, k, v)
+
+    # handle new contacts
+    if dancer_data.contact_ids:
+        new_contacts = await contact_services.get_contacts(dancer_data.contact_ids, db=db)
+        dancer.contacts = new_contacts
 
     db.commit()
     db.refresh(dancer)
