@@ -1,4 +1,4 @@
-# movemakers-fastapi
+# movemakers-backend
 
 (wip) find your favorite instructors, studios, classes, crews, and even choreographies!
 
