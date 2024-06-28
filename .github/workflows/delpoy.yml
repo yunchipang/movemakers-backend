@@ -21,7 +21,7 @@
 #           key: ${{ secrets.SSH_PRIVATE_KEY }}
 #           port: ${{ secrets.SSH_PORT }} # by default 22
 #           script: |
-#             cd movemakers-fastapi
+#             cd movemakers-backend
 #             docker compose down
 #             docker compose pull
 #             docker compose up -d --build
