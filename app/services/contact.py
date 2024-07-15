@@ -1,8 +1,9 @@
+import uuid
 from typing import List
 
 from fastapi import Depends
 from sqlalchemy.orm import Session
-import uuid
+
 from app.database import get_db
 from app.exceptions import contact as contact_exceptions
 from app.models import contact as contact_models
@@ -34,6 +35,7 @@ async def get_all_contacts(
     contacts = db.query(contact_models.Contact).all()
     return [contact_schemas.Contact.model_validate(contact) for contact in contacts]
 
+
 async def get_contact(contact_id: str, db: Session = Depends(get_db)):
     try:
         if isinstance(contact_id, uuid.UUID):
@@ -51,6 +53,7 @@ async def get_contact(contact_id: str, db: Session = Depends(get_db)):
     if not contact:
         raise contact_exceptions.ContactNotFoundError
     return contact
+
 
 async def get_contacts(contact_ids: List[str], db: Session = Depends(get_db)):
     contacts = []

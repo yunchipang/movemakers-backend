@@ -10,6 +10,7 @@ from app.models import dancer as dancer_models
 from app.schemas import dancer as dancer_schemas
 from app.services import contact as contact_services
 
+
 # create a dancer instance in database using the dancer data passed in
 async def create_dancer(
     dancer: dancer_schemas.CreateDancer, db: Session = Depends(get_db)
@@ -24,7 +25,7 @@ async def create_dancer(
     if dancer.contact_ids:
         contacts = await contact_services.get_contacts(dancer.contact_ids, db=db)
         new_dancer.contacts = contacts
-    
+
     db.commit()
     db.refresh(new_dancer)
     return dancer_schemas.Dancer.model_validate(new_dancer)
@@ -78,7 +79,9 @@ async def update_dancer(
 
     # handle new contacts
     if dancer_data.contact_ids:
-        new_contacts = await contact_services.get_contacts(dancer_data.contact_ids, db=db)
+        new_contacts = await contact_services.get_contacts(
+            dancer_data.contact_ids, db=db
+        )
         dancer.contacts = new_contacts
 
     db.commit()

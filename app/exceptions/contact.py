@@ -8,6 +8,7 @@ class ContactDuplicateError(HTTPException):
             detail="A contact with this email already exists.",
         )
 
+
 class ContactNotFoundError(HTTPException):
     def __init__(self):
         super().__init__(
