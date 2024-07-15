@@ -25,34 +25,33 @@ def training_id(test_app, core_dancer_id, core_studio_id):
     return data["id"]
 
 
-def test_get_all_trainings(test_app, training_id):
-    response = test_app.get("/trainings/")
-    assert response.status_code == 200
-    trainings = response.json()
-    assert any(
-        training["id"] == training_id for training in trainings
-    ), "Training not found in the list of all trainings."
+class TestTraining:
+    def test_get_all_trainings(self, test_app, training_id):
+        response = test_app.get("/trainings/")
+        assert response.status_code == 200
+        trainings = response.json()
+        assert any(
+            training["id"] == training_id for training in trainings
+        ), "Training not found in the list of all trainings."
 
+    def test_get_training(self, test_app, training_id):
+        response = test_app.get(f"/trainings/{training_id}")
+        assert response.status_code == 200
+        data = response.json()
+        assert data["id"] == training_id
 
-def test_get_training(test_app, training_id):
-    response = test_app.get(f"/trainings/{training_id}")
-    assert response.status_code == 200
-    data = response.json()
-    assert data["id"] == training_id
+    def test_update_training(self, test_app, training_id):
+        updated_payload = {"level": "Int/Adv"}
+        response = test_app.put(f"/trainings/{training_id}", json=updated_payload)
+        assert response.status_code == 200
+        data = response.json()
+        assert data["level"] == "Int/Adv", "Training was not updated successfully."
 
-
-def test_update_training(test_app, training_id):
-    updated_payload = {"level": "Int/Adv"}
-    response = test_app.put(f"/trainings/{training_id}", json=updated_payload)
-    assert response.status_code == 200
-    data = response.json()
-    assert data["level"] == "Int/Adv", "Training was not updated successfully."
-
-    # fetch the training to verify the update took effect
-    response = test_app.get(f"/trainings/{training_id}")
-    assert response.status_code == 200
-    data = response.json()
-    assert data["level"] == "Int/Adv", "Training update did not persist."
+        # fetch the training to verify the update took effect
+        response = test_app.get(f"/trainings/{training_id}")
+        assert response.status_code == 200
+        data = response.json()
+        assert data["level"] == "Int/Adv", "Training update did not persist."
 
 
 class TestRegistration:
