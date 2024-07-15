@@ -115,7 +115,7 @@ def core_dancer_id(test_app, core_contact_id):
         "based_in": "Seoul",
         "instagram": "badalee__",
         "youtube": "Bada_bebe",
-        "contacts": [core_contact_id]
+        "contacts": [core_contact_id],
     }
     response = test_app.post("/dancers/", json=payload)
     assert (

@@ -1,16 +1,16 @@
 import uuid
 
 from sqlalchemy import Column, Date, Enum, String, Text
-from sqlalchemy.dialects.postgresql import JSON, UUID
+from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import relationship
 
 from app.association import (
     choreography_choreographer_association,
     crew_leader_association,
     crew_member_association,
+    dancer_contact_association,
     studio_owner_association,
     training_instructor_association,
-    dancer_contact_association,
 )
 from app.database import Base
 from app.enums.pronouns import Pronouns
@@ -59,9 +59,7 @@ class Dancer(Base):
         back_populates="choreographers",
     )
     contacts = relationship(
-        "Contact",
-        secondary=dancer_contact_association,
-        back_populates="dancers"
+        "Contact", secondary=dancer_contact_association, back_populates="dancers"
     )
 
     def __repr__(self):

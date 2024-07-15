@@ -4,8 +4,9 @@ from sqlalchemy import Column, ForeignKey, String
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import relationship
 
-from app.database import Base
 from app.association import dancer_contact_association
+from app.database import Base
+
 
 class Contact(Base):
     __tablename__ = "contacts"
@@ -28,9 +29,7 @@ class Contact(Base):
 
     # fk to the dancers table
     dancers = relationship(
-        "Dancer",
-        secondary=dancer_contact_association,
-        back_populates="contacts"
+        "Dancer", secondary=dancer_contact_association, back_populates="contacts"
     )
 
     def __repr__(self):

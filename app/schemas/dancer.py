@@ -1,5 +1,5 @@
 from datetime import date
-from typing import Optional, List
+from typing import List, Optional
 
 from pydantic import UUID4, BaseModel, ConfigDict, Field
 
@@ -29,6 +29,7 @@ class BaseDancer(BaseModel):
 class Dancer(BaseDancer):
     id: UUID4
     contacts: List[Contact]
+
 
 class CreateDancer(BaseDancer):
     contact_ids: List[UUID4] = Field(default_factory=list)

@@ -50,7 +50,9 @@ class TestStudio:
         response = test_app.get(f"/studios/{studio_id}")
         assert response.status_code == 200
         data = response.json()
-        assert data["name"] == "1MILLION Dance Studio DJ", "Studio update did not persist."
+        assert (
+            data["name"] == "1MILLION Dance Studio DJ"
+        ), "Studio update did not persist."
 
     def test_delete_studio(self, test_app, studio_id):
         # delete the studio

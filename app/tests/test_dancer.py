@@ -45,7 +45,9 @@ class TestDancer:
         response = test_app.put(f"/dancers/{dancer_id}", json=updated_payload)
         assert response.status_code == 200
         data = response.json()
-        assert data["youtube"] == "akanenmiyoshi", "Dancer was not updated successfully."
+        assert (
+            data["youtube"] == "akanenmiyoshi"
+        ), "Dancer was not updated successfully."
 
         # fetch the dancer to verify the update took effect
         response = test_app.get(f"/dancers/{dancer_id}")

@@ -4,6 +4,7 @@ sample_user = {
     "password": "securepassword",
 }
 
+
 class TestSignup:
     def test_signup_success(self, test_app):
         response = test_app.post("/auth/signup/", json=sample_user)
@@ -30,6 +31,7 @@ class TestSignup:
         response = test_app.post("/auth/signup/", json=payload)
         assert response.status_code == 400
         assert response.json().get("detail") == "Username is already in use."
+
 
 class TestLogin:
     def test_login_success(self, test_app):
